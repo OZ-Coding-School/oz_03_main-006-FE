@@ -1,0 +1,10 @@
+{
+    "user_id": 101,
+    "email": "user101@naver.com",
+    "password": 123123,
+    "provider": "naver",
+    "social_id": 12345,
+    "nickname": "한바퀴유저101",
+    "location_id": "seoul",
+    "created_at": "2024-07-13"
+}
