@@ -4,7 +4,12 @@ module.exports = {
     './public/index.html', // 필요한 경우 추가 경로 지정
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        okgung: ['OKGUNG', 'sans-serif'],
+        chosun: ['ChosunCentennial', 'sans-serif'],
+      },
+    },
   },
   plugins: [],
 };
