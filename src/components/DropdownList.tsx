@@ -27,7 +27,7 @@ const DropdownList: React.FC<DropdownListProps> = ({ map, marker }) => {
           selectedLocation.longitude
         );
         map.morph(boundsLocation, 10);
-      }, 300);
+      }, 500);
     }
   };
 
