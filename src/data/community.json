@@ -1,0 +1,333 @@
+[
+    {
+      "locations": {
+        "location_id": 1,
+        "city": "서울특별시",
+        "distric": "종로구",
+        "symbol": "경복궁",
+        "population": 152000,
+        "information": "서울의 중심부에 위치한 역사적인 구역으로, 많은 문화유산과 현대적 시설이 공존합니다.",
+        "category": "서울",
+        "logation_img": "https://via.placeholder.com/400x400"
+      },
+      "posts": [
+        {
+          "post_id": 1,
+          "user_id": 101,
+          "title": "서울의 매력을 발견하다!",
+          "body": "서울의 숨겨진 명소들을 탐방했습니다. 경복궁, 북촌 한옥마을, 인사동 거리 등 다양한 곳을 방문하여 서울의 전통과 현대를 동시에 느낄 수 있었습니다.",
+          "created_at": "2024-06-15",
+          "updated_at": "2024-06-16",
+          "view_count": 152,
+          "representative_image_id": "https://via.placeholder.com/200x200",
+          "travel_start_date": "2024-06-10",
+          "travel_end_date": "2024-06-20"
+        },
+        {
+          "post_id": 2,
+          "user_id": 104,
+          "title": "서울의 밤을 즐기다",
+          "body": "서울의 밤은 낮과는 다른 매력을 가지고 있습니다. 동대문 디자인 플라자와 남산타워에서의 야경은 환상적입니다.",
+          "created_at": "2024-07-01",
+          "updated_at": "2024-07-02",
+          "view_count": 200,
+          "representative_image_id": "https://via.placeholder.com/200x200",
+          "travel_start_date": "2024-06-25",
+          "travel_end_date": "2024-06-30"
+        },
+        {
+          "post_id": 3,
+          "user_id": 105,
+          "title": "서울의 문화 체험",
+          "body": "국립중앙박물관과 세종문화회관에서 서울의 다양한 문화 체험을 했습니다. 공연과 전시가 인상적이었습니다.",
+          "created_at": "2024-07-10",
+          "updated_at": "2024-07-11",
+          "view_count": 180,
+          "representative_image_id": "https://via.placeholder.com/200x200",
+          "travel_start_date": "2024-07-05",
+          "travel_end_date": "2024-07-10"
+        },
+        {
+          "post_id": 4,
+          "user_id": 106,
+          "title": "서울의 맛집 투어",
+          "body": "서울의 다양한 맛집을 탐방했습니다. 명동, 홍대, 이태원 등 다양한 지역에서 맛있는 음식을 즐겼습니다.",
+          "created_at": "2024-07-15",
+          "updated_at": "2024-07-16",
+          "view_count": 220,
+          "representative_image_id": "https://via.placeholder.com/200x200",
+          "travel_start_date": "2024-07-10",
+          "travel_end_date": "2024-07-15"
+        },
+        {
+          "post_id": 5,
+          "user_id": 107,
+          "title": "서울의 역사 탐방",
+          "body": "서울의 역사적인 장소들을 방문했습니다. 창덕궁, 덕수궁, 종묘 등을 돌아보며 한국의 역사를 느낄 수 있었습니다.",
+          "created_at": "2024-07-20",
+          "updated_at": "2024-07-21",
+          "view_count": 250,
+          "representative_image_id": "https://via.placeholder.com/200x200",
+          "travel_start_date": "2024-07-15",
+          "travel_end_date": "2024-07-20"
+        },
+        {
+          "post_id": 6,
+          "user_id": 108,
+          "title": "서울의 쇼핑 즐기기",
+          "body": "서울의 다양한 쇼핑 명소를 돌아보았습니다. 명동, 강남, 동대문 등에서 쇼핑을 즐겼습니다.",
+          "created_at": "2024-07-25",
+          "updated_at": "2024-07-26",
+          "view_count": 300,
+          "representative_image_id": "https://via.placeholder.com/200x200",
+          "travel_start_date": "2024-07-20",
+          "travel_end_date": "2024-07-25"
+        },
+        {
+          "post_id": 7,
+          "user_id": 109,
+          "title": "서울의 자연을 만나다",
+          "body": "서울의 공원과 자연을 즐겼습니다. 남산공원, 올림픽공원, 한강공원 등에서 여유로운 시간을 보냈습니다.",
+          "created_at": "2024-07-30",
+          "updated_at": "2024-07-31",
+          "view_count": 270,
+          "representative_image_id": "https://via.placeholder.com/200x200",
+          "travel_start_date": "2024-07-25",
+          "travel_end_date": "2024-07-30"
+        },
+        {
+          "post_id": 8,
+          "user_id": 110,
+          "title": "서울의 현대 건축물 탐방",
+          "body": "서울의 현대적인 건축물들을 탐방했습니다. 롯데월드타워, 동대문디자인플라자, 서울시청 등을 방문했습니다.",
+          "created_at": "2024-08-05",
+          "updated_at": "2024-08-06",
+          "view_count": 320,
+          "representative_image_id": "https://via.placeholder.com/200x200",
+          "travel_start_date": "2024-08-01",
+          "travel_end_date": "2024-08-05"
+        }
+      ]
+    },
+    {
+      "locations": {
+        "location_id": 2,
+        "city": "부산광역시",
+        "distric": "해운대구",
+        "symbol": "해운대 해수욕장",
+        "population": 412000,
+        "information": "부산의 대표적인 해변 지역으로, 아름다운 해변과 현대적인 도시 경관이 어우러진 곳입니다.",
+        "category": "부산",
+        "logation_img": "https://via.placeholder.com/400x400"
+      },
+      "posts": [
+        {
+          "post_id": 1,
+          "user_id": 102,
+          "title": "부산 해변 여행기!",
+          "body": "부산의 아름다운 해변과 맛있는 해산물을 소개합니다. 해운대와 광안리 해변에서의 여유로운 시간을 보내고, 해변가 따라 걷는 산책로는 정말 멋졌습니다.",
+          "created_at": "2024-05-20",
+          "updated_at": "2024-05-22",
+          "view_count": 278,
+          "representative_image_id": "https://via.placeholder.com/200x200",
+          "travel_start_date": "2024-05-10",
+          "travel_end_date": "2024-05-17"
+        },
+        {
+          "post_id": 2,
+          "user_id": 111,
+          "title": "부산의 밤을 즐기다",
+          "body": "부산의 야경은 정말 아름답습니다. 광안대교와 해운대 해변의 야경을 감상했습니다.",
+          "created_at": "2024-06-01",
+          "updated_at": "2024-06-02",
+          "view_count": 220,
+          "representative_image_id": "https://via.placeholder.com/200x200",
+          "travel_start_date": "2024-05-25",
+          "travel_end_date": "2024-05-30"
+        },
+        {
+          "post_id": 3,
+          "user_id": 112,
+          "title": "부산의 전통 시장 탐방",
+          "body": "부산의 전통 시장을 탐방했습니다. 자갈치 시장과 국제 시장에서 다양한 먹거리를 즐겼습니다.",
+          "created_at": "2024-06-10",
+          "updated_at": "2024-06-11",
+          "view_count": 250,
+          "representative_image_id": "https://via.placeholder.com/200x200",
+          "travel_start_date": "2024-06-05",
+          "travel_end_date": "2024-06-10"
+        },
+        {
+          "post_id": 4,
+          "user_id": 113,
+          "title": "부산의 자연을 만나다",
+          "body": "부산의 자연을 즐겼습니다. 태종대와 오륙도 스카이워크에서의 경치는 정말 멋졌습니다.",
+          "created_at": "2024-06-20",
+          "updated_at": "2024-06-21",
+          "view_count": 300,
+          "representative_image_id": "https://via.placeholder.com/200x200",
+          "travel_start_date": "2024-06-15",
+          "travel_end_date": "2024-06-20"
+        },
+        {
+          "post_id": 5,
+          "user_id": 114,
+          "title": "부산의 문화 체험",
+          "body": "부산의 문화 체험을 했습니다. 영화의 전당과 부산박물관에서 다양한 전시와 공연을 즐겼습니다.",
+          "created_at": "2024-06-30",
+          "updated_at": "2024-07-01",
+          "view_count": 270,
+          "representative_image_id": "https://via.placeholder.com/200x200",
+          "travel_start_date": "2024-06-25",
+          "travel_end_date": "2024-06-30"
+        },
+        {
+          "post_id": 6,
+          "user_id": 115,
+          "title": "부산의 쇼핑 즐기기",
+          "body": "부산의 다양한 쇼핑 명소를 돌아보았습니다. 서면, 남포동, 해운대 등에서 쇼핑을 즐겼습니다.",
+          "created_at": "2024-07-10",
+          "updated_at": "2024-07-11",
+          "view_count": 320,
+          "representative_image_id": "https://via.placeholder.com/200x200",
+          "travel_start_date": "2024-07-05",
+          "travel_end_date": "2024-07-10"
+        },
+        {
+          "post_id": 7,
+          "user_id": 116,
+          "title": "부산의 맛집 탐방",
+          "body": "부산의 다양한 맛집을 탐방했습니다. 해산물 요리와 돼지국밥 등 다양한 음식을 맛봤습니다.",
+          "created_at": "2024-07-20",
+          "updated_at": "2024-07-21",
+          "view_count": 340,
+          "representative_image_id": "https://via.placeholder.com/200x200",
+          "travel_start_date": "2024-07-15",
+          "travel_end_date": "2024-07-20"
+        },
+        {
+          "post_id": 8,
+          "user_id": 117,
+          "title": "부산의 바다를 만나다",
+          "body": "부산의 바다를 즐겼습니다. 송도 해수욕장과 다대포 해수욕장에서 여유로운 시간을 보냈습니다.",
+          "created_at": "2024-07-30",
+          "updated_at": "2024-07-31",
+          "view_count": 380,
+          "representative_image_id": "https://via.placeholder.com/200x200",
+          "travel_start_date": "2024-07-25",
+          "travel_end_date": "2024-07-30"
+        }
+      ]
+    },
+    {
+      "locations": {
+        "location_id": 3,
+        "city": "제주특별자치도 제주시",
+        "distric": "서귀포시",
+        "symbol": "한라산",
+        "population": 182000,
+        "information": "제주도의 남부에 위치한 도시로, 아름다운 해변과 오름, 그리고 한라산의 절경을 감상할 수 있는 곳입니다.",
+        "category": "제주도",
+        "logation_img": "https://via.placeholder.com/400x400"
+      },
+      "posts": [
+        {
+          "post_id": 1,
+          "user_id": 103,
+          "title": "제주도에서의 한 달 살기",
+          "body": "제주도에서 한 달 동안 머물며 경험한 이야기. 에메랄드빛 바다와 푸른 하늘, 그리고 제주도만의 특별한 자연경관이 어우러진 한 달이었습니다.",
+          "created_at": "2024-07-01",
+          "updated_at": "2024-07-02",
+          "view_count": 345,
+          "representative_image_id": "https://via.placeholder.com/200x200",
+          "travel_start_date": "2024-06-01",
+          "travel_end_date": "2024-06-30"
+        },
+        {
+          "post_id": 2,
+          "user_id": 118,
+          "title": "제주도의 맛집 탐방",
+          "body": "제주도의 다양한 맛집을 탐방했습니다. 흑돼지와 해산물 요리 등 다양한 음식을 맛봤습니다.",
+          "created_at": "2024-07-10",
+          "updated_at": "2024-07-11",
+          "view_count": 250,
+          "representative_image_id": "https://via.placeholder.com/200x200",
+          "travel_start_date": "2024-07-05",
+          "travel_end_date": "2024-07-10"
+        },
+        {
+          "post_id": 3,
+          "user_id": 119,
+          "title": "제주도의 자연을 만나다",
+          "body": "제주도의 아름다운 자연을 즐겼습니다. 성산일출봉, 우도, 한라산 등에서의 경치는 정말 멋졌습니다.",
+          "created_at": "2024-07-20",
+          "updated_at": "2024-07-21",
+          "view_count": 270,
+          "representative_image_id": "https://via.placeholder.com/200x200",
+          "travel_start_date": "2024-07-15",
+          "travel_end_date": "2024-07-20"
+        },
+        {
+          "post_id": 4,
+          "user_id": 120,
+          "title": "제주도의 문화 체험",
+          "body": "제주도의 문화 체험을 했습니다. 제주 민속촌과 제주 자연사박물관에서 다양한 전시와 체험을 즐겼습니다.",
+          "created_at": "2024-07-30",
+          "updated_at": "2024-07-31",
+          "view_count": 320,
+          "representative_image_id": "https://via.placeholder.com/200x200",
+          "travel_start_date": "2024-07-25",
+          "travel_end_date": "2024-07-30"
+        },
+        {
+          "post_id": 5,
+          "user_id": 121,
+          "title": "제주도의 해변을 즐기다",
+          "body": "제주도의 아름다운 해변을 즐겼습니다. 함덕해수욕장과 협재해수욕장에서 여유로운 시간을 보냈습니다.",
+          "created_at": "2024-08-05",
+          "updated_at": "2024-08-06",
+          "view_count": 340,
+          "representative_image_id": "https://via.placeholder.com/200x200",
+          "travel_start_date": "2024-08-01",
+          "travel_end_date": "2024-08-05"
+        },
+        {
+          "post_id": 6,
+          "user_id": 122,
+          "title": "제주도의 오름 탐방",
+          "body": "제주도의 오름들을 탐방했습니다. 사라오름, 용눈이오름 등에서의 트레킹은 정말 멋졌습니다.",
+          "created_at": "2024-08-10",
+          "updated_at": "2024-08-11",
+          "view_count": 360,
+          "representative_image_id": "https://via.placeholder.com/200x200",
+          "travel_start_date": "2024-08-05",
+          "travel_end_date": "2024-08-10"
+        },
+        {
+          "post_id": 7,
+          "user_id": 123,
+          "title": "제주도의 역사 탐방",
+          "body": "제주도의 역사적인 장소들을 방문했습니다. 제주성지와 김녕사굴을 돌아보며 제주도의 역사를 느낄 수 있었습니다.",
+          "created_at": "2024-08-15",
+          "updated_at": "2024-08-16",
+          "view_count": 380,
+          "representative_image_id": "https://via.placeholder.com/200x200",
+          "travel_start_date": "2024-08-10",
+          "travel_end_date": "2024-08-15"
+        },
+        {
+          "post_id": 8,
+          "user_id": 124,
+          "title": "제주도의 액티비티 체험",
+          "body": "제주도의 다양한 액티비티를 체험했습니다. 스쿠버 다이빙, 패러글라이딩 등 다양한 체험을 즐겼습니다.",
+          "created_at": "2024-08-20",
+          "updated_at": "2024-08-21",
+          "view_count": 400,
+          "representative_image_id": "https://via.placeholder.com/200x200",
+          "travel_start_date": "2024-08-15",
+          "travel_end_date": "2024-08-20"
+        }
+      ]
+    }
+  ]
+  

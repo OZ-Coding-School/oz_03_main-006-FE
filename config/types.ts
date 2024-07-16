@@ -14,3 +14,4 @@ export interface Post {
   travel_start_date: string;
   travel_end_date: string;
 }
+
