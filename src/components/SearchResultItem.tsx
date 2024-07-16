@@ -40,9 +40,7 @@ const SearchResultItem: React.FC<SearchResultItemProps> = ({
         />
       </div>
       <div className='flex w-[220px] flex-col gap-1'>
-        <h2 className={`mt-0.5 truncate text-lg font-semibold ${textColor}`}>
-          {title}
-        </h2>
+        <h2 className={`mt-1 truncate font-semibold ${textColor}`}>{title}</h2>
         <p className={`flex-grow text-justify text-sm ${textColor}`}>
           {contentTruncate(body, 40)}
         </p>

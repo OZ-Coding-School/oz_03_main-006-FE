@@ -3,12 +3,13 @@ import { Link, useLocation } from 'react-router-dom';
 import { RiMenuFold4Fill, RiMenuUnfold4Fill } from 'react-icons/ri';
 import { PiPencilLine } from 'react-icons/pi';
 import { IoSearchSharp } from 'react-icons/io5';
+import { FaRegUser } from 'react-icons/fa';
 import { useNavToggleStore } from '../../../config/store';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import postsData from '../../data/posts.json';
-import userData from '../../data/user.json';
+//import userData from '../../data/user.json';
 import SearchResultItem from '../SearchResultItem';
-import { Post } from '../../../config/types';
+import { Post, User } from '../../../config/types';
 
 type Inputs = {
   searchValue: string;
@@ -30,13 +31,16 @@ const NavBar = () => {
       console.log(data);
     }
   };
-  //const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState<User | null>(null);
   //console.log(userData);
 
   const isHomePage = pathname === '/';
   const backgroundColor = isHomePage ? '#f9f9f9' : '#28466A';
   const iconColor = isHomePage ? 'text-[#727272]' : 'light-white';
   const textColor = isHomePage ? 'text-black' : 'light-white';
+  const userIconColor = isHomePage
+    ? 'light-white bg-[#28466A]'
+    : 'text-[#28466A] bg-[#f9f9f9]';
 
   const clearSearch = () => {
     reset({ searchValue: '' });
@@ -46,7 +50,7 @@ const NavBar = () => {
   const renderLogoAndTitle = (): React.ReactNode => {
     return (
       isOpen && (
-        <Link to='/' className='mb-6 flex items-center justify-center'>
+        <Link to='/' className='my-4 -ml-3 flex items-center justify-center'>
           <img src='/logo.svg' alt='한바퀴 로고' />
           <h1 className={`font-okgung text-5xl ${textColor}`}>한바퀴</h1>
         </Link>
@@ -58,22 +62,37 @@ const NavBar = () => {
     return (
       <div className='flex items-center justify-between'>
         {isOpen ? (
-          <RiMenuUnfold4Fill
-            className={`mx-4 my-2 cursor-pointer text-2xl ${iconColor}`}
-            onClick={toggleOpen}
-          />
+          <div className='flex w-full items-center justify-between'>
+            <div className='flex items-center gap-2'>
+              <RiMenuUnfold4Fill
+                className={`my-2 ml-4 cursor-pointer text-2xl ${iconColor}`}
+                onClick={toggleOpen}
+              />
+              {userData && (
+                <Link to='/posting'>
+                  <PiPencilLine className={`text-2xl ${iconColor}`} />
+                </Link>
+              )}
+            </div>
+            {userData ? (
+              <Link to='/mypage'>
+                <p
+                  className={`mx-4 text-lg ${textColor} font-chosun`}
+                >{`${userData.nickname} 님`}</p>
+              </Link>
+            ) : (
+              <Link to='/login'>
+                <p className={`mx-4 text-lg ${textColor} font-chosun`}>
+                  로그인
+                </p>
+              </Link>
+            )}
+          </div>
         ) : (
           <RiMenuFold4Fill
             className={`mx-4 my-2 cursor-pointer text-2xl ${iconColor}`}
             onClick={toggleOpen}
           />
-        )}
-        {isOpen && userData && (
-          <Link to='/posting'>
-            <PiPencilLine
-              className={`mx-4 my-2 cursor-pointer text-2xl ${iconColor}`}
-            />
-          </Link>
         )}
       </div>
     );
@@ -84,20 +103,23 @@ const NavBar = () => {
       return (
         <div className='flex flex-col items-center justify-center gap-2'>
           <Link to='/'>
-            <img src='/logo.svg' className='ml-2' alt='한바퀴 로고' />
+            <img
+              src='/logo.svg'
+              className='ml-1 h-[44px] w-[44px]'
+              alt='한바퀴 로고'
+            />
           </Link>
           {!isOpen && userData && (
-            <div className='flex flex-col items-center justify-center gap-5'>
-              <Link to='mypage'>
-                <img
-                  src='/logo.svg'
-                  className='ml-1 h-[52px] w-[52px] rounded-full bg-[#F4F4F4]'
-                  alt='프로필 이미지'
-                />
+            <div className='flex flex-col items-center justify-center gap-4'>
+              <Link
+                to='mypage'
+                className={`flex h-[30px] w-[30px] items-center justify-center rounded-full ${userIconColor}`}
+              >
+                <FaRegUser className={`text-lg ${userIconColor}`} />
               </Link>
               <Link to='/posting'>
                 <PiPencilLine
-                  className={`cursor-pointer text-4xl ${iconColor}`}
+                  className={`cursor-pointer text-2xl ${iconColor}`}
                 />
               </Link>
             </div>
@@ -110,29 +132,12 @@ const NavBar = () => {
 
   const renderLoginIcon = (): React.ReactNode => {
     if (isOpen) {
-      return userData ? (
-        <Link
-          to='mypage'
-          className='mx-8 my-3 flex w-[328px] items-center gap-3'
+      return (
+        <p
+          className={`mx-auto my-6 w-[312px] text-center font-chosun text-xl ${textColor}`}
         >
-          <img
-            src='/logo.svg'
-            className='ml-1 h-[52px] w-[52px] rounded-full bg-[#F4F4F4]'
-            alt='프로필 이미지'
-          />
-          <p
-            className={`flex-grow text-xl ${textColor}`}
-          >{`${userData.nickname} 님`}</p>
-        </Link>
-      ) : (
-        <div className='my-3 flex items-center justify-center gap-10'>
-          <Link to='/'>
-            <img src='/naver-logo.svg' alt='네이버 로그인' />
-          </Link>
-          <Link to='/'>
-            <img src='/kakao-logo.svg' alt='카카오 로그인' />
-          </Link>
-        </div>
+          한국을 한(韓)바퀴 돌아보세요
+        </p>
       );
     }
   };
@@ -140,15 +145,15 @@ const NavBar = () => {
   const renderSearchBar = () => {
     return (
       isOpen && (
-        <div className='flex flex-col items-center justify-center'>
+        <div className='my-8 flex flex-col items-center justify-center'>
           <form
             className='min-w-[328px] px-2'
             onSubmit={handleSubmit(onSubmit)}
           >
-            <div className='mx-auto my-3 flex items-center justify-center gap-1 border-b-2 py-2'>
+            <div className='mx-auto flex items-center justify-center gap-2 border-b-2 py-1'>
               <IoSearchSharp className={`text-2xl ${iconColor}`} />
               <input
-                className={`flex-grow bg-[#f9f9f9] px-1 text-xl ${textColor} outline-0`}
+                className={`flex-grow bg-[#f9f9f9] text-lg ${textColor} outline-0`}
                 style={{ backgroundColor }}
                 type='text'
                 placeholder='전체 게시글 중 검색'
@@ -179,7 +184,7 @@ const NavBar = () => {
   const renderSearchResult = () => {
     return (
       isOpen && (
-        <div className='mx-auto my-6 flex max-w-[360px] flex-col items-center justify-center gap-4 overflow-x-hidden'>
+        <div className='mx-auto my-8 flex max-w-[360px] flex-col items-center justify-center gap-4 overflow-x-hidden'>
           <div className='search-scroll flex max-h-[calc(100vh-318px)] max-w-[360px] flex-col gap-4 scroll-smooth px-5'>
             {posts.map((post) => (
               <SearchResultItem
@@ -198,7 +203,7 @@ const NavBar = () => {
 
   return (
     <div
-      className={`nav-bar ${isOpen ? 'w-[392px]' : 'w-[100px]'}`}
+      className={`nav-bar ${isOpen ? 'w-[392px]' : 'w-[60px]'}`}
       style={{ backgroundColor }}
     >
       <div>
