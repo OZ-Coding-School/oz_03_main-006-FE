@@ -28,4 +28,44 @@
     scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
     scrollbar-width: thin;
   }
+  .login-button-radius {
+    border-radius: 30px 30px 0 0;
+  }
+  .login-button-shadow {
+    box-shadow:
+      20px 10px 0 rgba(0, 0, 0, 0.19),
+      6px 6px 0 rgba(0, 0, 0, 0.23);
+  }
+  .signUp-button-radius {
+    border-radius: 30px 30px 0 0;
+  }
+  .signUp-button-shadow {
+    box-shadow:
+      -15px 10px 0 rgba(47, 69, 103, 0.24),
+      -6px 3px 0 rgba(47, 69, 103, 0.48);
+  }
+  .login-active {
+    border-radius: 0 0 10px 10px;
+    box-shadow:
+      15px 10px 0 rgba(47, 69, 103, 0.19),
+      6px 3px 0 rgba(47, 69, 103, 0.23);
+  }
+  .signUp-active {
+    border-radius: 0 0 10px 10px;
+    box-shadow:
+      -15px 10px 0 rgba(47, 69, 103, 0.24),
+      -6px 3px 0 rgba(47, 69, 103, 0.48);
+  }
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  .fade-in {
+    animation: fadeIn 1s ease-out;
+    overflow: hidden;
+  }
 }

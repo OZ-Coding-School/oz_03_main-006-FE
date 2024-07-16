@@ -15,3 +15,16 @@ export interface Post {
   travel_end_date: string;
 }
 
+<<<<<<< HEAD
+=======
+export interface User {
+  user_id: number;
+  email: string;
+  password: number;
+  provider: string;
+  social_id: number;
+  nickname: string;
+  location_id: string;
+  created_at: string;
+}
+>>>>>>> dev
