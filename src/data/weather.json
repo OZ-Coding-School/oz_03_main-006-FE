@@ -1,0 +1,20 @@
+[
+    {
+      "weather_id": 1,
+      "location_id": 1,
+      "temperature": 28,
+      "humidity": 60,
+      "description": "맑음",
+      "wind_speed": 3,
+      "updated_at": "2024-07-16T12:00:00Z"
+    },
+    {
+      "weather_id": 2,
+      "location_id": 2,
+      "temperature": 26,
+      "humidity": 70,
+      "description": "흐림",
+      "wind_speed": 5,
+      "updated_at": "2024-07-16T12:00:00Z"
+    }
+  ]
