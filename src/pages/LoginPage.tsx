@@ -26,10 +26,10 @@ const LoginPage = () => {
     activeTab === 'signUp' ? 'signUp-button-shadow' : '';
 
   return (
-    <div className='] h-screen w-screen'>
+    <div className='h-screen w-screen'>
       <div className='fixed flex h-full w-full items-center justify-center'>
         <div className='h-[640px] w-[460px] bg-transparent'>
-          <div className='flex h-full w-full flex-col p-8'>
+          <div className='flex h-full w-full flex-col px-8 py-4'>
             <div className='grid h-[50px] w-full grid-cols-2 items-center gap-0.5 text-center'>
               <div
                 className={`login-button-radius ${handleLoginShadow} ${handleAnimation} flex h-full cursor-pointer items-center justify-center bg-[#f9f9f9]`}

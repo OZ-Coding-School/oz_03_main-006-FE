@@ -78,7 +78,7 @@ const NavBar = () => {
               <Link to='/mypage'>
                 <p
                   className={`mx-4 text-lg ${textColor} font-chosun`}
-                >{`${userData.nickname} 님`}</p>
+                >{`${userData.nickname ? userData.nickname : userData.username} 님`}</p>
               </Link>
             ) : (
               <Link to='/login'>
