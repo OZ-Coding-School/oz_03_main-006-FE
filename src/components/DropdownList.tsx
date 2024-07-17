@@ -1,5 +1,5 @@
 import { IoMdArrowDropup } from 'react-icons/io';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { locationList } from '../data/locationList';
 
 interface DropdownListProps {
@@ -8,8 +8,10 @@ interface DropdownListProps {
 }
 
 const DropdownList: React.FC<DropdownListProps> = ({ map, marker }) => {
-  console.log(marker);
   const timeoutRef = useRef<number | null>(null);
+  const [choosedMarker, setChoosedMarker] = useState<naver.maps.Marker | null>(
+    null
+  );
 
   // 해당 하는 지역으로 zoomin + move
   const moveCenter = (location: string) => {
@@ -27,6 +29,7 @@ const DropdownList: React.FC<DropdownListProps> = ({ map, marker }) => {
           selectedLocation.longitude
         );
         map.morph(boundsLocation, 10);
+        updateMarkerAnimation(location);
       }, 500);
     }
   };
@@ -36,6 +39,26 @@ const DropdownList: React.FC<DropdownListProps> = ({ map, marker }) => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
+    }
+    if (choosedMarker) {
+      choosedMarker.setAnimation(null);
+    }
+  };
+
+  // 특정지역 마커에 bounce 애니메이션 추가와 삭제
+  const updateMarkerAnimation = (location: string) => {
+    if (marker) {
+      // 원래 뛰던애가 있으면 걔는 멈춤
+      if (choosedMarker) {
+        choosedMarker.setAnimation(null);
+      }
+      const selectedMarker = marker.find(
+        (item) => item.getTitle() === location
+      );
+      if (selectedMarker) {
+        selectedMarker.setAnimation(naver.maps.Animation.BOUNCE);
+        setChoosedMarker(selectedMarker);
+      }
     }
   };
 
