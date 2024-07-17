@@ -1,0 +1,27 @@
+@keyframes slideIn {
+  from {
+    max-height: 0;
+  }
+  to {
+    max-height: 100vh;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    max-height: 100vh;
+  }
+  to {
+    max-height: 0;
+  }
+}
+
+.slideUp {
+  animation: slideIn 0.3s forwards;
+  max-height: 100vh;
+}
+
+.slideDown {
+  animation: slideOut 0.3s forwards;
+  max-height: 0;
+}

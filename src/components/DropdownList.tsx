@@ -1,6 +1,9 @@
-import { IoMdArrowDropup } from 'react-icons/io';
+import { IoMdArrowDropdown } from 'react-icons/io';
 import { useRef, useState } from 'react';
 import { locationList } from '../data/locationList';
+import { Link } from 'react-router-dom';
+import { FaArrowRight } from 'react-icons/fa';
+import styles from './DropdownList.module.css'; // Import as styles
 
 interface DropdownListProps {
   map: naver.maps.Map | null;
@@ -12,15 +15,18 @@ const DropdownList: React.FC<DropdownListProps> = ({ map, marker }) => {
   const [choosedMarker, setChoosedMarker] = useState<naver.maps.Marker | null>(
     null
   );
+  const [isFold, setIsFold] = useState<boolean>(true);
 
-  // 해당 하는 지역으로 zoomin + move
-  const moveCenter = (location: string) => {
+  const toggleFold = () => {
+    setIsFold(!isFold);
+  };
+
+  const moveCenter = (location: string): void => {
     const selectedLocation = locationList.find(
       (item) => item.name === location
     );
     if (selectedLocation && map) {
       if (timeoutRef.current) {
-        // 다른 지역으로 이동했을 때 기존의 이벤트 삭제
         clearTimeout(timeoutRef.current);
       }
       timeoutRef.current = window.setTimeout(() => {
@@ -30,12 +36,11 @@ const DropdownList: React.FC<DropdownListProps> = ({ map, marker }) => {
         );
         map.morph(boundsLocation, 10);
         updateMarkerAnimation(location);
-      }, 500);
+      }, 300);
     }
   };
 
-  // 지도 이동 하기 전에, 또 다른 지역이 아니라 아예 리스트 밖으로 나갔을 때 이벤트 삭제
-  const clearMoveCenterTimeout = () => {
+  const clearMoveCenterTimeout = (): void => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
@@ -45,10 +50,8 @@ const DropdownList: React.FC<DropdownListProps> = ({ map, marker }) => {
     }
   };
 
-  // 특정지역 마커에 bounce 애니메이션 추가와 삭제
-  const updateMarkerAnimation = (location: string) => {
+  const updateMarkerAnimation = (location: string): void => {
     if (marker) {
-      // 원래 뛰던애가 있으면 걔는 멈춤
       if (choosedMarker) {
         choosedMarker.setAnimation(null);
       }
@@ -65,26 +68,63 @@ const DropdownList: React.FC<DropdownListProps> = ({ map, marker }) => {
   return (
     <div className='absolute right-[3%] top-[3%]'>
       <ul className='flex w-[201px] flex-col overflow-hidden rounded-b-lg rounded-t-lg bg-[#F5F5F5] bg-opacity-60'>
-        <li className='mb-1 flex items-center justify-between p-4 pb-0'>
-          접기
-          <IoMdArrowDropup />
+        <li
+          className='mb-1 flex items-center justify-between p-4 pb-0'
+          onClick={toggleFold}
+        >
+          {isFold ? '펼치기' : '접기'}
+          <IoMdArrowDropdown
+            className={`transition-transform duration-300 ${isFold ? '' : 'rotate-180'}`}
+          />
         </li>
         <div className='my-2 h-[1px] w-full bg-[#575757] bg-opacity-10'></div>
-        {locationList.map((item, index) => (
-          <li
-            key={index}
-            className='mb-2 flex items-center pl-4 hover:bg-[#575757] hover:bg-opacity-10'
-            onMouseEnter={() => moveCenter(item.name)}
-            onMouseLeave={clearMoveCenterTimeout}
-          >
-            <img
-              className='mr-5 h-[21px] w-[21px]'
-              src={item.src}
-              alt={item.alt}
-            ></img>
-            {item.name}
-          </li>
-        ))}
+        {/* 0~4는 무조건 보여줘야 하는 리스트 */}
+        {locationList.slice(0, 4).map((item) => {
+          return (
+            <Link to={`/community/${item.location_id}`} key={item.location_id}>
+              <li
+                className='group mb-2 flex items-center pl-4 font-chosun hover:bg-[#575757] hover:bg-opacity-10'
+                onMouseEnter={() => moveCenter(item.name)}
+                onMouseLeave={clearMoveCenterTimeout}
+              >
+                <img
+                  className='mr-5 h-[21px] w-[21px]'
+                  src={item.src}
+                  alt={item.alt}
+                />
+                {item.name}
+                <FaArrowRight className='ml-auto mr-3 hidden text-xs group-hover:inline' />
+              </li>
+            </Link>
+          );
+        })}
+        <div className={`${isFold ? styles.slideDown : styles.slideUp}`}>
+          {/* 나머지는 fold가 아닐 때만 보여줘야 하는 리스트 */}
+          {isFold
+            ? null
+            : locationList.slice(4, 18).map((item) => {
+                return (
+                  <Link
+                    to={`/community/${item.location_id}`}
+                    key={item.location_id}
+                  >
+                    <li
+                      className='group mb-2 flex items-center pl-4 font-chosun hover:bg-[#575757] hover:bg-opacity-10'
+                      onMouseEnter={() => moveCenter(item.name)}
+                      onMouseLeave={clearMoveCenterTimeout}
+                    >
+                      <img
+                        className='mr-5 h-[21px] w-[21px]'
+                        src={item.src}
+                        alt={item.alt}
+                      />
+                      {item.name}
+                      <FaArrowRight className='ml-auto mr-3 hidden text-xs group-hover:inline' />
+                    </li>
+                  </Link>
+                );
+              })}
+        </div>
       </ul>
     </div>
   );
