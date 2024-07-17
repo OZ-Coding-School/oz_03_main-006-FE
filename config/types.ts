@@ -2,6 +2,12 @@ export interface NavToggleState {
   isOpen: boolean;
   toggleOpen: () => void;
 }
+
+export interface tag {
+  tag_id: number;
+  name: string;
+}
+
 export interface Post {
   post_id: number;
   user_id: number;
@@ -13,6 +19,7 @@ export interface Post {
   representative_image_id: string;
   travel_start_date: string;
   travel_end_date: string;
+  tags?: tag[];
 }
 
 export interface User {
