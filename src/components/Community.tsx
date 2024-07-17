@@ -2,7 +2,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import communityData from '../data/community.json'
 import weatherData from '../data/weather.json'
 import { useEffect, useState } from 'react';
-import { Post } from '../../config/types';
+import { Post, tag } from '../../config/types';
+import PostCard from './PostCard';
 
 interface Locations {
   location_id: number;
@@ -12,7 +13,7 @@ interface Locations {
   population: number;
   information: string;
   category: string;
-  location_img: string;
+  logation_img: string;
 }
 
 interface Weather {
@@ -22,16 +23,18 @@ interface Weather {
   humidity: number;
   description: string;
   wind_speed: number;
-  updated_at: number;
+  updated_at: string;
 }
 
 
 interface CommunityPost {
   locations: Locations;
-  posts: Post[]
+  posts: Post[],
 }
 
-// const weather : Weather[] = weatherData;
+const weather : Weather[] = weatherData;
+const community : CommunityPost[] = communityData;
+
 
 
 const Community: React.FC = () => {
@@ -41,19 +44,16 @@ const Community: React.FC = () => {
   const [sortRegionType, setSortRegionType] = useState<string>("default")
 
 
-
-
-
   const navigate = useNavigate()
   
   // 날씨 정보 가져오기
-  const regionWeather = weatherData.find((region) => {
+  const regionWeather = weather.find((region) => {
     return region.location_id === parseInt(location_id || '0', 10)
   })
   console.log(regionWeather)
 
   // 총지역 데이터에서 각 지역 정보 가져오기 
-  const regionData = communityData.find((region) => {
+  const regionData = community.find((region) => {
     console.log(location_id)
     console.log(region)
     return region.locations.location_id === parseInt(location_id || '0', 10)
@@ -61,6 +61,7 @@ const Community: React.FC = () => {
   console.log(regionData)
 
 
+  // 데이터 정렬 함수 ( 날짜순, 조회순 )
   const sortPosts = (posts: any[], type: string)=> {
     if(type === "date") {
       return [...posts].sort((a,b) => 
@@ -78,14 +79,12 @@ const Community: React.FC = () => {
     if(regionData) {
       const sorted = sortPosts(regionData.posts, sortType)
       setSortedPosts(sorted)
-      // const currentRegion = regionData.locations.category
-      // setSortRegionType(currentRegion)
     }
   }, [regionData, sortType, sortRegionType])
   
 
   console.log(location_id);
-  console.log(communityData);
+  console.log(community);
   console.log( regionData);
 
   if (!regionData) return (<div>지역 데이터를 찾을 수 없습니다.</div>);
@@ -105,12 +104,12 @@ const Community: React.FC = () => {
 
 
   return (
-    <div className='container mx-auto px-10 py-8'>
-      <h1 className='text-5xl font-bold mb-4'>{regionData.locations.category}</h1>
+    <div className='container max-w-[1200px] mx-auto px-10 py-8 '>
+      <h1 className='font-okgung text-5xl font-bold mb-4'>{regionData.locations.category}</h1>
       <select onChange={handleRegion} className='mb-2 border-2' value={sortRegionType}>
-        <option value="default" selected disabled>지역을 골라주세요</option>
+        <option value="default" selected disabled>타 지역으로 이동</option>
         {
-          communityData.map((region) => (
+          community.map((region) => (
             <option key={region.locations.location_id} value={region.locations.location_id}>{region.locations.category}</option>
           ))
         }
@@ -121,7 +120,7 @@ const Community: React.FC = () => {
 
 
       <div className='mb-8 flex '>
-        <img src={regionData.locations.logation_img} alt={regionData.locations.city} className='rounded-xl'/>
+        <img src={regionData.locations.logation_img} alt={regionData.locations.city} className='rounded-xl w-[550px] h-[350px]'/>
         <div className='px-4 py-12'>
           <h2 className='text-4xl mx-auto mb-4'>{regionData.locations.city}</h2>
           <p className='my-4'>
@@ -130,7 +129,7 @@ const Community: React.FC = () => {
           </p>
           <p className='flex my-4  '>
             <span className='mr-12 text-gray-600/50'>날씨</span>
-            <p className='flexjustify-between text-gray-600/50'>
+            <p className='flexjustify-between text-blue-700/60'>
               <span className='mx-3'>{regionWeather?.description}</span>
               <span>|</span>
               <span className='mx-3'>온도 {regionWeather?.temperature}</span>
@@ -144,25 +143,16 @@ const Community: React.FC = () => {
         </div>
       </div>
 
-      <select onChange={handleArray} className='mb-2 border-2' value={sortType}>
+      <select onChange={handleArray} className='mb-3 border-2' value={sortType}>
         <option value="default" selected disabled>날짜순, 조회순 정렬</option>
         <option value="date">날짜순</option>
         <option value="search">조회순</option>
       </select>
+      {/* grid-cols-1 : 기본적으로 (모바일 화면 등 작은 화면에서 한 열로 배치) / md:grid-cols-2 중간 크기(768px) 이상의 화면에서 두열로 배치 */}
       <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
         {
           sortedPosts.map((post) => (
-            <div key={post.post_id} className='bg-white p-6 rounded-lg shadow-md flex'>
-              <img src={post.representative_image_id} alt={post.title} className='size-[150px] mr-4 rounded-xl'/>
-              <div>
-                <h2 className='text-xl font-semibold mb-2'>{post.title}</h2>
-                <p className='text-gray-600 mb-4'>{post.body}</p>
-                <div className='flex justify-between text-sm text-gray-500'>
-                  <span>{post.created_at}</span>
-                  <span className='text-xs py-1'>{post.view_count} 조회수</span>
-                </div>
-              </div>
-            </div>
+            <PostCard post={post}/>
           ))
         }
       </div>

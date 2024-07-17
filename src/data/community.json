@@ -19,9 +19,16 @@
           "created_at": "2024-06-15",
           "updated_at": "2024-06-16",
           "view_count": 152,
-          "representative_image_id": "https://via.placeholder.com/200x200",
+          "representative_image_id": "",
           "travel_start_date": "2024-06-10",
-          "travel_end_date": "2024-06-20"
+          "travel_end_date": "2024-06-20",
+          "tags": [
+            {"tag_id": 1, "name": "서울"},
+            {"tag_id": 2, "name": "경복"},
+            {"tag_id": 3, "name": "북촌"},
+            {"tag_id": 4, "name": "전통"},
+            {"tag_id": 5, "name": "현대"}
+        ]
         },
         {
           "post_id": 2,
@@ -31,9 +38,16 @@
           "created_at": "2024-07-01",
           "updated_at": "2024-07-02",
           "view_count": 200,
-          "representative_image_id": "https://via.placeholder.com/200x200",
+          "representative_image_id": "",
           "travel_start_date": "2024-06-25",
-          "travel_end_date": "2024-06-30"
+          "travel_end_date": "2024-06-30",
+          "tags": [
+            {"tag_id": 1, "name": "서울"},
+            {"tag_id": 2, "name": "경복"},
+            {"tag_id": 3, "name": "북촌"},
+            {"tag_id": 4, "name": "전통"},
+            {"tag_id": 5, "name": "현대"}
+        ]
         },
         {
           "post_id": 3,
@@ -45,7 +59,12 @@
           "view_count": 180,
           "representative_image_id": "https://via.placeholder.com/200x200",
           "travel_start_date": "2024-07-05",
-          "travel_end_date": "2024-07-10"
+          "travel_end_date": "2024-07-10",
+          "tags": [
+            {"tag_id": 1, "name": "서울"},
+            {"tag_id": 2, "name": "경복"},
+            {"tag_id": 3, "name": "북촌"}
+        ]
         },
         {
           "post_id": 4,
@@ -57,7 +76,14 @@
           "view_count": 220,
           "representative_image_id": "https://via.placeholder.com/200x200",
           "travel_start_date": "2024-07-10",
-          "travel_end_date": "2024-07-15"
+          "travel_end_date": "2024-07-15",
+          "tags": [
+            {"tag_id": 1, "name": "서울"},
+            {"tag_id": 2, "name": "경복"},
+            {"tag_id": 3, "name": "북촌"},
+            {"tag_id": 4, "name": "전통"},
+            {"tag_id": 5, "name": "현대"}
+        ]
         },
         {
           "post_id": 5,
@@ -69,7 +95,14 @@
           "view_count": 250,
           "representative_image_id": "https://via.placeholder.com/200x200",
           "travel_start_date": "2024-07-15",
-          "travel_end_date": "2024-07-20"
+          "travel_end_date": "2024-07-20",
+          "tags": [
+            {"tag_id": 1, "name": "서울"},
+            {"tag_id": 2, "name": "경복"},
+            {"tag_id": 3, "name": "북촌"},
+            {"tag_id": 4, "name": "전통"},
+            {"tag_id": 5, "name": "현대"}
+        ]
         },
         {
           "post_id": 6,
@@ -81,7 +114,14 @@
           "view_count": 300,
           "representative_image_id": "https://via.placeholder.com/200x200",
           "travel_start_date": "2024-07-20",
-          "travel_end_date": "2024-07-25"
+          "travel_end_date": "2024-07-25",
+          "tags": [
+            {"tag_id": 1, "name": "서울"},
+            {"tag_id": 2, "name": "경복"},
+            {"tag_id": 3, "name": "북촌"},
+            {"tag_id": 4, "name": "전통"},
+            {"tag_id": 5, "name": "현대"}
+        ]
         },
         {
           "post_id": 7,
@@ -93,7 +133,14 @@
           "view_count": 270,
           "representative_image_id": "https://via.placeholder.com/200x200",
           "travel_start_date": "2024-07-25",
-          "travel_end_date": "2024-07-30"
+          "travel_end_date": "2024-07-30",
+          "tags": [
+            {"tag_id": 1, "name": "서울"},
+            {"tag_id": 2, "name": "경복"},
+            {"tag_id": 3, "name": "북촌"},
+            {"tag_id": 4, "name": "전통"},
+            {"tag_id": 5, "name": "현대"}
+        ]
         },
         {
           "post_id": 8,
@@ -105,13 +152,20 @@
           "view_count": 320,
           "representative_image_id": "https://via.placeholder.com/200x200",
           "travel_start_date": "2024-08-01",
-          "travel_end_date": "2024-08-05"
+          "travel_end_date": "2024-08-05",
+          "tags": [
+            {"tag_id": 1, "name": "서울"},
+            {"tag_id": 2, "name": "경복"},
+            {"tag_id": 3, "name": "북촌"},
+            {"tag_id": 4, "name": "전통"},
+            {"tag_id": 5, "name": "현대"}
+        ]
         }
       ]
     },
     {
       "locations": {
-        "location_id": 2,
+        "location_id": 9,
         "city": "부산광역시",
         "distric": "해운대구",
         "symbol": "해운대 해수욕장",
@@ -131,7 +185,15 @@
           "view_count": 278,
           "representative_image_id": "https://via.placeholder.com/200x200",
           "travel_start_date": "2024-05-10",
-          "travel_end_date": "2024-05-17"
+          "travel_end_date": "2024-05-17",  
+          "tags": [
+            {"tag_id": 1, "name": "부산"},
+            {"tag_id": 2, "name": "해운"},
+            {"tag_id": 3, "name": "광안"},
+            {"tag_id": 4, "name": "감천"},
+            {"tag_id": 5, "name": "바다"}
+        ]
+          
         },
         {
           "post_id": 2,
@@ -143,7 +205,14 @@
           "view_count": 220,
           "representative_image_id": "https://via.placeholder.com/200x200",
           "travel_start_date": "2024-05-25",
-          "travel_end_date": "2024-05-30"
+          "travel_end_date": "2024-05-30",
+          "tags": [
+            {"tag_id": 1, "name": "부산"},
+            {"tag_id": 2, "name": "해운"},
+            {"tag_id": 3, "name": "광안"},
+            {"tag_id": 4, "name": "감천"},
+            {"tag_id": 5, "name": "바다"}
+        ]
         },
         {
           "post_id": 3,
@@ -155,7 +224,14 @@
           "view_count": 250,
           "representative_image_id": "https://via.placeholder.com/200x200",
           "travel_start_date": "2024-06-05",
-          "travel_end_date": "2024-06-10"
+          "travel_end_date": "2024-06-10",
+          "tags": [
+            {"tag_id": 1, "name": "부산"},
+            {"tag_id": 2, "name": "해운"},
+            {"tag_id": 3, "name": "광안"},
+            {"tag_id": 4, "name": "감천"},
+            {"tag_id": 5, "name": "바다"}
+        ]
         },
         {
           "post_id": 4,
@@ -167,7 +243,14 @@
           "view_count": 300,
           "representative_image_id": "https://via.placeholder.com/200x200",
           "travel_start_date": "2024-06-15",
-          "travel_end_date": "2024-06-20"
+          "travel_end_date": "2024-06-20",
+          "tags": [
+            {"tag_id": 1, "name": "부산"},
+            {"tag_id": 2, "name": "해운"},
+            {"tag_id": 3, "name": "광안"},
+            {"tag_id": 4, "name": "감천"},
+            {"tag_id": 5, "name": "바다"}
+        ]
         },
         {
           "post_id": 5,
@@ -179,7 +262,14 @@
           "view_count": 270,
           "representative_image_id": "https://via.placeholder.com/200x200",
           "travel_start_date": "2024-06-25",
-          "travel_end_date": "2024-06-30"
+          "travel_end_date": "2024-06-30",
+          "tags": [
+            {"tag_id": 1, "name": "부산"},
+            {"tag_id": 2, "name": "해운"},
+            {"tag_id": 3, "name": "광안"},
+            {"tag_id": 4, "name": "감천"},
+            {"tag_id": 5, "name": "바다"}
+        ]
         },
         {
           "post_id": 6,
@@ -191,7 +281,14 @@
           "view_count": 320,
           "representative_image_id": "https://via.placeholder.com/200x200",
           "travel_start_date": "2024-07-05",
-          "travel_end_date": "2024-07-10"
+          "travel_end_date": "2024-07-10",
+          "tags": [
+            {"tag_id": 1, "name": "부산"},
+            {"tag_id": 2, "name": "해운"},
+            {"tag_id": 3, "name": "광안"},
+            {"tag_id": 4, "name": "감천"},
+            {"tag_id": 5, "name": "바다"}
+        ]
         },
         {
           "post_id": 7,
@@ -203,7 +300,14 @@
           "view_count": 340,
           "representative_image_id": "https://via.placeholder.com/200x200",
           "travel_start_date": "2024-07-15",
-          "travel_end_date": "2024-07-20"
+          "travel_end_date": "2024-07-20",
+          "tags": [
+            {"tag_id": 1, "name": "부산"},
+            {"tag_id": 2, "name": "해운"},
+            {"tag_id": 3, "name": "광안"},
+            {"tag_id": 4, "name": "감천"},
+            {"tag_id": 5, "name": "바다"}
+        ]
         },
         {
           "post_id": 8,
@@ -215,13 +319,20 @@
           "view_count": 380,
           "representative_image_id": "https://via.placeholder.com/200x200",
           "travel_start_date": "2024-07-25",
-          "travel_end_date": "2024-07-30"
+          "travel_end_date": "2024-07-30",
+          "tags": [
+            {"tag_id": 1, "name": "부산"},
+            {"tag_id": 2, "name": "해운"},
+            {"tag_id": 3, "name": "광안"},
+            {"tag_id": 4, "name": "감천"},
+            {"tag_id": 5, "name": "바다"}
+        ]
         }
       ]
     },
     {
       "locations": {
-        "location_id": 3,
+        "location_id": 17,
         "city": "제주특별자치도 제주시",
         "distric": "서귀포시",
         "symbol": "한라산",
@@ -241,7 +352,14 @@
           "view_count": 345,
           "representative_image_id": "https://via.placeholder.com/200x200",
           "travel_start_date": "2024-06-01",
-          "travel_end_date": "2024-06-30"
+          "travel_end_date": "2024-06-30",
+          "tags": [
+            {"tag_id": 1, "name": "제주도"},
+            {"tag_id": 2, "name": "한라산"},
+            {"tag_id": 3, "name": "서귀포"},
+            {"tag_id": 4, "name": "한라봉"},
+            {"tag_id": 5, "name": "바다"}
+        ]
         },
         {
           "post_id": 2,
@@ -253,7 +371,14 @@
           "view_count": 250,
           "representative_image_id": "https://via.placeholder.com/200x200",
           "travel_start_date": "2024-07-05",
-          "travel_end_date": "2024-07-10"
+          "travel_end_date": "2024-07-10",
+          "tags": [
+            {"tag_id": 1, "name": "제주도"},
+            {"tag_id": 2, "name": "한라산"},
+            {"tag_id": 3, "name": "서귀포"},
+            {"tag_id": 4, "name": "한라봉"},
+            {"tag_id": 5, "name": "바다"}
+        ]
         },
         {
           "post_id": 3,
@@ -265,7 +390,14 @@
           "view_count": 270,
           "representative_image_id": "https://via.placeholder.com/200x200",
           "travel_start_date": "2024-07-15",
-          "travel_end_date": "2024-07-20"
+          "travel_end_date": "2024-07-20",
+          "tags": [
+            {"tag_id": 1, "name": "제주도"},
+            {"tag_id": 2, "name": "한라산"},
+            {"tag_id": 3, "name": "서귀포"},
+            {"tag_id": 4, "name": "한라봉"},
+            {"tag_id": 5, "name": "바다"}
+        ]
         },
         {
           "post_id": 4,
@@ -277,7 +409,14 @@
           "view_count": 320,
           "representative_image_id": "https://via.placeholder.com/200x200",
           "travel_start_date": "2024-07-25",
-          "travel_end_date": "2024-07-30"
+          "travel_end_date": "2024-07-30",
+          "tags": [
+            {"tag_id": 1, "name": "제주도"},
+            {"tag_id": 2, "name": "한라산"},
+            {"tag_id": 3, "name": "서귀포"},
+            {"tag_id": 4, "name": "한라봉"},
+            {"tag_id": 5, "name": "바다"}
+        ]
         },
         {
           "post_id": 5,
@@ -289,7 +428,14 @@
           "view_count": 340,
           "representative_image_id": "https://via.placeholder.com/200x200",
           "travel_start_date": "2024-08-01",
-          "travel_end_date": "2024-08-05"
+          "travel_end_date": "2024-08-05",
+          "tags": [
+            {"tag_id": 1, "name": "제주도"},
+            {"tag_id": 2, "name": "한라산"},
+            {"tag_id": 3, "name": "서귀포"},
+            {"tag_id": 4, "name": "한라봉"},
+            {"tag_id": 5, "name": "바다"}
+        ]
         },
         {
           "post_id": 6,
@@ -301,7 +447,14 @@
           "view_count": 360,
           "representative_image_id": "https://via.placeholder.com/200x200",
           "travel_start_date": "2024-08-05",
-          "travel_end_date": "2024-08-10"
+          "travel_end_date": "2024-08-10",
+          "tags": [
+            {"tag_id": 1, "name": "제주도"},
+            {"tag_id": 2, "name": "한라산"},
+            {"tag_id": 3, "name": "서귀포"},
+            {"tag_id": 4, "name": "한라봉"},
+            {"tag_id": 5, "name": "바다"}
+        ]
         },
         {
           "post_id": 7,
@@ -313,7 +466,14 @@
           "view_count": 380,
           "representative_image_id": "https://via.placeholder.com/200x200",
           "travel_start_date": "2024-08-10",
-          "travel_end_date": "2024-08-15"
+          "travel_end_date": "2024-08-15",
+          "tags": [
+            {"tag_id": 1, "name": "제주도"},
+            {"tag_id": 2, "name": "한라산"},
+            {"tag_id": 3, "name": "서귀포"},
+            {"tag_id": 4, "name": "한라봉"},
+            {"tag_id": 5, "name": "바다"}
+        ]
         },
         {
           "post_id": 8,
@@ -325,7 +485,14 @@
           "view_count": 400,
           "representative_image_id": "https://via.placeholder.com/200x200",
           "travel_start_date": "2024-08-15",
-          "travel_end_date": "2024-08-20"
+          "travel_end_date": "2024-08-20",
+          "tags": [
+            {"tag_id": 1, "name": "제주도"},
+            {"tag_id": 2, "name": "한라산한라산한라산"},
+            {"tag_id": 3, "name": "서귀포"},
+            {"tag_id": 4, "name": "한라봉"},
+            {"tag_id": 5, "name": "바다바다바다바다바다바다바다바다"}
+        ]
         }
       ]
     }
