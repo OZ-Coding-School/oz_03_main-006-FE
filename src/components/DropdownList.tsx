@@ -3,7 +3,6 @@ import { useRef, useState } from 'react';
 import { locationList } from '../data/locationList';
 import { Link } from 'react-router-dom';
 import { FaArrowRight } from 'react-icons/fa';
-import styles from './DropdownList.module.css'; // Import as styles
 
 interface DropdownListProps {
   map: naver.maps.Map | null;
@@ -74,7 +73,7 @@ const DropdownList: React.FC<DropdownListProps> = ({ map, marker }) => {
         >
           {isFold ? '펼치기' : '접기'}
           <IoMdArrowDropdown
-            className={`transition-transform duration-300 ${isFold ? '' : 'rotate-180'}`}
+            className={`transition-transform duration-700 ${isFold ? '' : 'rotate-180'}`}
           />
         </li>
         <div className='my-2 h-[1px] w-full bg-[#575757] bg-opacity-10'></div>
@@ -98,32 +97,34 @@ const DropdownList: React.FC<DropdownListProps> = ({ map, marker }) => {
             </Link>
           );
         })}
-        <div className={`${isFold ? styles.slideDown : styles.slideUp}`}>
+        <div
+          className={`transition-[max-height] duration-1000 ease-linear ${
+            isFold ? 'max-h-0' : 'max-h-[100vh]'
+          }`}
+        >
           {/* 나머지는 fold가 아닐 때만 보여줘야 하는 리스트 */}
-          {isFold
-            ? null
-            : locationList.slice(4, 18).map((item) => {
-                return (
-                  <Link
-                    to={`/community/${item.location_id}`}
-                    key={item.location_id}
-                  >
-                    <li
-                      className='group mb-2 flex items-center pl-4 font-chosun hover:bg-[#575757] hover:bg-opacity-10'
-                      onMouseEnter={() => moveCenter(item.name)}
-                      onMouseLeave={clearMoveCenterTimeout}
-                    >
-                      <img
-                        className='mr-5 h-[21px] w-[21px]'
-                        src={item.src}
-                        alt={item.alt}
-                      />
-                      {item.name}
-                      <FaArrowRight className='ml-auto mr-3 hidden text-xs group-hover:inline' />
-                    </li>
-                  </Link>
-                );
-              })}
+          {locationList.slice(4, 18).map((item) => {
+            return (
+              <Link
+                to={`/community/${item.location_id}`}
+                key={item.location_id}
+              >
+                <li
+                  className='group mb-2 flex items-center pl-4 font-chosun hover:bg-[#575757] hover:bg-opacity-10'
+                  onMouseEnter={() => moveCenter(item.name)}
+                  onMouseLeave={clearMoveCenterTimeout}
+                >
+                  <img
+                    className='mr-5 h-[21px] w-[21px]'
+                    src={item.src}
+                    alt={item.alt}
+                  />
+                  {item.name}
+                  <FaArrowRight className='ml-auto mr-3 hidden text-xs group-hover:inline' />
+                </li>
+              </Link>
+            );
+          })}
         </div>
       </ul>
     </div>
