@@ -1,0 +1,14 @@
+.slick-slide img {
+    width: 500px;
+    height: 350px;
+    object-fit: cover;
+    max-width: 500px;
+    /* border-radius: 0.75rem; */
+  }
+
+ .carousel {
+    max-width: 500px;
+ }
+ .slick-list {
+   border-radius: 0.75rem;
+ }

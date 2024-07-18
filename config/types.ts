@@ -46,6 +46,13 @@ export interface LoginUser {
   password: string;
 }
 
+export interface AlertState {
+  showAlert: boolean;
+  alertMessage: string;
+  setAlert: (message: string) => void;
+  clearAlert: () => void;
+}
+
 export interface Tag {
   id: number;
   content: string;

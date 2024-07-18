@@ -4,6 +4,8 @@ import weatherData from '../data/weather.json'
 import { useEffect, useState } from 'react';
 import { Post, tag } from '../../config/types';
 import PostCard from './PostCard';
+import Carousel from './Carousel';
+import icons from '../data/icons.json'
 
 interface Locations {
   location_id: number;
@@ -37,13 +39,13 @@ const community : CommunityPost[] = communityData;
 
 
 
-const Community: React.FC = () => {
+const Community = () => {
   const { location_id } = useParams<{ location_id: string }>();
   const [sortedPosts, setSortedPosts] = useState<any[]>([])
   const [sortType, setSortType] = useState<string>("default")
   const [sortRegionType, setSortRegionType] = useState<string>("default")
 
-
+ 
   const navigate = useNavigate()
   
   // 날씨 정보 가져오기
@@ -102,11 +104,18 @@ const Community: React.FC = () => {
 
 
 
-
   return (
-    <div className='container max-w-[1200px] mx-auto px-10 py-8 '>
-      <h1 className='font-okgung text-5xl font-bold mb-4'>{regionData.locations.category}</h1>
-      <select onChange={handleRegion} className='mb-2 border-2' value={sortRegionType}>
+    // <div className='container max-w-[1200px] mx-auto px-10 py-8 overflow-y-scroll h-[100vh]'>
+      <div className='container max-w-[1200px] mx-auto px-10 py-8 overflow-y-scroll h-[100vh]'>
+        <div className='flex  '>
+          {
+            icons.map((icon) => (
+              icon.icon_id === regionData.locations.location_id ? <img  src={icon.file} alt={icon.name} className='w-12 h-12 mr-3'/> : <></>
+            ))
+          }
+        <h1 className='font-okgung text-5xl font-bold mb-4'>{regionData.locations.category}</h1>
+        </div>
+        <select onChange={handleRegion} className='mb-2 border-2' value={sortRegionType}>
         <option value="default" selected disabled>타 지역으로 이동</option>
         {
           community.map((region) => (
@@ -118,30 +127,34 @@ const Community: React.FC = () => {
 
       <hr className='mb-5 border-1.8'/>
 
-
-      <div className='mb-8 flex '>
-        <img src={regionData.locations.logation_img} alt={regionData.locations.city} className='rounded-xl w-[550px] h-[350px]'/>
-        <div className='px-4 py-12'>
-          <h2 className='text-4xl mx-auto mb-4'>{regionData.locations.city}</h2>
-          <p className='my-4'>
-            <span className='text-gray-600/50'>인기도시</span>
-            <span></span>
-          </p>
-          <p className='flex my-4  '>
-            <span className='mr-12 text-gray-600/50'>날씨</span>
-            <p className='flexjustify-between text-blue-700/60'>
-              <span className='mx-3'>{regionWeather?.description}</span>
-              <span>|</span>
-              <span className='mx-3'>온도 {regionWeather?.temperature}</span>
-              <span>|</span>
-              <span className='mx-3'>습도 {regionWeather?.humidity}</span>
-              <span>|</span>
-              <span className='mx-3'>풍속 {regionWeather?.wind_speed}</span>
-            </p>
-          </p>
-          <p className='mt-6 '>{regionData.locations.information}</p>
-        </div>
-      </div>
+        <div className=' overflow-y-scroll max-h-[calc(100vh-160px)] '>
+        {/* <div className='  '> */}
+          <div className='mb-8 flex'>
+            {/* <img src={regionData.locations.logation_img} alt={regionData.locations.city} className='rounded-xl w-[550px] h-[350px]'/> */}
+            <div className='rounded-xl w-[500px] '>
+              <Carousel  />
+            </div>
+            <div className='px-8 py-12'>
+              <h2 className='text-4xl mx-auto mb-4'>{regionData.locations.city}</h2>
+              <p className='my-4'>
+                <span className='text-gray-600/50'>인기도시</span>
+                <span></span>
+              </p>
+              <p className='flex my-4  '>
+                <span className='mr-12 text-gray-600/50'>날씨</span>
+                <p className='flexjustify-between text-blue-700/60'>
+                  <span className='mx-3'>{regionWeather?.description}</span>
+                  <span>|</span>
+                  <span className='mx-3'>온도 {regionWeather?.temperature}</span>
+                  <span>|</span>
+                  <span className='mx-3'>습도 {regionWeather?.humidity}</span>
+                  <span>|</span>
+                  <span className='mx-3'>풍속 {regionWeather?.wind_speed}</span>
+                </p>
+              </p>
+              <p className='mt-6 '>{regionData.locations.information}</p>
+            </div>
+          </div>
 
       <select onChange={handleArray} className='mb-3 border-2' value={sortType}>
         <option value="default" selected disabled>날짜순, 조회순 정렬</option>
@@ -156,6 +169,7 @@ const Community: React.FC = () => {
           ))
         }
       </div>
+    </div>
     </div>
   );
 };

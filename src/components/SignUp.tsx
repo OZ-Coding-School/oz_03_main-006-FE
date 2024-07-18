@@ -1,9 +1,12 @@
 import { Link } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { SignUpUser } from '../../config/types';
+import { useAlertStore } from '../../config/store';
+import Alert from './common/Alert';
 //import axios, { AxiosError } from 'axios';
 
 const SignUp = () => {
+  const setAlert = useAlertStore((state) => state.setAlert);
   const {
     register,
     handleSubmit,
@@ -21,6 +24,7 @@ const SignUp = () => {
   const onSubmit: SubmitHandler<SignUpUser> = async (data) => {
     console.log(data);
     clearValue();
+    setAlert('테스트');
     // try {
     //     const { username, email, password } = data;
     //     await axios.post('/register',{
@@ -31,18 +35,18 @@ const SignUp = () => {
     //       withCredentials: true
     //     })
     //     console.log('회원가입 성공');
-    //     alert("회원가입이 완료되었습니다.");
+    //     setAlert("회원가입이 완료되었습니다. 로그인 후 이용해 주세요.");
     // } catch (error) {
     //   if (error instanceof AxiosError && error.response) {
     //     console.error('회원가입 실패: ', error);
     //     if (error.response.status === 400) {
-    //         alert("이미 사용중인 메일입니다.")
+    //       setAlert("이미 사용중인 메일입니다.")
     //     } else {
-    //         alert("회원가입에 실패하였습니다.")
+    //       setAlert("회원가입에 실패했습니다. 다시 시도해 주세요.")
     //     }
     //   } else {
     //     console.error('회원가입 실패: ', error);
-    //     alert("회원가입 중 문제가 발생했습니다.");
+    //     setAlert("회원가입 중 문제가 발생했습니다. 다시 시도해 주세요.");
     //   }
     // }
   };
@@ -172,6 +176,7 @@ const SignUp = () => {
           </div>
         </div>
       </div>
+      {<Alert />}
     </div>
   );
 };
