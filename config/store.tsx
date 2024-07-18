@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { NavToggleState, User, UserState } from './types';
+import { AlertState, NavToggleState, User, UserState } from './types';
 
 export const useNavToggleStore = create<NavToggleState>((set) => ({
   isOpen: false,
@@ -12,3 +12,17 @@ export const useUserStore = create<UserState>((set) => ({
   clearUser: () => set({ user: null }),
 }));
 
+export const useAlertStore = create<AlertState>((set) => ({
+  showAlert: false,
+  alertMessage: '',
+  setAlert: (message) =>
+    set(() => ({
+      showAlert: true,
+      alertMessage: message,
+    })),
+  clearAlert: () =>
+    set(() => ({
+      showAlert: false,
+      alertMessage: '',
+    })),
+}));
