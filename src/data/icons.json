@@ -1,0 +1,87 @@
+[
+    {
+      "name": "seoul",
+      "file": "/icon/seoul.svg",
+      "icon_id": 1
+    },
+    {
+      "name": "gyeonggi",
+      "file": "/icon/gyeonggi.svg",
+      "icon_id": 2
+    },
+    {
+      "name": "incheon",
+      "file": "/icon/incheon.svg",
+      "icon_id": 3
+    },
+    {
+      "name": "gangwon",
+      "file": "/icon/gangwon.svg",
+      "icon_id": 4
+    },
+    {
+      "name": "gyeongbuk",
+      "file": "/icon/gyeongbuk.svg",
+      "icon_id": 5
+    },
+    {
+      "name": "gyeongnam",
+      "file": "/icon/gyeongnam.svg",
+      "icon_id": 6
+    },
+    {
+      "name": "daegu",
+      "file": "/icon/daegu.svg",
+      "icon_id": 7
+    },
+    {
+      "name": "ulsan",
+      "file": "/icon/ulsan.svg",
+      "icon_id": 8
+    },
+    {
+      "name": "busan",
+      "file": "/icon/busan.svg",
+      "icon_id": 9
+    },
+    {
+      "name": "chungbuk",
+      "file": "/icon/chungbuk.svg",
+      "icon_id": 10
+    },
+    {
+      "name": "chungnam",
+      "file": "/icon/chungnam.svg",
+      "icon_id": 11
+    },
+    {
+      "name": "sejong",
+      "file": "/icon/sejong.svg",
+      "icon_id": 12
+    },
+    {
+      "name": "daejeon",
+      "file": "/icon/daejeon.svg",
+      "icon_id": 13
+    },
+    {
+      "name": "jeonbuk",
+      "file": "/icon/jeonbuk.svg",
+      "icon_id": 14
+    },
+    {
+      "name": "jeonnam",
+      "file": "/icon/jeonnam.svg",
+      "icon_id": 15
+    },
+    {
+      "name": "gwangju",
+      "file": "/icon/gwangju.svg",
+      "icon_id": 16
+    },
+    {
+      "name": "jeju",
+      "file": "/icon/jeju.svg",
+      "icon_id": 17
+    }
+  ]
