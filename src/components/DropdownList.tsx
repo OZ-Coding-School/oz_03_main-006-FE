@@ -68,7 +68,7 @@ const DropdownList: React.FC<DropdownListProps> = ({ map, marker }) => {
     <div className='absolute right-[3%] top-[3%]'>
       <ul className='flex w-[201px] flex-col overflow-hidden rounded-b-lg rounded-t-lg bg-[#F5F5F5] bg-opacity-60'>
         <li
-          className='mb-1 flex items-center justify-between p-4 pb-0'
+          className='mb-1 flex cursor-pointer items-center justify-between p-4 pb-0'
           onClick={toggleFold}
         >
           {isFold ? '펼치기' : '접기'}
@@ -98,7 +98,7 @@ const DropdownList: React.FC<DropdownListProps> = ({ map, marker }) => {
           );
         })}
         <div
-          className={`transition-[max-height] duration-1000 ease-linear ${
+          className={`linear transition-[max-height] duration-700 ${
             isFold ? 'max-h-0' : 'max-h-[100vh]'
           }`}
         >
