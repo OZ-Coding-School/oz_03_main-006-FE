@@ -45,3 +45,14 @@ export interface LoginUser {
   username: string;
   password: string;
 }
+
+export interface Tag {
+  id: number;
+  content: string;
+}
+
+export interface TagState {
+  tags: Tag[];
+  addTag: (content: string) => void;
+  removeTag: (id: number) => void;
+}

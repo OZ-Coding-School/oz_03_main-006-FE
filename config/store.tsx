@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { NavToggleState, User, UserState } from './types';
+import { NavToggleState, User, UserState, TagState } from './types';
 
 export const useNavToggleStore = create<NavToggleState>((set) => ({
   isOpen: false,
@@ -12,3 +12,14 @@ export const useUserStore = create<UserState>((set) => ({
   clearUser: () => set({ user: null }),
 }));
 
+export const useTagStore = create<TagState>((set) => ({
+  tags: [],
+  addTag: (content: string) =>
+    set((state) => ({
+      tags: [...state.tags, { id: Date.now(), content }],
+    })),
+  removeTag: (id: number) =>
+    set((state) => ({
+      tags: state.tags.filter((tag) => tag.id !== id),
+    })),
+}));
