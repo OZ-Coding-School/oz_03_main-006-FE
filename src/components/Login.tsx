@@ -1,12 +1,15 @@
 import { Link } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { LoginUser } from '../../config/types';
+import { useAlertStore } from '../../config/store';
+import Alert from './common/Alert';
 //import axios, { AxiosError } from 'axios';
 //import { useUserStore } from '../../config/store';
 
 const Login = () => {
   //const navigate = useNavigate();
   //const setUser = useUserStore((state)=>state.setUser);
+  const setAlert = useAlertStore((state) => state.setAlert);
   const {
     register,
     handleSubmit,
@@ -22,6 +25,7 @@ const Login = () => {
   const onSubmit: SubmitHandler<LoginUser> = async (data) => {
     console.log(data);
     clearValue();
+    setAlert('테스트');
     // try {
     //   const { username, password } = data;
     //   const response = await axios.post('/login', {
@@ -33,18 +37,18 @@ const Login = () => {
     //   console.log("response: ", response)
     //   const { nickname, email, profile_image } = response.data
     //   setUser({ username, nickname, email, profile_image})
-    //   alert("로그인 되었습니다.")
+    //   setAlert("로그인 되었습니다. 홈페이지로 이동합니다.")
     // } catch (error) {
     //   if (error instanceof AxiosError && error.response) {
     //     console.error('로그인 실패: ', error)
     //     if (error.response.status === 403) {
-    //       alert("가입되지 않은 사용자입니다.")
+    //       setAlert("가입되지 않은 사용자입니다. 다시 시도해 주세요.")
     //     } else {
-    //       alert("로그인에 실패하였습니다.")
+    //       setAlert("로그인에 실패했습니다. 다시 시도해 주세요.")
     //     }
     //   } else {
     //     console.error('로그인 실패: ', error);
-    //     alert("로그인 중 문제가 발생했습니다.");
+    //     setAlert("로그인 중 문제가 발생했습니다. 다시 시도해 주세요.");
     //   }
     // }
   };
@@ -132,6 +136,7 @@ const Login = () => {
           </div>
         </div>
       </div>
+      {<Alert />}
     </div>
   );
 };
