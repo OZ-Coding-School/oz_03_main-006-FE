@@ -1,8 +1,8 @@
+import React, { useRef, useState } from 'react';
 import { IoMdArrowDropdown } from 'react-icons/io';
-import { useRef, useState } from 'react';
+import { FaArrowRight } from 'react-icons/fa';
 import { locationList } from '../data/locationList';
 import { Link } from 'react-router-dom';
-import { FaArrowRight } from 'react-icons/fa';
 
 interface DropdownListProps {
   map: naver.maps.Map | null;
@@ -15,30 +15,47 @@ const DropdownList: React.FC<DropdownListProps> = ({ map, marker }) => {
     null
   );
   const [isFold, setIsFold] = useState<boolean>(true);
+  const [infoWindow, setInfoWindow] = useState<naver.maps.InfoWindow | null>(
+    null
+  );
 
   const toggleFold = () => {
     setIsFold(!isFold);
   };
 
+  // 선택된 지역으로 지도가 움직이는 함수
   const moveCenter = (location: string): void => {
     const selectedLocation = locationList.find(
       (item) => item.name === location
     );
     if (selectedLocation && map) {
+      // 지도가 움직이기 전에 다른 지역이 선택되면, setTimeout 취소
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
+
+      const morphMap = (): Promise<void> => {
+        return new Promise((resolve) => {
+          const boundsLocation = new naver.maps.LatLng(
+            selectedLocation.latitude,
+            selectedLocation.longitude
+          );
+          map.morph(boundsLocation, 10);
+          // map.morph에 대한 지연 시간을 직접 추가
+          setTimeout(() => resolve(), 300); // 지연 시간을 적절하게 설정
+        });
+      };
+
       timeoutRef.current = window.setTimeout(() => {
-        const boundsLocation = new naver.maps.LatLng(
-          selectedLocation.latitude,
-          selectedLocation.longitude
-        );
-        map.morph(boundsLocation, 10);
-        updateMarkerAnimation(location);
+        morphMap().then(() => {
+          updateMarkerAnimation(location);
+          showInfoWindow(location);
+        });
       }, 300);
     }
   };
 
+  // 지도가 움직이기 전에 다른 지역이 선택되는게 아니라, 아예 리스트를 벗어났을 경우 이벤트 삭제
   const clearMoveCenterTimeout = (): void => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
@@ -47,10 +64,15 @@ const DropdownList: React.FC<DropdownListProps> = ({ map, marker }) => {
     if (choosedMarker) {
       choosedMarker.setAnimation(null);
     }
+    if (infoWindow) {
+      infoWindow.close();
+    }
   };
 
+  // 선택된 마커에 bounce 애니메이션 추가
   const updateMarkerAnimation = (location: string): void => {
     if (marker) {
+      // 이전의 선택된 마커가 있으면 이벤트 삭제
       if (choosedMarker) {
         choosedMarker.setAnimation(null);
       }
@@ -64,11 +86,45 @@ const DropdownList: React.FC<DropdownListProps> = ({ map, marker }) => {
     }
   };
 
+  // infowindow 생성
+  const showInfoWindow = (location: string): void => {
+    const selectedLocation = locationList.find(
+      (item) => item.name === location
+    );
+    if (selectedLocation && map !== null) {
+      const colors = ['#42c2f4', '#E894C1', '#f47575', '#44d0b0', '#8d7cf6'];
+      const newInfoWindow = new naver.maps.InfoWindow({
+        content: `
+        <div class='info-window_container'>
+          <div class='info-tail'></div>
+            <h3 class='info-window_title'><img class="info-title_img" src="${selectedLocation.src}"></img>${selectedLocation.name}</h3>
+          <p class='info-window_activity'>${selectedLocation.highlights.메세지.활동.join(', ')}</p>
+          ${selectedLocation.highlights.메세지.명소
+            .map((item, index) => {
+              return `<div class='info-window_sights' style="background-color: ${colors[index % colors.length]}"><img class='info-img' src='marker.svg'></img>${item}</div>`;
+            })
+            .join('')}
+        </div>
+      `,
+        borderWidth: 0,
+        disableAnchor: true,
+        backgroundColor: 'transparent',
+        disableAutoPan: false,
+      });
+      const position = new naver.maps.LatLng(
+        selectedLocation.latitude,
+        selectedLocation.longitude
+      );
+      setInfoWindow(newInfoWindow);
+      newInfoWindow.open(map, position);
+    }
+  };
+
   return (
     <div className='absolute right-[3%] top-[3%]'>
       <ul className='flex w-[201px] flex-col overflow-hidden rounded-b-lg rounded-t-lg bg-[#F5F5F5] bg-opacity-60'>
         <li
-          className='mb-1 flex items-center justify-between p-4 pb-0'
+          className='mb-1 flex cursor-pointer items-center justify-between p-4 pb-0'
           onClick={toggleFold}
         >
           {isFold ? '펼치기' : '접기'}
@@ -77,7 +133,6 @@ const DropdownList: React.FC<DropdownListProps> = ({ map, marker }) => {
           />
         </li>
         <div className='my-2 h-[1px] w-full bg-[#575757] bg-opacity-10'></div>
-        {/* 0~4는 무조건 보여줘야 하는 리스트 */}
         {locationList.slice(0, 4).map((item) => {
           return (
             <Link to={`/community/${item.location_id}`} key={item.location_id}>
@@ -98,11 +153,8 @@ const DropdownList: React.FC<DropdownListProps> = ({ map, marker }) => {
           );
         })}
         <div
-          className={`transition-[max-height] duration-1000 ease-linear ${
-            isFold ? 'max-h-0' : 'max-h-[100vh]'
-          }`}
+          className={`linear transition-[max-height] duration-700 ${isFold ? 'max-h-0' : 'max-h-[100vh]'}`}
         >
-          {/* 나머지는 fold가 아닐 때만 보여줘야 하는 리스트 */}
           {locationList.slice(4, 18).map((item) => {
             return (
               <Link

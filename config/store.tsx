@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { AlertState, NavToggleState, User, UserState } from './types';
 
 export const useNavToggleStore = create<NavToggleState>((set) => ({
-  isOpen: false,
+  isOpen: true,
   toggleOpen: () => set((state) => ({ isOpen: !state.isOpen })),
 }));
 
@@ -26,3 +26,4 @@ export const useAlertStore = create<AlertState>((set) => ({
       alertMessage: '',
     })),
 }));
+

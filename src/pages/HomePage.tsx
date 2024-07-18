@@ -17,6 +17,7 @@ const HomePage = () => {
       disableDoubleTapZoom: true,
       maxZoom: 12,
       minZoom: 7,
+      tileSpare: 2,
     };
     const mapInstance = new naver.maps.Map('map', mapOptions);
     setMap(mapInstance);
