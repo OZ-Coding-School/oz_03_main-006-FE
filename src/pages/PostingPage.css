@@ -1,4 +1,16 @@
 .quill-toolbar .ql-container {
-  min-height: 50vh;
+  min-height: 80vh;
   height: auto;
+  padding: 10px 0;
+  border: none;
+}
+
+.quill-toolbar .ql-toolbar {
+  position: sticky;
+  top: 76px;
+  z-index: 1;
+  background-color: white;
+  border: none;
+  border-bottom: 1px solid #cdcdcd;
+  border-top: 1px solid #cdcdcd;
 }

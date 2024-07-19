@@ -52,3 +52,14 @@ export interface AlertState {
   setAlert: (message: string) => void;
   clearAlert: () => void;
 }
+
+export interface Tag {
+  id: number;
+  content: string;
+}
+
+export interface TagState {
+  tags: Tag[];
+  addTag: (content: string) => void;
+  removeTag: (id: number) => void;
+}
