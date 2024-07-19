@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import communityData from '../data/community.json'
 import weatherData from '../data/weather.json'
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Post, tag } from '../../config/types';
 import PostCard from './PostCard';
 import Carousel from './Carousel';
@@ -103,20 +103,23 @@ const Community = () => {
   }
 
 
-
   return (
-    // <div className='container max-w-[1200px] mx-auto px-10 py-8 overflow-y-scroll h-[100vh]'>
-      <div className='container max-w-[1200px] mx-auto px-10 py-8 overflow-y-scroll h-[100vh]'>
-        <div className='flex  '>
+    <>
+    {/* <div className='container max-w-[1200px] mx-auto px-10 py-8 overflow-hidden h-[100vh]'> */}
+    {/* 기본적으로 숨겼다가(hidden) 사이즈가 lg(1024px)가 되면 block */}
+    <div className='block 2xl:px-[100px]'>
+      {/* min-w-[1200px]로 1200px보다 작아지면 가로 스크롤이 생김 -> 1200px 화면 유지 */}
+      <div className= {`container min-w-[1200px] mx-auto px-10 py-8 overflow-hidden h-[100vh] `}>
+        <div className='flex'>
           {
             icons.map((icon) => (
-              icon.icon_id === regionData.locations.location_id ? <img  src={icon.file} alt={icon.name} className='w-12 h-12 mr-3'/> : <></>
+              icon.icon_id === regionData.locations.location_id ? <img key={icon.icon_id} src={icon.file} alt={icon.name} className='w-12 h-12 mr-3'/> : <React.Fragment key={icon.icon_id}></React.Fragment>
             ))
           }
         <h1 className='font-okgung text-5xl font-bold mb-4'>{regionData.locations.category}</h1>
         </div>
-        <select onChange={handleRegion} className='mb-2 border-2' value={sortRegionType}>
-        <option value="default" selected disabled>타 지역으로 이동</option>
+        <select onChange={handleRegion} className='mb-2 border-2' defaultValue={sortRegionType}>
+        <option value="default" disabled>타 지역으로 이동</option>
         {
           community.map((region) => (
             <option key={region.locations.location_id} value={region.locations.location_id}>{region.locations.category}</option>
@@ -140,9 +143,9 @@ const Community = () => {
                 <span className='text-gray-600/50'>인기도시</span>
                 <span></span>
               </p>
-              <p className='flex my-4  '>
+              <div className='flex my-4'>
                 <span className='mr-12 text-gray-600/50'>날씨</span>
-                <p className='flexjustify-between text-blue-700/60'>
+                <div className='flex justify-between text-blue-700/60'>
                   <span className='mx-3'>{regionWeather?.description}</span>
                   <span>|</span>
                   <span className='mx-3'>온도 {regionWeather?.temperature}</span>
@@ -150,27 +153,36 @@ const Community = () => {
                   <span className='mx-3'>습도 {regionWeather?.humidity}</span>
                   <span>|</span>
                   <span className='mx-3'>풍속 {regionWeather?.wind_speed}</span>
-                </p>
-              </p>
+                  <span>|</span>
+                  <span className='mx-3'>예보 {regionWeather?.wind_speed}</span>
+                </div>
+              </div>
               <p className='mt-6 '>{regionData.locations.information}</p>
             </div>
           </div>
 
-      <select onChange={handleArray} className='mb-3 border-2' value={sortType}>
-        <option value="default" selected disabled>날짜순, 조회순 정렬</option>
+      <select onChange={handleArray} className='mb-3 border-2' defaultValue={sortType}>
+        <option value="default"  disabled>날짜순, 조회순 정렬</option>
         <option value="date">날짜순</option>
         <option value="search">조회순</option>
       </select>
       {/* grid-cols-1 : 기본적으로 (모바일 화면 등 작은 화면에서 한 열로 배치) / md:grid-cols-2 중간 크기(768px) 이상의 화면에서 두열로 배치 */}
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+      <div className='grid grid-cols-2 gap-6 '>
         {
           sortedPosts.map((post) => (
-            <PostCard post={post}/>
+            <PostCard key={post.post_id} post={post}/>
           ))
         }
       </div>
     </div>
     </div>
+    </div>
+
+        {/* 사이즈가 lg이면 hidden (미만이면) */}
+    {/* <div className='lg:hidden'>
+      <p className='text-center py-10'>화면 크기가 너무 작습니다. 더 큰 화면에서 확인해주세요.</p>
+    </div> */}
+  </>
   );
 };
 

@@ -1,26 +1,21 @@
 import React, { useRef, useState } from 'react';
 import { IoMdArrowDropdown } from 'react-icons/io';
-import { FaArrowRight } from 'react-icons/fa';
 import { locationList } from '../data/locationList';
-import { Link } from 'react-router-dom';
+import DropdownListContents from './DropdownListContents';
 
 interface DropdownListProps {
-  map: naver.maps.Map | null;
+  map: naver.maps.Map | undefined;
   marker: naver.maps.Marker[] | null;
 }
 
 const DropdownList: React.FC<DropdownListProps> = ({ map, marker }) => {
   const timeoutRef = useRef<number | null>(null);
-  const [choosedMarker, setChoosedMarker] = useState<naver.maps.Marker | null>(
-    null
-  );
+  const choosedMarkerRef = useRef<naver.maps.Marker | null>(null);
+  const infoWindowRef = useRef<naver.maps.InfoWindow | null>(null);
   const [isFold, setIsFold] = useState<boolean>(true);
-  const [infoWindow, setInfoWindow] = useState<naver.maps.InfoWindow | null>(
-    null
-  );
 
   const toggleFold = () => {
-    setIsFold(!isFold);
+    setIsFold((prev) => !prev);
   };
 
   // 선택된 지역으로 지도가 움직이는 함수
@@ -40,7 +35,7 @@ const DropdownList: React.FC<DropdownListProps> = ({ map, marker }) => {
             selectedLocation.latitude,
             selectedLocation.longitude
           );
-          map.morph(boundsLocation, 10);
+          map.morph(boundsLocation, 9);
           // map.morph에 대한 지연 시간을 직접 추가
           setTimeout(() => resolve(), 300); // 지연 시간을 적절하게 설정
         });
@@ -61,11 +56,11 @@ const DropdownList: React.FC<DropdownListProps> = ({ map, marker }) => {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
     }
-    if (choosedMarker) {
-      choosedMarker.setAnimation(null);
+    if (choosedMarkerRef.current) {
+      choosedMarkerRef.current.setAnimation(null);
     }
-    if (infoWindow) {
-      infoWindow.close();
+    if (infoWindowRef.current) {
+      infoWindowRef.current.close();
     }
   };
 
@@ -73,15 +68,15 @@ const DropdownList: React.FC<DropdownListProps> = ({ map, marker }) => {
   const updateMarkerAnimation = (location: string): void => {
     if (marker) {
       // 이전의 선택된 마커가 있으면 이벤트 삭제
-      if (choosedMarker) {
-        choosedMarker.setAnimation(null);
+      if (choosedMarkerRef.current) {
+        choosedMarkerRef.current.setAnimation(null);
       }
       const selectedMarker = marker.find(
         (item) => item.getTitle() === location
       );
       if (selectedMarker) {
         selectedMarker.setAnimation(naver.maps.Animation.BOUNCE);
-        setChoosedMarker(selectedMarker);
+        choosedMarkerRef.current = selectedMarker;
       }
     }
   };
@@ -115,8 +110,10 @@ const DropdownList: React.FC<DropdownListProps> = ({ map, marker }) => {
         selectedLocation.latitude,
         selectedLocation.longitude
       );
-      setInfoWindow(newInfoWindow);
-      newInfoWindow.open(map, position);
+      infoWindowRef.current = newInfoWindow;
+      if (map) {
+        newInfoWindow.open(map, position);
+      }
     }
   };
 
@@ -133,50 +130,21 @@ const DropdownList: React.FC<DropdownListProps> = ({ map, marker }) => {
           />
         </li>
         <div className='my-2 h-[1px] w-full bg-[#575757] bg-opacity-10'></div>
-        {locationList.slice(0, 4).map((item) => {
-          return (
-            <Link to={`/community/${item.location_id}`} key={item.location_id}>
-              <li
-                className='group mb-2 flex items-center pl-4 font-chosun hover:bg-[#575757] hover:bg-opacity-10'
-                onMouseEnter={() => moveCenter(item.name)}
-                onMouseLeave={clearMoveCenterTimeout}
-              >
-                <img
-                  className='mr-5 h-[21px] w-[21px]'
-                  src={item.src}
-                  alt={item.alt}
-                />
-                {item.name}
-                <FaArrowRight className='ml-auto mr-3 hidden text-xs group-hover:inline' />
-              </li>
-            </Link>
-          );
-        })}
+        <DropdownListContents
+          startIndex={0}
+          lastIndex={4}
+          moveCenter={moveCenter}
+          clearMoveCenterTimeout={clearMoveCenterTimeout}
+        />
         <div
           className={`linear transition-[max-height] duration-700 ${isFold ? 'max-h-0' : 'max-h-[100vh]'}`}
         >
-          {locationList.slice(4, 18).map((item) => {
-            return (
-              <Link
-                to={`/community/${item.location_id}`}
-                key={item.location_id}
-              >
-                <li
-                  className='group mb-2 flex items-center pl-4 font-chosun hover:bg-[#575757] hover:bg-opacity-10'
-                  onMouseEnter={() => moveCenter(item.name)}
-                  onMouseLeave={clearMoveCenterTimeout}
-                >
-                  <img
-                    className='mr-5 h-[21px] w-[21px]'
-                    src={item.src}
-                    alt={item.alt}
-                  />
-                  {item.name}
-                  <FaArrowRight className='ml-auto mr-3 hidden text-xs group-hover:inline' />
-                </li>
-              </Link>
-            );
-          })}
+          <DropdownListContents
+            startIndex={4}
+            lastIndex={18}
+            moveCenter={moveCenter}
+            clearMoveCenterTimeout={clearMoveCenterTimeout}
+          />
         </div>
       </ul>
     </div>

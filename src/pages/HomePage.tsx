@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import DropdownList from '../components/DropdownList';
 import { locationList } from '../data/locationList';
 
 const HomePage = () => {
-  const [map, setMap] = useState<naver.maps.Map | null>(null);
+  const mapRef = useRef<naver.maps.Map | undefined>(undefined); // 초기 값을 undefined로 설정
   const centerX = 36.0595704;
   const centerY = 127.805399;
   const [marker, setMarker] = useState<naver.maps.Marker[] | null>(null);
@@ -15,33 +15,40 @@ const HomePage = () => {
       zoom: 8,
       disableDoubleClickZoom: true,
       disableDoubleTapZoom: true,
-      maxZoom: 12,
-      minZoom: 7,
+      maxZoom: 9,
+      minZoom: 8,
       tileSpare: 2,
     };
     const mapInstance = new naver.maps.Map('map', mapOptions);
-    setMap(mapInstance);
-  }, []);
+    mapRef.current = mapInstance;
 
-  // 마커생성하고 마커를 담은 배열을 state로 관리 -> dropdownlist로 넘겨서 list 특정지역 호버시 해당 지역의 마커 bound animation 줄 예정
-  useEffect(() => {
-    if (map) {
-      const MarkerArr = locationList.map((item) => {
-        return new naver.maps.Marker({
-          position: new naver.maps.LatLng(item.latitude, item.longitude),
-          map: map,
-          animation: naver.maps.Animation.DROP,
-          title: item.name,
-        });
+    // 마커 생성
+    const MarkerArr = locationList.map((item) => {
+      return new naver.maps.Marker({
+        position: new naver.maps.LatLng(item.latitude, item.longitude),
+        map: mapRef.current,
+        animation: naver.maps.Animation.DROP,
+        title: item.name,
       });
-      setMarker(MarkerArr);
-    }
-  }, [map]);
+    });
+    setMarker(MarkerArr);
+
+    // zoom 1씩 증가하고 감소하도록 지정
+    naver.maps.Event.addListener(mapRef.current, 'zoom_changed', () => {
+      if (mapRef.current) {
+        const newZoom = mapRef.current.getZoom();
+        mapRef.current.setOptions({
+          maxZoom: newZoom + 1,
+          minZoom: newZoom - 1,
+        });
+      }
+    });
+  }, []);
 
   return (
     <>
       <div id='map' className='relative h-full w-full'></div>
-      <DropdownList map={map} marker={marker}></DropdownList>
+      <DropdownList map={mapRef.current} marker={marker}></DropdownList>
     </>
   );
 };

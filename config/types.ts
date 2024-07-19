@@ -24,9 +24,12 @@ export interface Post {
 export interface User {
   user_id?: number;
   email: string;
-  nickname?: string | null;
+  nickname?: string;
   username: string;
   profile_image?: string | null;
+  provider?: string | null;
+  password: string;
+  created_at: string;
 }
 
 export interface UserState {
@@ -51,4 +54,15 @@ export interface AlertState {
   alertMessage: string;
   setAlert: (message: string) => void;
   clearAlert: () => void;
+}
+
+export interface Tag {
+  id: number;
+  content: string;
+}
+
+export interface TagState {
+  tags: Tag[];
+  addTag: (content: string) => void;
+  removeTag: (id: number) => void;
 }
