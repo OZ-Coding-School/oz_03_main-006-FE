@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import ReactQuill, { Quill } from 'react-quill';
 import { useForm } from 'react-hook-form';
 import 'react-quill/dist/quill.snow.css';
@@ -22,6 +23,7 @@ const PostingPage = () => {
     tags: state.tags,
     addTag: state.addTag,
   }));
+  const [travelPeriodError, setTravelPeriodError] = useState('');
 
   // 에디터 모듈 설정
   const modules = {
@@ -66,28 +68,36 @@ const PostingPage = () => {
       const end = new Date(endDate);
       const dayDiff = (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24); // 일수로 변환
 
-      clearErrors('startDate');
-      clearErrors('endDate');
-
-      if (start > end) {
-        // setError('startDate', {
+      // clearErrors('endDate');
+      // setTravelPeriodError('');
+      if (startDate && endDate) {
+        if (start > end) {
+          setTravelPeriodError('*종료일은 시작일보다 이후이어야 합니다*');
+          if (endDate !== null) {
+            setValue('endDate', null);
+          }
+          // setError('endDate', {
+          //   type: 'manual',
+          //   message: '*종료일은 시작일보다 이후이어야 합니다*',
+          // });
+          return;
+        }
+        if (dayDiff < 5) {
+          setTravelPeriodError('*여행 기간은 5일 이상이어야 합니다*');
+          if (endDate !== null) {
+            setValue('endDate', null);
+          }
+          return;
+        }
+        // setError('endDate', {
         //   type: 'manual',
-        //   message: '출발일은 종료일보다 이전이어야 합니다.',
+        //   message: '*여행 기간은 5일 이상이어야 합니다*',
         // });
-        setError('endDate', {
-          type: 'manual',
-          message: '*종료일은 시작일보다 이후이어야 합니다*',
-        });
-        // setValue('endDate', '');
-      } else if (dayDiff < 5) {
-        setError('endDate', {
-          type: 'manual',
-          message: '*여행 기간은 5일 이상이어야 합니다*',
-        });
+        setTravelPeriodError(''); // 유효성 검사 통과 시 오류 메시지 초기화
       }
     };
     checkDateValidity();
-  }, [startDate, endDate, setError, clearErrors]);
+  }, [startDate, endDate]);
 
   //quill에디터로 작성한 내용
   const handleQuillChange = (content: string) => {
@@ -103,7 +113,7 @@ const PostingPage = () => {
       if (
         tagValue.trim() !== '' &&
         tags.length < 5 &&
-        event.nativeEvent.isComposing === false
+        event.nativeEvent.isComposing === false //마지막글자남지않도록
       ) {
         addTag(tagValue);
         setValue('tagValue', '');
@@ -117,101 +127,124 @@ const PostingPage = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div className='mx-auto my-20 w-screen max-w-[1200px] px-20'>
-        <div className='my-4'>
-          <select
-            className='cursor-pointer rounded-sm border px-2 py-1 text-sm text-[#7e7e7e] hover:bg-[#eeeeeec8] hover:text-[#5b5b5b] focus:outline-none'
-            id='location'
-            {...register('location', { required: true })}
-          >
-            <option value='default'>지역을 선택해주세요</option>
-            <option value='서울'>서울</option>
-            <option value='경기도'>경기도</option>
-            <option value='인천'>인천</option>
-            <option value='강원도'>강원도</option>
-            <option value='경상북도'>경상북도</option>
-            <option value='경상남도'>경상남도</option>
-            <option value='대구'>대구</option>
-            <option value='울산'>울산</option>
-            <option value='부산'>부산</option>
-            <option value='충청북도'>충청북도</option>
-            <option value='충청남도'>충청남도</option>
-            <option value='세종'>세종</option>
-            <option value='대전'>대전</option>
-            <option value='전라북도'>전라북도</option>
-            <option value='전라남도'>전라남도</option>
-            <option value='광주'>광주</option>
-            <option value='제주도'>제주도</option>
-          </select>
-        </div>
-        <div>
-          <textarea
-            className='my-3 h-auto w-full resize-none overflow-hidden text-3xl focus:outline-none'
-            placeholder='제목을 입력하세요'
-            rows={1}
-            id='title'
-            {...register('title', { required: true })}
-          ></textarea>
-        </div>
-        <div className='my-4 flex'>
-          {tags.map((tag, index) => (
-            <TagItem tagContent={tag} key={index} showDeleteButton={false} />
-          ))}
-          <input
-            className='focus:outline-none'
-            type='text'
-            id='tag'
-            placeholder='태그를 입력하세요'
-            onKeyDown={handleKeyDown}
-            {...register('tagValue')}
-          />
-        </div>
-        <div className='mb-1 mt-4 flex'>
-          <p className='mr-8 flex items-center justify-center text-[#000000]'>
-            여행 시작일
-          </p>
-          <input
-            className='cursor-pointer text-sm focus:outline-none'
-            type='date'
-            id='start-date'
-            {...register('startDate', { required: true })}
-          />
-          {errors.startDate && (
-            <p className='my-auto ml-5 text-xs text-[#f85c5c]'>
-              {errors.startDate.message}
+    <>
+      <div className='fixed left-0 top-0 z-10 w-screen bg-white'>
+        <Link to='/' className='flex items-center py-[20px] pl-[30px]'>
+          <img src='/logo.svg' alt='한바퀴 로고' className='w-9' />
+          <h1 className={'font-okgung text-2xl text-black'}>한바퀴</h1>
+        </Link>
+      </div>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className='relative mx-auto mt-24 w-full max-w-[1200px] px-4 sm:px-6 lg:px-8'>
+          <div className='mb-4'>
+            <select
+              className='cursor-pointer rounded-sm border px-2 py-1 text-sm text-[#7e7e7e] hover:bg-[#eeeeeec8] hover:text-[#5b5b5b] focus:outline-none'
+              id='location'
+              {...register('location', { required: true })}
+            >
+              <option value='default'>지역을 선택해주세요</option>
+              <option value='서울'>서울</option>
+              <option value='경기도'>경기도</option>
+              <option value='인천'>인천</option>
+              <option value='강원도'>강원도</option>
+              <option value='경상북도'>경상북도</option>
+              <option value='경상남도'>경상남도</option>
+              <option value='대구'>대구</option>
+              <option value='울산'>울산</option>
+              <option value='부산'>부산</option>
+              <option value='충청북도'>충청북도</option>
+              <option value='충청남도'>충청남도</option>
+              <option value='세종'>세종</option>
+              <option value='대전'>대전</option>
+              <option value='전라북도'>전라북도</option>
+              <option value='전라남도'>전라남도</option>
+              <option value='광주'>광주</option>
+              <option value='제주도'>제주도</option>
+            </select>
+          </div>
+          <div>
+            <textarea
+              className='my-3 h-auto w-full resize-none overflow-hidden text-3xl focus:outline-none'
+              placeholder='제목을 입력하세요'
+              rows={1}
+              id='title'
+              {...register('title', { required: true })}
+            ></textarea>
+          </div>
+          <div className='mb-4 flex h-7'>
+            {tags.map((tag, index) => (
+              <TagItem tagContent={tag} key={index} showDeleteButton={false} />
+            ))}
+            {tags.length < 5 && (
+              <input
+                className='focus:outline-none'
+                type='text'
+                id='tag'
+                placeholder='태그를 입력하세요'
+                onKeyDown={handleKeyDown}
+                {...register('tagValue')}
+              />
+            )}
+          </div>
+          <div className='mb-1 mt-4 flex'>
+            <p className='mr-8 flex items-center justify-center text-[#000000]'>
+              여행 시작일
             </p>
-          )}
-        </div>
-        <div className='mb-2 mt-1 flex'>
-          <p className='mr-8 flex items-center justify-center text-[#000000]'>
-            여행 종료일
-          </p>
-          <input
-            className='cursor-pointer text-sm focus:outline-none'
-            type='date'
-            id='end-date'
-            {...register('endDate', { required: true })}
-          />
-          {errors.endDate && (
+            <input
+              className='cursor-pointer text-sm focus:outline-none'
+              type='date'
+              id='start-date'
+              {...register('startDate', { required: true })}
+            />
+          </div>
+          <div className='mb-5 mt-1 flex'>
+            <p className='mr-8 flex items-center justify-center text-[#000000]'>
+              여행 종료일
+            </p>
+            <input
+              className='cursor-pointer text-sm focus:outline-none'
+              type='date'
+              id='end-date'
+              {...register('endDate', { required: true })}
+            />
+            <p className='my-auto ml-5 text-xs text-[#f85c5c]'>
+              {travelPeriodError}
+            </p>
+            {/* {errors.endDate && (
             <p className='my-auto ml-5 text-xs text-[#f85c5c]'>
               {errors.endDate.message}
             </p>
-          )}
+          )} */}
+          </div>
+          <div>
+            <input
+              className='mb-4 text-sm'
+              type='file'
+              id='thumnail'
+              {...register('thumnail')}
+            />
+          </div>
+          <ReactQuill
+            modules={modules}
+            placeholder='당신의 여행 이야기를 들려주세요..'
+            className='quill-toolbar'
+            onChange={handleQuillChange}
+          />
+          <input type='hidden' {...register('content', { required: true })} />
+          <div className='sticky bottom-0 flex w-full justify-end gap-2 border-t border-[#cdcdcd] bg-white py-2'>
+            <button className='rounded-lg border border-[#28466A] bg-white px-5 py-1 text-sm text-[#28466A] hover:bg-[#f3f7ff]'>
+              취소
+            </button>
+            <button
+              className='rounded-lg bg-[#28466A] px-5 py-1 text-sm text-white hover:bg-[#1a2e46]'
+              type='submit'
+            >
+              발행
+            </button>
+          </div>
         </div>
-        <div className='mb-5 ml-1 text-xs text-[#f85c5c]'>
-          {/* *여행기간은 5일 이상만 가능합니다* */}
-        </div>
-        <ReactQuill
-          modules={modules}
-          placeholder='당신의 여행 이야기를 들려주세요..'
-          className='quill-toolbar'
-          onChange={handleQuillChange}
-        />
-        <input type='hidden' {...register('content', { required: true })} />
-        <button type='submit'>제출</button>
-      </div>
-    </form>
+      </form>
+    </>
   );
 };
 
