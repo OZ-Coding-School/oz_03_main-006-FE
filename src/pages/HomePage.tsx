@@ -4,15 +4,15 @@ import { locationList } from '../data/locationList';
 
 const HomePage = () => {
   const [map, setMap] = useState<naver.maps.Map | null>(null);
-  const centerX = 36.3595704;
-  const centerY = 127.105399;
+  const centerX = 36.0595704;
+  const centerY = 127.805399;
   const [marker, setMarker] = useState<naver.maps.Marker[] | null>(null);
 
   // 지도 생성
   useEffect(() => {
     const mapOptions = {
       center: new naver.maps.LatLng(centerX, centerY),
-      zoom: 7,
+      zoom: 8,
       disableDoubleClickZoom: true,
       disableDoubleTapZoom: true,
       maxZoom: 12,

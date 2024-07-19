@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { RiMenuFold4Fill, RiMenuUnfold4Fill } from 'react-icons/ri';
-import { PiPencilLine } from 'react-icons/pi';
+import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { IoSearchSharp } from 'react-icons/io5';
-import { FaRegUser } from 'react-icons/fa';
 import { useNavToggleStore } from '../../../config/store';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import postsData from '../../data/posts.json';
 //import userData from '../../data/user.json';
 import SearchResultItem from '../SearchResultItem';
 import { Post, User } from '../../../config/types';
+import LogoAndTitle from './nav/LogoAndTitle';
+import Subtitle from './nav/Subtitle';
+import OpenMenuIcon from './nav/OpenMenuIcon';
+import CloseMenuIcon from './nav/CloseMenuIcon';
 
 type Inputs = {
   searchValue: string;
@@ -18,7 +19,7 @@ type Inputs = {
 const posts: Post[] = postsData;
 
 const NavBar = () => {
-  const { isOpen, toggleOpen } = useNavToggleStore();
+  const isOpen = useNavToggleStore((state) => state.isOpen);
   const { pathname } = useLocation();
   const { register, handleSubmit, reset } = useForm<Inputs>();
   const [searchError, setSearchError] = useState(false);
@@ -47,100 +48,100 @@ const NavBar = () => {
     setSearchError(false);
   };
 
-  const renderLogoAndTitle = (): React.ReactNode => {
-    return (
-      isOpen && (
-        <Link to='/' className='my-4 -ml-3 flex items-center justify-center'>
-          <img src='/logo.svg' alt='한바퀴 로고' />
-          <h1 className={`font-okgung text-5xl ${textColor}`}>한바퀴</h1>
-        </Link>
-      )
-    );
-  };
+  // const renderLogoAndTitle = (): React.ReactNode => {
+  //   return (
+  //     isOpen && (
+  //       <Link to='/' className='my-4 -ml-3 flex items-center justify-center'>
+  //         <img src='/logo.svg' alt='한바퀴 로고' />
+  //         <h1 className={`font-okgung text-5xl ${textColor}`}>한바퀴</h1>
+  //       </Link>
+  //     )
+  //   );
+  // };
 
-  const renderMenuIcon = (): React.ReactNode => {
-    return (
-      <div className='flex items-center justify-between'>
-        {isOpen ? (
-          <div className='flex w-full items-center justify-between'>
-            <div className='flex items-center gap-2'>
-              <RiMenuUnfold4Fill
-                className={`my-2 ml-4 cursor-pointer text-2xl ${iconColor}`}
-                onClick={toggleOpen}
-              />
-              {userData && (
-                <Link to='/posting'>
-                  <PiPencilLine className={`text-2xl ${iconColor}`} />
-                </Link>
-              )}
-            </div>
-            {userData ? (
-              <Link to='/mypage'>
-                <p
-                  className={`mx-4 text-lg ${textColor} font-chosun`}
-                >{`${userData.nickname ? userData.nickname : userData.username} 님`}</p>
-              </Link>
-            ) : (
-              <Link to='/login'>
-                <p className={`mx-4 text-lg ${textColor} font-chosun`}>
-                  로그인
-                </p>
-              </Link>
-            )}
-          </div>
-        ) : (
-          <RiMenuFold4Fill
-            className={`mx-4 my-2 cursor-pointer text-2xl ${iconColor}`}
-            onClick={toggleOpen}
-          />
-        )}
-      </div>
-    );
-  };
+  // const renderMenuIcon = (): React.ReactNode => {
+  //   return (
+  //     <div className='flex items-center justify-between'>
+  //       {isOpen ? (
+  //         <div className='flex w-full items-center justify-between'>
+  //           <div className='flex items-center gap-2'>
+  //             <RiMenuUnfold4Fill
+  //               className={`my-2 ml-4 cursor-pointer text-2xl ${iconColor}`}
+  //               onClick={toggleOpen}
+  //             />
+  //             {userData && (
+  //               <Link to='/posting'>
+  //                 <PiPencilLine className={`text-2xl ${iconColor}`} />
+  //               </Link>
+  //             )}
+  //           </div>
+  //           {userData ? (
+  //             <Link to='/mypage'>
+  //               <p
+  //                 className={`mx-4 text-lg ${textColor} font-chosun`}
+  //               >{`${userData.nickname ? userData.nickname : userData.username} 님`}</p>
+  //             </Link>
+  //           ) : (
+  //             <Link to='/login'>
+  //               <p className={`mx-4 text-lg ${textColor} font-chosun`}>
+  //                 로그인
+  //               </p>
+  //             </Link>
+  //           )}
+  //         </div>
+  //       ) : (
+  //         <RiMenuFold4Fill
+  //           className={`mx-4 my-2 cursor-pointer text-2xl ${iconColor}`}
+  //           onClick={toggleOpen}
+  //         />
+  //       )}
+  //     </div>
+  //   );
+  // };
 
-  const renderPostingIcon = () => {
-    if (!isOpen) {
-      return (
-        <div className='flex flex-col items-center justify-center gap-2'>
-          <Link to='/'>
-            <img
-              src='/logo.svg'
-              className='ml-1 h-[44px] w-[44px]'
-              alt='한바퀴 로고'
-            />
-          </Link>
-          {!isOpen && userData && (
-            <div className='flex flex-col items-center justify-center gap-4'>
-              <Link
-                to='mypage'
-                className={`flex h-[30px] w-[30px] items-center justify-center rounded-full ${userIconColor}`}
-              >
-                <FaRegUser className={`text-lg ${userIconColor}`} />
-              </Link>
-              <Link to='/posting'>
-                <PiPencilLine
-                  className={`cursor-pointer text-2xl ${iconColor}`}
-                />
-              </Link>
-            </div>
-          )}
-        </div>
-      );
-    }
-    return null;
-  };
+  // const renderPostingIcon = () => {
+  //   if (!isOpen) {
+  //     return (
+  //       <div className='flex flex-col items-center justify-center gap-2'>
+  //         <Link to='/'>
+  //           <img
+  //             src='/logo.svg'
+  //             className='ml-1 h-[44px] w-[44px]'
+  //             alt='한바퀴 로고'
+  //           />
+  //         </Link>
+  //         {!isOpen && userData && (
+  //           <div className='flex flex-col items-center justify-center gap-4'>
+  //             <Link
+  //               to='mypage'
+  //               className={`flex h-[30px] w-[30px] items-center justify-center rounded-full ${userIconColor}`}
+  //             >
+  //               <FaRegUser className={`text-lg ${userIconColor}`} />
+  //             </Link>
+  //             <Link to='/posting'>
+  //               <PiPencilLine
+  //                 className={`cursor-pointer text-2xl ${iconColor}`}
+  //               />
+  //             </Link>
+  //           </div>
+  //         )}
+  //       </div>
+  //     );
+  //   }
+  //   return null;
+  // };
 
-  const renderLoginIcon = (): React.ReactNode => {
-    if (isOpen) {
-      return (
-        <p
-          className={`mx-auto my-6 w-[312px] text-center font-chosun text-xl ${textColor}`}
-        >
-          한국을 한(韓)바퀴 돌아보세요
-        </p>
-      );
-    }
-  };
+  // const renderLoginIcon = (): React.ReactNode => {
+  //   if (isOpen) {
+  //     return (
+  //       <p
+  //         className={`mx-auto my-6 w-[312px] text-center font-chosun text-xl ${textColor}`}
+  //       >
+  //         한국을 한(韓)바퀴 돌아보세요
+  //       </p>
+  //     );
+  //   }
+  // };
 
   const renderSearchBar = () => {
     return (
@@ -207,10 +208,13 @@ const NavBar = () => {
       style={{ backgroundColor }}
     >
       <div>
-        {renderMenuIcon()}
-        {renderLogoAndTitle()}
-        {renderPostingIcon()}
-        {renderLoginIcon()}
+        {isOpen ? (
+          <OpenMenuIcon textColor={textColor} iconColor={iconColor} />
+        ) : (
+          <CloseMenuIcon iconColor={iconColor} userIconColor={userIconColor} />
+        )}
+        {isOpen && <LogoAndTitle textColor={textColor} />}
+        {isOpen && <Subtitle textColor={textColor} />}
         {renderSearchBar()}
         {renderSearchResult()}
       </div>
