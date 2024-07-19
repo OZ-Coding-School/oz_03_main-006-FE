@@ -8,6 +8,7 @@ import PostingPage from './pages/PostingPage';
 import MyPage from './pages/MyPage';
 import LoginPage from './pages/LoginPage';
 
+
 function App() {
   return (
     <>

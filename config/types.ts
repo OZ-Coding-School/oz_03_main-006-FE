@@ -24,9 +24,12 @@ export interface Post {
 export interface User {
   user_id?: number;
   email: string;
-  nickname?: string | null;
+  nickname?: string;
   username: string;
   profile_image?: string | null;
+  provider?: string | null;
+  password: string;
+  created_at: string;
 }
 
 export interface UserState {
