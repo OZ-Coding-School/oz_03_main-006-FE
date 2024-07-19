@@ -26,7 +26,7 @@ const PostCard: React.FC<PostCardProps> = ({post}) => {
         <>
                 <Link to={`/post-detail/${post.post_id}`} className='block'>
                     <div key={post.post_id} className='bg-white p-6 rounded-lg shadow-md flex'>
-                        <div className='bg-[#F4F4F4] w-[300px] rounded-xl '>
+                        <div className='flex justify-center bg-[#F4F4F4] w-[300px] rounded-xl '>
                             <img src={postImg} alt={post.title} className={` rounded-xl ${errorLogoWidth} ${errorLogoHeight} ${errorLogoMargin}`}  />
                         </div>
                         <div className='ml-4'>
