@@ -23,13 +23,11 @@ export interface Post {
 }
 export interface User {
   user_id?: number;
-  email: string;
+  email?: string;
   nickname?: string;
   username: string;
   profile_image?: string | null;
-  provider?: string | null;
-  password: string;
-  created_at: string;
+  password?: string;
 }
 
 export interface UserState {
