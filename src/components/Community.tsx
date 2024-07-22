@@ -107,9 +107,9 @@ const Community = () => {
     <>
     {/* <div className='container max-w-[1200px] mx-auto px-10 py-8 overflow-hidden h-[100vh]'> */}
     {/* 기본적으로 숨겼다가(hidden) 사이즈가 lg(1024px)가 되면 block */}
-    <div className='block 2xl:px-[100px]'>
+    <div className='w-[calc(100vw-392px)]'>
       {/* min-w-[1200px]로 1200px보다 작아지면 가로 스크롤이 생김 -> 1200px 화면 유지 */}
-      <div className= {`container min-w-[1200px] mx-auto px-10 py-8 overflow-hidden h-[100vh] `}>
+      <div className= {`container min-w-[1200px] mx-auto px-10 py-8 overflow-hidden h-screen `}>
         <div className='flex'>
           {
             icons.map((icon) => (
