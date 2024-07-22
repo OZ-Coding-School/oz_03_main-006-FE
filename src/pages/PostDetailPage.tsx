@@ -3,10 +3,12 @@ import Comment from '../components/Comment';
 
 const PostDetailPage = () => {
   return (
-    <>
-      <Article></Article>
-      <Comment></Comment>
-    </>
+    <div className='h-screen overflow-hidden'>
+      <div className='h-full overflow-y-scroll'>
+        <Article />
+        <Comment />
+      </div>
+    </div>
   );
 };
 
