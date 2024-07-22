@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import ReactQuill, { Quill } from 'react-quill';
 import { useForm } from 'react-hook-form';
@@ -10,15 +10,7 @@ import ImageResize from 'quill-image-resize';
 Quill.register('modules/ImageResize', ImageResize);
 
 const PostingPage = () => {
-  const {
-    register,
-    handleSubmit,
-    watch,
-    setValue,
-    formState: { errors },
-    setError,
-    clearErrors,
-  } = useForm();
+  const { register, handleSubmit, watch, setValue } = useForm();
   const { tags, addTag } = useTagStore((state) => ({
     tags: state.tags,
     addTag: state.addTag,
@@ -140,7 +132,7 @@ const PostingPage = () => {
             <select
               className='cursor-pointer rounded-sm border px-2 py-1 text-sm text-[#7e7e7e] hover:bg-[#eeeeeec8] hover:text-[#5b5b5b] focus:outline-none'
               id='location'
-              {...register('location', { required: true })}
+              {...register('location', { required: '지역을 선택해주세요.' })}
             >
               <option value='default'>지역을 선택해주세요</option>
               <option value='서울'>서울</option>
@@ -168,12 +160,19 @@ const PostingPage = () => {
               placeholder='제목을 입력하세요'
               rows={1}
               id='title'
-              {...register('title', { required: true })}
+              {...register('title', { required: '제목을 입력히주세요.' })}
             ></textarea>
           </div>
           <div className='mb-4 flex h-7'>
             {tags.map((tag, index) => (
-              <TagItem tagContent={tag} key={index} showDeleteButton={false} />
+              <React.Fragment key={index}>
+                <TagItem tagContent={tag} showDeleteButton={true} />
+                <input
+                  type='hidden'
+                  {...register(`tag${index}`)}
+                  value={tag.content}
+                />
+              </React.Fragment>
             ))}
             {tags.length < 5 && (
               <input
@@ -194,7 +193,9 @@ const PostingPage = () => {
               className='cursor-pointer text-sm focus:outline-none'
               type='date'
               id='start-date'
-              {...register('startDate', { required: true })}
+              {...register('startDate', {
+                required: '여행 시작일을 선택해주세요.',
+              })}
             />
           </div>
           <div className='mb-5 mt-1 flex'>
@@ -205,9 +206,11 @@ const PostingPage = () => {
               className='cursor-pointer text-sm focus:outline-none'
               type='date'
               id='end-date'
-              {...register('endDate', { required: true })}
+              {...register('endDate', {
+                required: '여행 종료일을 선택해주세요.',
+              })}
             />
-            <p className='my-auto ml-5 text-xs text-[#f85c5c]'>
+            <p className='my-auto ml-5 text-xs text-red-500'>
               {travelPeriodError}
             </p>
             {/* {errors.endDate && (
@@ -230,7 +233,16 @@ const PostingPage = () => {
             className='quill-toolbar'
             onChange={handleQuillChange}
           />
-          <input type='hidden' {...register('content', { required: true })} />
+          <input
+            type='hidden'
+            {...register('content', {
+              required: '내용을 입력해주세요.',
+              minLength: {
+                value: 200,
+                message: '내용은 최소 200자 이상이어야 합니다.',
+              },
+            })}
+          />
           <div className='sticky bottom-0 flex w-full justify-end gap-2 border-t border-[#cdcdcd] bg-white py-2'>
             <button className='rounded-lg border border-[#28466A] bg-white px-5 py-1 text-sm text-[#28466A] hover:bg-[#f3f7ff]'>
               취소
