@@ -1,16 +1,41 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import ReactQuill, { Quill } from 'react-quill';
-import { useForm } from 'react-hook-form';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import 'react-quill/dist/quill.snow.css';
 import './PostingPage.css';
-import { useTagStore } from '../../config/store';
 import TagItem from '../components/TagItem';
+import { useTagStore } from '../../config/store';
 import ImageResize from 'quill-image-resize';
 Quill.register('modules/ImageResize', ImageResize);
 
+interface FormData {
+  title: string;
+  location: string;
+  startDate: string;
+  endDate: string;
+  content: string;
+  tagValue: string;
+  thumnail: FileList;
+  [key: string]: string | FileList;
+}
+
 const PostingPage = () => {
-  const { register, handleSubmit, watch, setValue } = useForm();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm<FormData>({
+    defaultValues: {
+      title: '',
+      location: '',
+      startDate: '',
+      endDate: '',
+      content: '',
+    },
+  });
   const { tags, addTag } = useTagStore((state) => ({
     tags: state.tags,
     addTag: state.addTag,
@@ -60,36 +85,22 @@ const PostingPage = () => {
       const end = new Date(endDate);
       const dayDiff = (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24); // 일수로 변환
 
-      // clearErrors('endDate');
-      // setTravelPeriodError('');
       if (startDate && endDate) {
         if (start > end) {
           setTravelPeriodError('*종료일은 시작일보다 이후이어야 합니다*');
-          if (endDate !== null) {
-            setValue('endDate', null);
-          }
-          // setError('endDate', {
-          //   type: 'manual',
-          //   message: '*종료일은 시작일보다 이후이어야 합니다*',
-          // });
+          if (endDate !== null) setValue('endDate', '');
           return;
         }
         if (dayDiff < 5) {
           setTravelPeriodError('*여행 기간은 5일 이상이어야 합니다*');
-          if (endDate !== null) {
-            setValue('endDate', null);
-          }
+          if (endDate !== null) setValue('endDate', '');
           return;
         }
-        // setError('endDate', {
-        //   type: 'manual',
-        //   message: '*여행 기간은 5일 이상이어야 합니다*',
-        // });
-        setTravelPeriodError(''); // 유효성 검사 통과 시 오류 메시지 초기화
+        setTravelPeriodError('');
       }
     };
     checkDateValidity();
-  }, [startDate, endDate]);
+  }, [startDate, endDate, setValue]);
 
   //quill에디터로 작성한 내용
   const handleQuillChange = (content: string) => {
@@ -114,7 +125,7 @@ const PostingPage = () => {
   };
 
   //서버에 보낼때
-  const onSubmit = (data) => {
+  const onSubmit: SubmitHandler<FormData> = (data) => {
     console.log(data);
   };
 
@@ -130,11 +141,13 @@ const PostingPage = () => {
         <div className='relative mx-auto mt-24 w-full max-w-[1200px] px-4 sm:px-6 lg:px-8'>
           <div className='mb-4'>
             <select
-              className='cursor-pointer rounded-sm border px-2 py-1 text-sm text-[#7e7e7e] hover:bg-[#eeeeeec8] hover:text-[#5b5b5b] focus:outline-none'
+              className={`cursor-pointer rounded-sm border px-2 py-1 text-sm text-[#7e7e7e] hover:bg-[#eeeeeec8] hover:text-[#5b5b5b] focus:outline-none ${errors.location && 'border-red-500'}`}
               id='location'
               {...register('location', { required: '지역을 선택해주세요.' })}
             >
-              <option value='default'>지역을 선택해주세요</option>
+              <option value='' disabled>
+                지역을 선택해주세요
+              </option>
               <option value='서울'>서울</option>
               <option value='경기도'>경기도</option>
               <option value='인천'>인천</option>
@@ -156,7 +169,7 @@ const PostingPage = () => {
           </div>
           <div>
             <textarea
-              className='my-3 h-auto w-full resize-none overflow-hidden text-3xl focus:outline-none'
+              className={`my-3 h-auto w-full resize-none overflow-hidden text-3xl focus:outline-none ${errors.title && 'placeholder:text-red-500'}`}
               placeholder='제목을 입력하세요'
               rows={1}
               id='title'
@@ -210,14 +223,14 @@ const PostingPage = () => {
                 required: '여행 종료일을 선택해주세요.',
               })}
             />
+            {(errors.startDate || errors.endDate) && (
+              <p className='my-auto ml-5 text-xs text-red-500'>
+                *여행기간을 지정해주세요*
+              </p>
+            )}
             <p className='my-auto ml-5 text-xs text-red-500'>
               {travelPeriodError}
             </p>
-            {/* {errors.endDate && (
-            <p className='my-auto ml-5 text-xs text-[#f85c5c]'>
-              {errors.endDate.message}
-            </p>
-          )} */}
           </div>
           <div>
             <input
@@ -230,19 +243,10 @@ const PostingPage = () => {
           <ReactQuill
             modules={modules}
             placeholder='당신의 여행 이야기를 들려주세요..'
-            className='quill-toolbar'
+            className={'quill-toolbar'}
             onChange={handleQuillChange}
           />
-          <input
-            type='hidden'
-            {...register('content', {
-              required: '내용을 입력해주세요.',
-              minLength: {
-                value: 200,
-                message: '내용은 최소 200자 이상이어야 합니다.',
-              },
-            })}
-          />
+          <input type='hidden' {...register('content')} />
           <div className='sticky bottom-0 flex w-full justify-end gap-2 border-t border-[#cdcdcd] bg-white py-2'>
             <button className='rounded-lg border border-[#28466A] bg-white px-5 py-1 text-sm text-[#28466A] hover:bg-[#f3f7ff]'>
               취소
