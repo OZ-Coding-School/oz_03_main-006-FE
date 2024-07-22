@@ -68,7 +68,7 @@ const Article = () => {
         </div>
         <div className='mb-6 flex h-7 w-full'>
           {tags.map((tag, index) => (
-            <TagItem tagContent={tag} showDeleteButton={true} key={index} />
+            <TagItem tagContent={tag} showDeleteButton={false} key={index} />
           ))}
           <span className='ml-auto flex gap-2'>
             <p className='m-auto text-sm text-[#777777]'>{'24'}회</p>{' '}
@@ -89,7 +89,7 @@ const Article = () => {
             </p>
           </div>
         </div>
-        <div className='w-full border-t pb-32 pt-4'>
+        <div className='w-full border-y pb-32 pt-4'>
           장기 여행을 하다 보면 유명한 관광지 외에도 뜻밖의 아름다움을 간직한
           숨겨진 보석 같은 장소들을 만나게 됩니다. 이 포스팅에서는 제가 장기
           여행 중 발견한, 아직 많은 이들에게 알려지지 않은 특별한 장소들을
