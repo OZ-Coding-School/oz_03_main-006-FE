@@ -1,11 +1,8 @@
-import { useNavToggleStore } from '../../../../config/store';
+import { useNavToggleStore, useUserStore } from '../../../../config/store';
 import { RiMenuUnfold4Fill } from 'react-icons/ri';
-import { User } from '../../../../config/types';
-import React, { useState } from 'react';
+import React from 'react';
 import PostingIcon from './PostingIcon';
 import LoginOrUsername from './LoginOrUsername';
-//import userData from '../../data/user.json';
-
 interface OpenMenuIconProps {
   textColor: string;
   iconColor: string;
@@ -16,7 +13,7 @@ const OpenMenuIcon: React.FC<OpenMenuIconProps> = ({
   iconColor,
 }) => {
   const toggleOpen = useNavToggleStore((state) => state.toggleOpen);
-  const [userData, setUserData] = useState<User | null>(null);
+  const user = useUserStore((state) => state.user);
 
   return (
     <div className='flex w-full items-center justify-between'>
@@ -25,7 +22,7 @@ const OpenMenuIcon: React.FC<OpenMenuIconProps> = ({
           className={`my-2 ml-4 cursor-pointer text-2xl ${iconColor}`}
           onClick={toggleOpen}
         />
-        {userData && <PostingIcon iconColor={iconColor} />}
+        {user && <PostingIcon iconColor={iconColor} />}
       </div>
       {<LoginOrUsername textColor={textColor} />}
     </div>

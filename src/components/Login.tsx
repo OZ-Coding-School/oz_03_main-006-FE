@@ -4,11 +4,11 @@ import { LoginUser } from '../../config/types';
 import { useAlertStore } from '../../config/store';
 import Alert from './common/Alert';
 //import axios, { AxiosError } from 'axios';
-//import { useUserStore } from '../../config/store';
+import { useUserStore } from '../../config/store';
 
 const Login = () => {
   //const navigate = useNavigate();
-  //const setUser = useUserStore((state)=>state.setUser);
+  const setUser = useUserStore((state) => state.setUser);
   const setAlert = useAlertStore((state) => state.setAlert);
   const {
     register,
@@ -24,8 +24,10 @@ const Login = () => {
 
   const onSubmit: SubmitHandler<LoginUser> = async (data) => {
     console.log(data);
+    const { username } = data;
     clearValue();
     setAlert('테스트');
+    setUser({ username });
     // try {
     //   const { username, password } = data;
     //   const response = await axios.post('/login', {

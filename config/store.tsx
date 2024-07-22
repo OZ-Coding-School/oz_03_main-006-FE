@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import { AlertState, NavToggleState, User, UserState, TagState } from './types';
 
 export const useNavToggleStore = create<NavToggleState>((set) => ({
@@ -6,11 +7,18 @@ export const useNavToggleStore = create<NavToggleState>((set) => ({
   toggleOpen: () => set((state) => ({ isOpen: !state.isOpen })),
 }));
 
-export const useUserStore = create<UserState>((set) => ({
-  user: null,
-  setUser: (user: User) => set({ user }),
-  clearUser: () => set({ user: null }),
-}));
+export const useUserStore = create(
+  persist<UserState>(
+    (set) => ({
+      user: null,
+      setUser: (user: User) => set({ user }),
+      clearUser: () => set({ user: null }),
+    }),
+    {
+      name: 'userInfo',
+    }
+  )
+);
 
 export const useAlertStore = create<AlertState>((set) => ({
   showAlert: false,

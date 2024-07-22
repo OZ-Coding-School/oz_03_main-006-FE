@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { RiMenuFold4Fill } from 'react-icons/ri';
-import { FaRegUser } from 'react-icons/fa';
-import { useNavToggleStore } from '../../../../config/store';
+import { useNavToggleStore, useUserStore } from '../../../../config/store';
 import PostingIcon from './PostingIcon';
-//import userData from '../../data/user.json';
-import { User } from '../../../../config/types';
+import UserProfile from './UserProfile';
 
 interface CloseMenuIconProps {
   iconColor: string;
@@ -17,7 +15,7 @@ const CloseMenuIcon: React.FC<CloseMenuIconProps> = ({
   userIconColor,
 }) => {
   const toggleOpen = useNavToggleStore((state) => state.toggleOpen);
-  const [userData, setUserData] = useState<User | null>(null);
+  const user = useUserStore((state) => state.user);
 
   return (
     <div className='flex flex-col items-center justify-center'>
@@ -32,14 +30,9 @@ const CloseMenuIcon: React.FC<CloseMenuIconProps> = ({
           alt='한바퀴 로고'
         />
       </Link>
-      {userData && (
-        <div className='flex flex-col items-center justify-center gap-4'>
-          <Link
-            to='mypage'
-            className={`flex h-[30px] w-[30px] items-center justify-center rounded-full ${userIconColor}`}
-          >
-            <FaRegUser className={`text-lg ${userIconColor}`} />
-          </Link>
+      {user && (
+        <div className='my-2.5 flex flex-col items-center justify-center gap-4'>
+          <UserProfile userIconColor={userIconColor} />
           <PostingIcon iconColor={iconColor} />
         </div>
       )}

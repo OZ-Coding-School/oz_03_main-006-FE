@@ -1,20 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { User } from '../../../../config/types';
-//import userData from '../../../data/user.json';
+import { useUserStore } from '../../../../config/store';
 
 interface LoginOrUsernameProps {
   textColor: string;
 }
 
 const LoginOrUsername: React.FC<LoginOrUsernameProps> = ({ textColor }) => {
-  const [userData, setUserData] = useState<User | null>(null);
+  const user = useUserStore((state) => state.user);
 
-  return userData ? (
+  return user ? (
     <Link to='/mypage'>
       <p
         className={`mx-4 text-lg ${textColor} font-chosun`}
-      >{`${userData.nickname ? userData.nickname : userData.username} 님`}</p>
+      >{`${user.nickname ? user.nickname : user.username} 님`}</p>
     </Link>
   ) : (
     <Link to='/login'>
