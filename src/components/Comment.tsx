@@ -57,6 +57,11 @@ const Comment = () => {
   };
 
   const deleteComment = async (comment_id: number) => {
+    // 유저 정보가 일치할 때만 버튼이 보이도록 했지만, 혹~시~나~ 한번 더 막아주기
+    if (user?.user_id !== comment_id) {
+      setAlert('댓글 작성자만 삭제할 수 있습니다.');
+      return;
+    }
     try {
       await axios.delete(`/api/comments/${comment_id}`, {
         data: { user_id: user?.user_id },
