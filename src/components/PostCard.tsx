@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Post } from '../../config/types'
 import { Link } from 'react-router-dom'
+import { IoMdHeart } from 'react-icons/io';
 
 
 interface PostCardProps {
@@ -41,7 +42,8 @@ const PostCard: React.FC<PostCardProps> = ({post}) => {
                                 </div>
                                 <div className='flex mt-1'>
                                     <span className='mr-1 text-sm '>99</span>
-                                    <img src='/full-heart.svg' alt='Likes' className='w-5 h-5'/>
+                                    {/* <img src='/full-heart.svg' alt='Likes' className='w-5 h-5'/> */}
+                                    <IoMdHeart className='mt-0.5'/>
                                 </div>
                             </div>
                             <p className='text-gray-600 mb-4'>{bodyLength(post.body, 50)}</p>

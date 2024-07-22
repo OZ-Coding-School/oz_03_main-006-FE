@@ -13,6 +13,10 @@ export const useUserStore = create(
       user: null,
       setUser: (user: User) => set({ user }),
       clearUser: () => set({ user: null }),
+      updateProfileImage: (imageUrl: string) => 
+        set((state) => ({
+          user: state.user ? {...state.user, profile_img: imageUrl  } : null,
+        }))
     }),
     {
       name: 'userInfo',
