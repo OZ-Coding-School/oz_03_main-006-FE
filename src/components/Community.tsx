@@ -2,7 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import communityData from '../data/community.json'
 import weatherData from '../data/weather.json'
 import React, { useEffect, useState } from 'react';
-import { Post, tag } from '../../config/types';
+import { Post } from '../../config/types';
 import PostCard from './PostCard';
 import Carousel from './Carousel';
 import icons from '../data/icons.json'
@@ -107,10 +107,10 @@ const Community = () => {
     <>
     {/* <div className='container max-w-[1200px] mx-auto px-10 py-8 overflow-hidden h-[100vh]'> */}
     {/* 기본적으로 숨겼다가(hidden) 사이즈가 lg(1024px)가 되면 block */}
-    <div className='w-[calc(100vw-392px)]'>
+    <div className='w-[calc(100vw-392px)] overflow-hidden h-screen'>
       {/* min-w-[1200px]로 1200px보다 작아지면 가로 스크롤이 생김 -> 1200px 화면 유지 */}
-      <div className= {`container min-w-[1200px] mx-auto px-10 py-8 overflow-hidden h-screen `}>
-        <div className='flex'>
+      <div className= {`container mx-auto min-w-[1200px] max-w-[1200px] px-10 py-8 h-full overflow-hidden`}>
+        <div className='flex mb-2'>
           {
             icons.map((icon) => (
               icon.icon_id === regionData.locations.location_id ? <img key={icon.icon_id} src={icon.file} alt={icon.name} className='w-12 h-12 mr-3'/> : <React.Fragment key={icon.icon_id}></React.Fragment>
@@ -130,7 +130,7 @@ const Community = () => {
 
       <hr className='mb-5 border-1.8'/>
 
-        <div className=' overflow-y-scroll max-h-[calc(100vh-160px)] '>
+        <div className=' overflow-y-auto h-[calc(100%-100px)]'>
         {/* <div className='  '> */}
           <div className='mb-8 flex'>
             {/* <img src={regionData.locations.logation_img} alt={regionData.locations.city} className='rounded-xl w-[550px] h-[350px]'/> */}

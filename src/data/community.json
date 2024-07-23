@@ -23,11 +23,11 @@
           "travel_start_date": "2024-06-10",
           "travel_end_date": "2024-06-20",
           "tags": [
-            {"tag_id": 1, "name": "서울"},
-            {"tag_id": 2, "name": "경복"},
-            {"tag_id": 3, "name": "북촌"},
-            {"tag_id": 4, "name": "전통"},
-            {"tag_id": 5, "name": "현대"}
+            {"id": 1, "content": "서울"},
+            {"id": 2, "content": "경복"},
+            {"id": 3, "content": "북촌"},
+            {"id": 4, "content": "전통"},
+            {"id": 5, "content": "현대"}
         ]
         },
         {

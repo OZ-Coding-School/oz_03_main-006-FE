@@ -22,12 +22,13 @@ const MyPage = () => {
 
   useEffect(() => {
     if(!user) {
-        setUser({...userData})
+        // setUser({...userData})
         // updateProfileImage(userData.profile_image)
+        navigate('/')
     } 
   }, [user])
 
-console.log(userData)
+// console.log(userData)
 
   const handleEdit = () => {
     console.log('edit')
@@ -56,19 +57,20 @@ console.log(userData)
 
   console.log(profileEdit)
 
-  const handleFileSelect = (file: File) => {
-    const imageUrl = URL.createObjectURL(file);
-    console.log(imageUrl);
-    console.log(typeof imageUrl);
+  // // 파일 객체를 받아서 그 파일을 브라우저에서 바로 사용할 수 있는 URL로 변환하는 역할 -> 미리보기
+  // const handleFileSelect = (file: File) => {
+  //   const imageUrl = URL.createObjectURL(file);
+  //   console.log(imageUrl);
+  //   console.log(typeof imageUrl);
+  // }
 
-    updateProfileImage(imageUrl)
-  }
-
-console.log(user?.profile_image)
+  console.log(user?.profile_image)
+  
   return (
     <>
-    <form>
-        <div className="min-w-[1200px]">
+    <form className="flex justify-center">
+        <div className="">
+
           <div className='left-0 top-0 z-10 w-screen  bg-white'>
             <Link to='/' className='flex items-center py-[20px] pl-[30px]'>
               <img src='/logo.svg' alt='한바퀴 로고' className='w-9' />
@@ -76,8 +78,8 @@ console.log(user?.profile_image)
             </Link>
           </div>
 
-
-          <div className="px-32 mt-12">
+        <div className="max-w-[1200px] mx-auto ">
+          <div className="px-8 mt-12">
 
             <div className="flex justify-between">
               <div className="flex">
@@ -85,7 +87,7 @@ console.log(user?.profile_image)
                 {
                     profileEdit ? (
                         <>
-                            <ProfileImage onFileSelect={handleFileSelect} updateProfileImage={updateProfileImage}/>
+                            <ProfileImage  updateProfileImage={updateProfileImage} profile_img={user?.profile_image}/>
                         </>
                     ) : ( 
                     <div>
@@ -129,6 +131,7 @@ console.log(user?.profile_image)
             <div className="grid grid-cols-2 gap-6 mt-12">
                 사용자가 좋아요 누른 포스터들
             </div>
+          </div>
           </div>
         </div>
       </form>
