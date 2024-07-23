@@ -20,7 +20,7 @@ const NavBar = () => {
 
   return (
     <div
-      className={`nav-bar ${isOpen ? 'w-[392px]' : 'w-[60px]'}`}
+      className={`nav-bar ${isOpen ? 'min-w-[392px]' : 'min-w-[60px]'}`}
       style={{ backgroundColor }}
     >
       {isOpen ? (

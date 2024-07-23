@@ -2,13 +2,15 @@ import axios from 'axios';
 import TagItem from './TagItem';
 import { PiEyesFill } from 'react-icons/pi';
 import { useParams } from 'react-router-dom';
-import { IoMdHeart } from 'react-icons/io';
-import { IoMdHeartEmpty } from 'react-icons/io';
+import { IoMdHeart, IoMdHeartEmpty } from 'react-icons/io';
 import { useEffect, useState } from 'react';
-
-interface postDetail {}
+import { useUserStore, useAlertStore } from '../../config/store';
+import Alert from './common/Alert';
 
 const Article = () => {
+  const user = useUserStore((state) => state.user);
+  const setAlert = useAlertStore((state) => state.setAlert);
+
   const tags = [
     { id: 1, content: '이것은' },
     { id: 2, content: '태그테스트' },
@@ -19,8 +21,22 @@ const Article = () => {
 
   const { postId } = useParams();
   const [isLiked, setIsLiked] = useState<boolean>(false);
+  const [showButton, setShowButton] = useState<boolean>(false);
+  const [postUserId, setPostUserId] = useState(null);
+
+  useEffect(() => {
+    if (user && postUserId && user.user_id === postUserId) {
+      setShowButton(true);
+    } else {
+      setShowButton(false);
+    }
+  }, [user, postUserId]);
 
   const handleHeartToggle = () => {
+    if (!user) {
+      setAlert('로그인 후 이용해주세요.');
+      return;
+    }
     setIsLiked(!isLiked);
     //count 올리기
   };
@@ -28,8 +44,9 @@ const Article = () => {
   useEffect(() => {
     const getPostData = async () => {
       try {
-        const response = await axios.get(`/posts/detail/${postId}`);
-        console.log(response.data);
+        const response = await axios.get(`/posts/${postId}`);
+        // setPostUserId(response.user_id); //게시글 작성한 유저의 id
+        console.log(response);
       } catch (error) {
         console.error(error);
       }
@@ -39,8 +56,8 @@ const Article = () => {
 
   const handleDelete = async () => {
     try {
-      const response = await axios.delete('/posts', {
-        data: { post_id: postId },
+      const response = await axios.delete(`/posts/${postId}`, {
+        // data: { post_id: postId },
       });
       console.log(response.data);
     } catch (error) {
@@ -51,6 +68,7 @@ const Article = () => {
   return (
     <>
       <div className='mx-auto mt-8 flex max-w-[1052px] flex-wrap'>
+        <Alert></Alert>
         <div className='mb-8 w-full text-4xl font-bold'>
           {
             '이 제목들이 장기 여행자들에게 유용한 정보를 제공하고 흥미를 끌 수있기를 바랍니다.'
@@ -68,7 +86,7 @@ const Article = () => {
         </div>
         <div className='mb-6 flex h-7 w-full'>
           {tags.map((tag, index) => (
-            <TagItem tagContent={tag} showDeleteButton={true} key={index} />
+            <TagItem tagContent={tag} showDeleteButton={false} key={index} />
           ))}
           <span className='ml-auto flex gap-2'>
             <p className='m-auto text-sm text-[#777777]'>{'24'}회</p>{' '}
@@ -78,18 +96,22 @@ const Article = () => {
         <div className='mb-2 flex w-full'>
           <span className='mr-5 font-semibold'>{'나는 한바퀴유저'}</span>
           <span className='my-auto text-sm text-[#777777]'>{'2024.07.09'}</span>
-          <div className='my-auto ml-auto flex justify-center gap-1 align-middle text-sm text-[#777777]'>
-            <p className='cursor-pointer hover:text-[#373737]'>수정</p>
-            <p>/</p>
-            <p
-              className='cursor-pointer hover:text-[#373737]'
-              onClick={handleDelete}
-            >
-              삭제
-            </p>
-          </div>
+          {showButton && (
+            <div className='my-auto ml-auto flex justify-center gap-1 align-middle text-sm text-[#777777]'>
+              <button className='cursor-pointer hover:text-[#373737]'>
+                수정
+              </button>
+              <p>/</p>
+              <button
+                className='cursor-pointer hover:text-[#373737]'
+                onClick={handleDelete}
+              >
+                삭제
+              </button>
+            </div>
+          )}
         </div>
-        <div className='w-full border-t pb-32 pt-4'>
+        <div className='w-full border-y pb-32 pt-4'>
           장기 여행을 하다 보면 유명한 관광지 외에도 뜻밖의 아름다움을 간직한
           숨겨진 보석 같은 장소들을 만나게 됩니다. 이 포스팅에서는 제가 장기
           여행 중 발견한, 아직 많은 이들에게 알려지지 않은 특별한 장소들을
@@ -126,7 +148,7 @@ const Article = () => {
         </div>
         <div className='mb-10 mt-4 flex w-full justify-end gap-2 text-lg'>
           <p>9,999</p>
-          <span
+          <button
             onClick={handleHeartToggle}
             className='my-auto cursor-pointer text-red-500'
           >
@@ -135,7 +157,7 @@ const Article = () => {
             ) : (
               <IoMdHeartEmpty className='size-6' />
             )}
-          </span>
+          </button>
         </div>
       </div>
     </>

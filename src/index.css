@@ -123,3 +123,7 @@
   height: 14px;
   margin-right: 2px;
 }
+
+:root::-webkit-scrollbar {
+  display: none;
+}
