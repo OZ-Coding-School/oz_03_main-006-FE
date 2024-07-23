@@ -42,8 +42,9 @@ const PostingPage = () => {
     addTag: state.addTag,
   }));
   const user = useUserStore((state) => state.user);
-  const [travelPeriodError, setTravelPeriodError] = useState('');
   const setAlert = useAlertStore((state) => state.setAlert);
+  const [travelPeriodError, setTravelPeriodError] = useState('');
+
   const navigate = useNavigate();
 
   useEffect(() => {
