@@ -44,7 +44,7 @@ const PostingPage = () => {
   }));
   const user = useUserStore((state) => state.user);
   const setAlert = useAlertStore((state) => state.setAlert);
-  const [travelPeriodError, setTravelPeriodError] = useState('');
+  const [travelPeriodError, setTravelPeriodError] = useState<string>('');
   const [imageIds, setImageIds] = useState<string[]>([]);
   const quillRef = useRef<ReactQuill>(null);
 
@@ -209,8 +209,13 @@ const PostingPage = () => {
     for (const [key, value] of formData.entries()) {
       console.log(key, value);
     }
+
     try {
-      const response = await axios.post('/posts', formData);
+      const response = await axios.post('/posts', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       console.log(response);
     } catch (error) {
       console.log(error);
