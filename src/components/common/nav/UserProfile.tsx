@@ -16,7 +16,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ userIconColor }) => {
       className={`flex h-[30px] w-[30px] items-center justify-center rounded-full ${userIconColor}`}
     >
       {user?.profile_image ? (
-        <img src={user.profile_image} />
+        <img src={user.profile_image} className='rounded-full' />
       ) : (
         <FaRegUser className={`text-lg ${userIconColor}`} />
       )}
