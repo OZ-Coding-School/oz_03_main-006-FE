@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ReactQuill, { Quill } from 'react-quill';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import 'react-quill/dist/quill.snow.css';
 import './PostingPage.css';
 import TagItem from '../components/TagItem';
-import { useTagStore } from '../../config/store';
+import { useTagStore, useUserStore, useAlertStore } from '../../config/store';
 import ImageResize from 'quill-image-resize';
+import Alert from '../components/common/Alert';
 Quill.register('modules/ImageResize', ImageResize);
 
 interface FormData {
@@ -40,7 +41,17 @@ const PostingPage = () => {
     tags: state.tags,
     addTag: state.addTag,
   }));
+  const user = useUserStore((state) => state.user);
   const [travelPeriodError, setTravelPeriodError] = useState('');
+  const setAlert = useAlertStore((state) => state.setAlert);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!user) {
+      setAlert('로그인이 필요한 페이지 입니다.');
+      navigate('/login');
+    }
+  }, [user, navigate]);
 
   // 에디터 모듈 설정
   const modules = {
@@ -132,6 +143,7 @@ const PostingPage = () => {
   return (
     <>
       <div className='fixed left-0 top-0 z-10 w-screen bg-white'>
+        <Alert></Alert>
         <Link to='/' className='flex items-center py-[20px] pl-[30px]'>
           <img src='/logo.svg' alt='한바퀴 로고' className='w-9' />
           <h1 className={'font-okgung text-2xl text-black'}>한바퀴</h1>
