@@ -123,16 +123,16 @@ const Login = () => {
             <div className='h-[1px] bg-[#BFBFBF]'></div>
           </div>
           <div className='flex h-[100px] items-center justify-center gap-6'>
-            <Link to='/'>
+            <Link to='https://kauth.kakao.com/oauth/authorize'>
               <img src='/kakao-logo.svg' />
             </Link>
             <Link
-              to='/'
+              to='https://accounts.google.com/o/oauth2/v2/auth'
               className='flex h-[49px] w-[49px] items-center justify-center rounded-full bg-white'
             >
               <img src='/google-logo.svg' className='h-8 w-8' />
             </Link>
-            <Link to='/'>
+            <Link to='https://nid.naver.com/oauth2.0/authorize'>
               <img src='/naver-logo.svg' />
             </Link>
           </div>
