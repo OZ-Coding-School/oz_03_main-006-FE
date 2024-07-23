@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import ReactQuill, { Quill } from 'react-quill';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -8,6 +8,7 @@ import TagItem from '../components/TagItem';
 import { useTagStore, useUserStore, useAlertStore } from '../../config/store';
 import ImageResize from 'quill-image-resize';
 import Alert from '../components/common/Alert';
+import axios from 'axios';
 Quill.register('modules/ImageResize', ImageResize);
 
 interface FormData {
@@ -44,6 +45,8 @@ const PostingPage = () => {
   const user = useUserStore((state) => state.user);
   const setAlert = useAlertStore((state) => state.setAlert);
   const [travelPeriodError, setTravelPeriodError] = useState('');
+  const [imageIds, setImageIds] = useState<string[]>([]);
+  const quillRef = useRef<ReactQuill>(null);
 
   const navigate = useNavigate();
 
@@ -53,6 +56,38 @@ const PostingPage = () => {
       navigate('/login');
     }
   }, [user, navigate]);
+
+  const imageHandler = useCallback(() => {
+    const input = document.createElement('input');
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', 'image/*');
+    input.click();
+
+    input.onchange = async () => {
+      const file = input.files?.[0];
+      if (file) {
+        const formData = new FormData();
+        formData.append('image', file);
+
+        try {
+          const response = await axios.post('/posts/images', formData);
+          console.log(response);
+
+          setImageIds((prev) => [...prev, response.data.imaages.id]);
+          const imageUrl = response.data.images.image;
+          console.log('업로드된 이미지 URL:', imageUrl);
+
+          const quill = quillRef.current?.getEditor();
+          if (quill) {
+            const range = quill.getSelection(true);
+            quill.insertEmbed(range.index, 'image', imageUrl);
+          }
+        } catch (error) {
+          console.error('이미지 업로드 실패:', error);
+        }
+      }
+    };
+  }, []);
 
   // 에디터 모듈 설정
   const modules = {
@@ -70,6 +105,9 @@ const PostingPage = () => {
         [{ color: [] }, { background: [] }],
         ['image'],
       ],
+      handlers: {
+        image: imageHandler,
+      },
     },
     ImageResize: {
       parchment: Quill.import('parchment'),
@@ -137,8 +175,46 @@ const PostingPage = () => {
   };
 
   //서버에 보낼때
-  const onSubmit: SubmitHandler<FormData> = (data) => {
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
     console.log(data);
+    const formData = new FormData();
+    const temp_image_ids = imageIds.join(',');
+    // const postData = {
+    //   user_id: user?.user_id,
+    //   title: data.title,
+    //   tag: tags.map((tag) => tag.content).join(','),
+    //   region: data.location,
+    //   body: data.content,
+    //   view_count: 0,
+    //   travel_start_date: data.startDate,
+    //   travel_end_date: data.endDate,
+    //   temp_image_ids: temp_image_ids,
+    // };
+
+    formData.append('user_id', user?.user_id?.toString() || '');
+    formData.append('title', data.title);
+    formData.append('tag', tags.map((tag) => tag.content).join(','));
+    formData.append('region', data.location);
+    formData.append('body', data.content);
+    formData.append('view_count', '0');
+    formData.append('travel_start_date', data.startDate);
+    formData.append('travel_end_date', data.endDate);
+    formData.append('temp_image_ids', temp_image_ids);
+
+    if (data.thumnail && data.thumnail.length > 0) {
+      formData.append('thumbnail', data.thumnail[0]);
+    }
+
+    console.log('FormData contents:');
+    for (const [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
+    try {
+      const response = await axios.post('/posts', formData);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -161,23 +237,23 @@ const PostingPage = () => {
               <option value='' disabled>
                 지역을 선택해주세요
               </option>
-              <option value='서울'>서울</option>
-              <option value='경기도'>경기도</option>
-              <option value='인천'>인천</option>
-              <option value='강원도'>강원도</option>
-              <option value='경상북도'>경상북도</option>
-              <option value='경상남도'>경상남도</option>
-              <option value='대구'>대구</option>
-              <option value='울산'>울산</option>
-              <option value='부산'>부산</option>
-              <option value='충청북도'>충청북도</option>
-              <option value='충청남도'>충청남도</option>
-              <option value='세종'>세종</option>
-              <option value='대전'>대전</option>
-              <option value='전라북도'>전라북도</option>
-              <option value='전라남도'>전라남도</option>
-              <option value='광주'>광주</option>
-              <option value='제주도'>제주도</option>
+              <option value='1'>서울</option>
+              <option value='2'>경기도</option>
+              <option value='3'>인천</option>
+              <option value='4'>강원도</option>
+              <option value='5'>경상북도</option>
+              <option value='6'>경상남도</option>
+              <option value='7'>대구</option>
+              <option value='8'>울산</option>
+              <option value='9'>부산</option>
+              <option value='10'>충청북도</option>
+              <option value='11'>충청남도</option>
+              <option value='12'>세종</option>
+              <option value='13'>대전</option>
+              <option value='14'>전라북도</option>
+              <option value='15'>전라남도</option>
+              <option value='16'>광주</option>
+              <option value='17'>제주도</option>
             </select>
           </div>
           <div>
@@ -254,6 +330,7 @@ const PostingPage = () => {
             />
           </div>
           <ReactQuill
+            ref={quillRef}
             modules={modules}
             placeholder='당신의 여행 이야기를 들려주세요..'
             className={'quill-toolbar'}
