@@ -56,8 +56,8 @@ const Article = () => {
 
   const handleDelete = async () => {
     try {
-      const response = await axios.delete('/posts', {
-        data: { post_id: postId },
+      const response = await axios.delete(`/posts/${postId}`, {
+        // data: { post_id: postId },
       });
       console.log(response.data);
     } catch (error) {
