@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import ReactQuill, { Quill } from 'react-quill';
@@ -6,9 +7,11 @@ import 'react-quill/dist/quill.snow.css';
 import './PostingPage.css';
 import TagItem from '../components/TagItem';
 import { useTagStore, useUserStore, useAlertStore } from '../../config/store';
-import ImageResize from 'quill-image-resize';
+import { FaPlus } from 'react-icons/fa6';
 import Alert from '../components/common/Alert';
+import { locationList } from '../data/locationList';
 import axios from 'axios';
+import ImageResize from 'quill-image-resize';
 Quill.register('modules/ImageResize', ImageResize);
 
 interface FormData {
@@ -18,7 +21,7 @@ interface FormData {
   endDate: string;
   content: string;
   tagValue: string;
-  thumnail: FileList;
+  thumbnail: FileList;
   [key: string]: string | FileList;
 }
 
@@ -38,6 +41,7 @@ const PostingPage = () => {
       content: '',
     },
   });
+
   const { tags, addTag } = useTagStore((state) => ({
     tags: state.tags,
     addTag: state.addTag,
@@ -46,6 +50,7 @@ const PostingPage = () => {
   const setAlert = useAlertStore((state) => state.setAlert);
   const [travelPeriodError, setTravelPeriodError] = useState<string>('');
   const [imageIds, setImageIds] = useState<string[]>([]);
+  const [fileName, setFileName] = useState<string | null>(null);
   const quillRef = useRef<ReactQuill>(null);
 
   const navigate = useNavigate();
@@ -154,7 +159,7 @@ const PostingPage = () => {
 
   //quill에디터로 작성한 내용
   const handleQuillChange = (content: string) => {
-    setValue('content', content);
+    setValue('content', content === '<p><br></p>' ? '' : content);
     console.log(content);
   };
 
@@ -191,7 +196,7 @@ const PostingPage = () => {
     //   temp_image_ids: temp_image_ids,
     // };
 
-    formData.append('user_id', user?.user_id?.toString() || '');
+    formData.append('user_id', user?.user_id?.toString() || '1');
     formData.append('title', data.title);
     formData.append('tag', tags.map((tag) => tag.content).join(','));
     formData.append('region', data.location);
@@ -201,8 +206,8 @@ const PostingPage = () => {
     formData.append('travel_end_date', data.endDate);
     formData.append('temp_image_ids', temp_image_ids);
 
-    if (data.thumnail && data.thumnail.length > 0) {
-      formData.append('thumbnail', data.thumnail[0]);
+    if (data.thumbnail && data.thumbnail.length > 0) {
+      formData.append('thumbnail', data.thumbnail[0]);
     }
 
     console.log('FormData contents:');
@@ -222,6 +227,14 @@ const PostingPage = () => {
     }
   };
 
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const fileList = event.currentTarget.files;
+    if (fileList) {
+      setValue('thumbnail', fileList);
+      setFileName(fileList[0].name);
+    }
+  };
+
   return (
     <>
       <div className='fixed left-0 top-0 z-10 w-screen bg-white'>
@@ -235,30 +248,18 @@ const PostingPage = () => {
         <div className='relative mx-auto mt-24 w-full max-w-[1200px] px-4 sm:px-6 lg:px-8'>
           <div className='mb-4'>
             <select
-              className={`cursor-pointer rounded-sm border px-2 py-1 text-sm text-[#7e7e7e] hover:bg-[#eeeeeec8] hover:text-[#5b5b5b] focus:outline-none ${errors.location && 'border-red-500'}`}
+              className={`cursor-pointer rounded-sm border px-2 py-1 text-sm text-[#9f9f9f] hover:bg-[#eeeeeec8] hover:text-[#5b5b5b] focus:outline-none ${errors.location && 'border-red-500'}`}
               id='location'
               {...register('location', { required: '지역을 선택해주세요.' })}
             >
               <option value='' disabled>
                 지역을 선택해주세요
               </option>
-              <option value='1'>서울</option>
-              <option value='2'>경기도</option>
-              <option value='3'>인천</option>
-              <option value='4'>강원도</option>
-              <option value='5'>경상북도</option>
-              <option value='6'>경상남도</option>
-              <option value='7'>대구</option>
-              <option value='8'>울산</option>
-              <option value='9'>부산</option>
-              <option value='10'>충청북도</option>
-              <option value='11'>충청남도</option>
-              <option value='12'>세종</option>
-              <option value='13'>대전</option>
-              <option value='14'>전라북도</option>
-              <option value='15'>전라남도</option>
-              <option value='16'>광주</option>
-              <option value='17'>제주도</option>
+              {locationList.map((location) => (
+                <option key={location.location_id} value={location.location_id}>
+                  {location.name}
+                </option>
+              ))}
             </select>
           </div>
           <div>
@@ -270,7 +271,7 @@ const PostingPage = () => {
               {...register('title', { required: '제목을 입력히주세요.' })}
             ></textarea>
           </div>
-          <div className='mb-4 flex h-7'>
+          <div className='mb-4 flex h-auto min-h-7 flex-wrap'>
             {tags.map((tag, index) => (
               <React.Fragment key={index}>
                 <TagItem tagContent={tag} showDeleteButton={true} />
@@ -286,6 +287,7 @@ const PostingPage = () => {
                 className='focus:outline-none'
                 type='text'
                 id='tag'
+                autoComplete='off'
                 placeholder='태그를 입력하세요'
                 onKeyDown={handleKeyDown}
                 {...register('tagValue')}
@@ -326,13 +328,24 @@ const PostingPage = () => {
               {travelPeriodError}
             </p>
           </div>
-          <div>
+          <div className='mb-3 mt-1 flex'>
             <input
-              className='mb-4 text-sm'
+              className='hidden'
               type='file'
-              id='thumnail'
+              id='thumbnail'
               {...register('thumnail')}
+              onChange={handleFileChange}
             />
+            <label
+              htmlFor='thumbnail'
+              className='mr-4 flex cursor-pointer gap-2 border border-slate-200 bg-[#f8f8f8bb] px-3 py-2 text-xs text-[#9f9f9f] hover:border-slate-300 hover:bg-[#f4f4f4a6]'
+            >
+              <FaPlus className='my-auto size-3' />
+              대표이미지
+            </label>
+            {fileName && (
+              <p className='my-auto text-xs text-[#656565]'>{fileName}</p>
+            )}
           </div>
           <ReactQuill
             ref={quillRef}
@@ -343,7 +356,7 @@ const PostingPage = () => {
           />
           <input type='hidden' {...register('content')} />
           <div className='sticky bottom-0 flex w-full justify-end gap-2 border-t border-[#cdcdcd] bg-white py-2'>
-            <button className='rounded-lg border border-[#28466A] bg-white px-5 py-1 text-sm text-[#28466A] hover:bg-[#f3f7ff]'>
+            <button className='rounded-lg border border-[#28466A] bg-white px-5 py-1 text-sm text-[#28466A] hover:bg-[#f9fbff]'>
               취소
             </button>
             <button

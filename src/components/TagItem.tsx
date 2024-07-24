@@ -11,7 +11,7 @@ interface TagItemProps {
 const TagItem: React.FC<TagItemProps> = ({ tagContent, showDeleteButton }) => {
   const removeTag = useTagStore((state) => state.removeTag);
   return (
-    <div className='mr-2 flex h-auto rounded-md border-[#d9264d] bg-[#ffe9ed] px-2 text-[#d9264d]'>
+    <div className='mr-2 flex h-auto rounded-md border-[#d9264d] bg-[#ffe9ed] px-2 py-1 text-[#d9264d]'>
       <p className='m-auto text-sm'>{tagContent.content}</p>
       {showDeleteButton ? (
         <button
