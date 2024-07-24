@@ -12,6 +12,7 @@ import Alert from '../components/common/Alert';
 import { locationList } from '../data/locationList';
 import axios from 'axios';
 import ImageResize from 'quill-image-resize';
+import { ConfirmAlert } from '../components/common/Alert';
 Quill.register('modules/ImageResize', ImageResize);
 
 interface FormData {
@@ -360,7 +361,12 @@ const PostingPage = () => {
           />
           <input type='hidden' {...register('content')} />
           <div className='sticky bottom-0 flex w-full justify-end gap-2 border-t border-[#cdcdcd] bg-white py-2'>
-            <button className='rounded-lg border border-[#28466A] bg-white px-5 py-1 text-sm text-[#28466A] hover:bg-[#f9fbff]'>
+            <button
+              className='rounded-lg border border-[#28466A] bg-white px-5 py-1 text-sm text-[#28466A] hover:bg-[#f9fbff]'
+              onClick={() => {
+                setAlert('정말 작성을 취소하고 돌아가시겠습니까?');
+              }}
+            >
               취소
             </button>
             <button
@@ -369,6 +375,7 @@ const PostingPage = () => {
             >
               발행
             </button>
+            <ConfirmAlert></ConfirmAlert>
           </div>
         </div>
       </form>
