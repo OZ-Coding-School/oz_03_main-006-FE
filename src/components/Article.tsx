@@ -57,7 +57,7 @@ const Article = () => {
     const getPostData = async () => {
       try {
         const response = await axios.get(`/posts/${postId}`);
-        console.log(response);
+        console.log(response.data);
         setPostUserId(response.user_id); //게시글 작성한 유저의 id
         setPostContent(response.content);
         setPostTitle(response.title);
@@ -141,10 +141,10 @@ const Article = () => {
           )}
         </div>
         <div className='w-full border-y pb-32 pt-4'>
-          <div
+          {/* <div
             className='ql-editor'
             dangerouslySetInnerHTML={{ __html: sanitizer(postContent) }}
-          />
+          /> */}
           장기 여행을 하다 보면 유명한 관광지 외에도 뜻밖의 아름다움을 간직한
           숨겨진 보석 같은 장소들을 만나게 됩니다. 이 포스팅에서는 제가 장기
           여행 중 발견한, 아직 많은 이들에게 알려지지 않은 특별한 장소들을
