@@ -24,10 +24,8 @@ export interface Post {
 export interface User {
   user_id?: number;
   email?: string;
-  nickname?: string;
-  username: string;
+  nickname: string;
   profile_image?: string | null;
-  password?: string;
 }
 
 export interface UserState {
@@ -37,14 +35,14 @@ export interface UserState {
   updateProfileImage: (imageUrl: string) => void;
 }
 export interface SignUpUser {
-  username: string;
+  nickname: string;
   email: string;
   password: string;
   confirmPassword?: string;
 }
 
 export interface LoginUser {
-  username: string;
+  nickname: string;
   password: string;
 }
 

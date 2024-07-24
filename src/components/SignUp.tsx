@@ -3,7 +3,7 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { SignUpUser } from '../../config/types';
 import { useAlertStore } from '../../config/store';
 import Alert from './common/Alert';
-//import axios, { AxiosError } from 'axios';
+import axios, { AxiosError } from 'axios';
 
 const SignUp = () => {
   const setAlert = useAlertStore((state) => state.setAlert);
@@ -15,7 +15,7 @@ const SignUp = () => {
     formState: { errors },
   } = useForm<SignUpUser>({
     defaultValues: {
-      username: '',
+      nickname: '',
       email: '',
       password: '',
       confirmPassword: '',
@@ -24,36 +24,39 @@ const SignUp = () => {
   const onSubmit: SubmitHandler<SignUpUser> = async (data) => {
     console.log(data);
     clearValue();
-    setAlert('테스트');
-    // try {
-    //     const { username, email, password } = data;
-    //     await axios.post('/register',{
-    //         username,
-    //         email,
-    //         password,
-    // }, {
-    //       withCredentials: true
-    //     })
-    //     console.log('회원가입 성공');
-    //     setAlert("회원가입이 완료되었습니다. 로그인 후 이용해 주세요.");
-    // } catch (error) {
-    //   if (error instanceof AxiosError && error.response) {
-    //     console.error('회원가입 실패: ', error);
-    //     if (error.response.status === 400) {
-    //       setAlert("이미 사용중인 메일입니다.")
-    //     } else {
-    //       setAlert("회원가입에 실패했습니다. 다시 시도해 주세요.")
-    //     }
-    //   } else {
-    //     console.error('회원가입 실패: ', error);
-    //     setAlert("회원가입 중 문제가 발생했습니다. 다시 시도해 주세요.");
-    //   }
-    // }
+    try {
+      const { nickname, email, password } = data;
+      await axios.post(
+        'http://43.203.170.167:8000/users/accounts/register',
+        {
+          nickname,
+          email,
+          password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      console.log('회원가입 성공');
+      setAlert('회원가입이 완료되었습니다. 로그인 후 이용해 주세요.');
+    } catch (error) {
+      if (error instanceof AxiosError && error.response) {
+        console.error('회원가입 실패: ', error);
+        if (error.response.status === 400) {
+          setAlert('이미 사용중인 닉네임입니다.');
+        } else {
+          setAlert('회원가입에 실패했습니다. 다시 시도해 주세요.');
+        }
+      } else {
+        console.error('회원가입 실패: ', error);
+        setAlert('회원가입 중 문제가 발생했습니다. 다시 시도해 주세요.');
+      }
+    }
   };
 
   const clearValue = () => {
     reset({
-      username: '',
+      nickname: '',
       email: '',
       password: '',
       confirmPassword: '',
@@ -78,32 +81,17 @@ const SignUp = () => {
                 className='bg-[#f4f4f4]] light-white h-11 w-full rounded-md border border-[#f9f9f9] bg-[#28466A] p-2 text-sm'
                 type='text'
                 autoComplete='off'
-                placeholder='아이디'
-                {...register('username', {
+                placeholder='닉네임'
+                {...register('nickname', {
                   required: '필수 항목입니다.',
                   minLength: 2,
                   maxLength: 12,
                   pattern: /^[ㄱ-ㅎ가-힣a-zA-Z0-9]+$/i,
                 })}
               />
-              {errors.username && (
+              {errors.nickname && (
                 <p className='light-white px-2 text-xs'>
                   * 2~12글자 사이의 한글, 영문, 숫자만 가능합니다
-                </p>
-              )}
-              <input
-                className='bg-[#f4f4f4]] light-white h-11 w-full rounded-md border border-[#f9f9f9] bg-[#28466A] p-2 text-sm'
-                type='email'
-                id='email'
-                placeholder='이메일'
-                {...register('email', {
-                  required: '필수 항목입니다.',
-                  pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i,
-                })}
-              />
-              {errors.email && (
-                <p className='light-white px-2 text-xs'>
-                  * 유효한 이메일 주소를 입력해주세요
                 </p>
               )}
               <input
@@ -143,6 +131,21 @@ const SignUp = () => {
                   * 비밀번호가 일치하지 않습니다
                 </p>
               )}
+              <input
+                className='bg-[#f4f4f4]] light-white h-11 w-full rounded-md border border-[#f9f9f9] bg-[#28466A] p-2 text-sm'
+                type='email'
+                id='email'
+                placeholder='이메일'
+                {...register('email', {
+                  required: '필수 항목입니다.',
+                  pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i,
+                })}
+              />
+              {errors.email && (
+                <p className='light-white px-2 text-xs'>
+                  * 유효한 이메일 주소를 입력해주세요
+                </p>
+              )}
             </div>
             <button
               className='h-11 w-full rounded-md bg-[#f4f4f4] font-chosun'
@@ -159,7 +162,7 @@ const SignUp = () => {
               </p>
               <div className='h-[1px] bg-[#BFBFBF]'></div>
             </div>
-            <div className='flex h-[100px] items-center justify-center gap-8'>
+            <div className='flex h-[100px] items-center justify-center gap-10'>
               <Link to='https://kauth.kakao.com/oauth/authorize'>
                 <img src='/kakao-logo.svg' />
               </Link>
@@ -168,9 +171,6 @@ const SignUp = () => {
                 className='flex h-[49px] w-[49px] items-center justify-center rounded-full bg-white'
               >
                 <img src='/google-logo.svg' className='h-8 w-8' />
-              </Link>
-              <Link to='https://nid.naver.com/oauth2.0/authorize'>
-                <img src='/naver-logo.svg' />
               </Link>
             </div>
           </div>
