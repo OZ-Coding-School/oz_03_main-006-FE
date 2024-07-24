@@ -2,7 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import communityData from '../data/community.json';
 import weatherData from '../data/weather.json';
 import React, { useEffect, useState } from 'react';
-import { Post, tag } from '../../config/types';
+import { Post } from '../../config/types';
 import PostCard from './PostCard';
 import Carousel from './Carousel';
 import icons from '../data/icons.json';
@@ -99,12 +99,12 @@ const Community = () => {
     <>
       {/* <div className='container max-w-[1200px] mx-auto px-10 py-8 overflow-hidden h-[100vh]'> */}
       {/* 기본적으로 숨겼다가(hidden) 사이즈가 lg(1024px)가 되면 block */}
-      <div className='mx-auto w-[calc(100vw-392px)]'>
+      <div className='h-screen w-[calc(100vw-392px)] overflow-hidden'>
         {/* min-w-[1200px]로 1200px보다 작아지면 가로 스크롤이 생김 -> 1200px 화면 유지 */}
         <div
-          className={`container mx-auto h-screen min-w-[1200px] overflow-hidden px-10 py-8`}
+          className={`container mx-auto h-full min-w-[1200px] max-w-[1200px] overflow-hidden px-10 py-8`}
         >
-          <div className='flex'>
+          <div className='mb-2 flex'>
             {icons.map((icon) =>
               icon.icon_id === regionData.locations.location_id ? (
                 <img
@@ -141,7 +141,7 @@ const Community = () => {
 
           <hr className='border-1.8 mb-5' />
 
-          <div className='max-h-[calc(100vh-160px)] overflow-y-scroll'>
+          <div className='h-[calc(100%-100px)] overflow-y-auto'>
             {/* <div className='  '> */}
             <div className='mb-8 flex'>
               {/* <img src={regionData.locations.logation_img} alt={regionData.locations.city} className='rounded-xl w-[550px] h-[350px]'/> */}
