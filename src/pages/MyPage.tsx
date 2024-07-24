@@ -85,6 +85,7 @@ const MyPage = () => {
   }, [img]);
 
   console.log(user?.profile_image);
+  console.log(img);
 
   return (
     <>
