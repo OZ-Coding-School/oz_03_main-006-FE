@@ -4,9 +4,10 @@ import ReactQuill, { Quill } from 'react-quill';
 import { useForm } from 'react-hook-form';
 import 'react-quill/dist/quill.snow.css';
 import './PostingPage.css';
-import { useTagStore } from '../../config/store';
+import { useAlertStore, useTagStore } from '../../config/store';
 import TagItem from '../components/TagItem';
 import ImageResize from 'quill-image-resize';
+import { ConfirmAlert } from '../components/common/Alert';
 Quill.register('modules/ImageResize', ImageResize);
 
 const PostingPage = () => {
@@ -16,6 +17,7 @@ const PostingPage = () => {
     addTag: state.addTag,
   }));
   const [travelPeriodError, setTravelPeriodError] = useState('');
+  const { setAlert } = useAlertStore();
 
   // 에디터 모듈 설정
   const modules = {
@@ -244,7 +246,12 @@ const PostingPage = () => {
             })}
           />
           <div className='sticky bottom-0 flex w-full justify-end gap-2 border-t border-[#cdcdcd] bg-white py-2'>
-            <button className='rounded-lg border border-[#28466A] bg-white px-5 py-1 text-sm text-[#28466A] hover:bg-[#f3f7ff]'>
+            <button
+              className='rounded-lg border border-[#28466A] bg-white px-5 py-1 text-sm text-[#28466A] hover:bg-[#f3f7ff]'
+              onClick={() => {
+                setAlert('정말 작성을 취소하고 돌아가시겠습니까?');
+              }}
+            >
               취소
             </button>
             <button
@@ -253,6 +260,7 @@ const PostingPage = () => {
             >
               발행
             </button>
+            <ConfirmAlert></ConfirmAlert>
           </div>
         </div>
       </form>
