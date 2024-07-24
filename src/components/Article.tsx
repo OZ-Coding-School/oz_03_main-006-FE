@@ -6,6 +6,10 @@ import { IoMdHeart, IoMdHeartEmpty } from 'react-icons/io';
 import { useEffect, useState } from 'react';
 import { useUserStore, useAlertStore } from '../../config/store';
 import Alert from './common/Alert';
+import dompurify from 'dompurify';
+import { locationList } from '../data/locationList';
+
+const sanitizer = dompurify.sanitize;
 
 const Article = () => {
   const user = useUserStore((state) => state.user);
@@ -23,6 +27,14 @@ const Article = () => {
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const [showButton, setShowButton] = useState<boolean>(false);
   const [postUserId, setPostUserId] = useState(null);
+  const [postContent, setPostContent] = useState<string>('');
+  const [postTitle, setPostTitle] = useState<string>('');
+  const [postRegion, setPostRegion] = useState<string>('');
+  const [postTags, setPostTags] = useState<string[]>([]);
+  const [postStartDate, setPostStartDate] = useState<string>('');
+  const [postEndDate, setPostEndDate] = useState<string>('');
+  const [postCreateDate, setPostCreateDate] = useState<string>('');
+  const [postView, setPostView] = useState<string>('');
 
   useEffect(() => {
     if (user && postUserId && user.user_id === postUserId) {
@@ -45,8 +57,20 @@ const Article = () => {
     const getPostData = async () => {
       try {
         const response = await axios.get(`/posts/${postId}`);
-        // setPostUserId(response.user_id); //게시글 작성한 유저의 id
         console.log(response);
+        setPostUserId(response.user_id); //게시글 작성한 유저의 id
+        setPostContent(response.content);
+        setPostTitle(response.title);
+        matchLocationName(response.region);
+        setPostStartDate(response.travel_start_date);
+        setPostEndDate(response.travel_end_date);
+        setPostCreateDate(response.created_at);
+        setPostView(response.view_count);
+
+        //유저 아이디로 닉네임 가져와야 함..
+
+        const tagsArr = response.tag.split(',').map((i) => i.trim());
+        setPostTags(tagsArr);
       } catch (error) {
         console.error(error);
       }
@@ -54,11 +78,16 @@ const Article = () => {
     getPostData();
   }, [postId]);
 
+  const matchLocationName = (value: string) => {
+    const location = locationList.find(
+      (loc) => loc.location_id === parseInt(value)
+    );
+    location ? setPostRegion(location.name) : setPostRegion('');
+  };
+
   const handleDelete = async () => {
     try {
-      const response = await axios.delete(`/posts/${postId}`, {
-        // data: { post_id: postId },
-      });
+      const response = await axios.delete(`/posts/${postId}`);
       console.log(response.data);
     } catch (error) {
       console.error(error);
@@ -112,6 +141,10 @@ const Article = () => {
           )}
         </div>
         <div className='w-full border-y pb-32 pt-4'>
+          <div
+            className='ql-editor'
+            dangerouslySetInnerHTML={{ __html: sanitizer(postContent) }}
+          />
           장기 여행을 하다 보면 유명한 관광지 외에도 뜻밖의 아름다움을 간직한
           숨겨진 보석 같은 장소들을 만나게 됩니다. 이 포스팅에서는 제가 장기
           여행 중 발견한, 아직 많은 이들에게 알려지지 않은 특별한 장소들을
