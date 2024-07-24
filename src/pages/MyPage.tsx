@@ -11,9 +11,13 @@ import { FaRegUser } from 'react-icons/fa';
 const MyPage = () => {
   const [edit, setEdit] = useState(false);
   const [profileEdit, setProfileEdit] = useState(false);
+
   const navigate = useNavigate();
 
   const { user, setUser, updateProfileImage } = useUserStore((state) => state);
+
+  const [nickname, setNickname] = useState(user?.nickname || '');
+  const [img, setImg] = useState(user?.profile_image || '');
 
   const handleLogout = async () => {
     navigate('/');
@@ -40,26 +44,45 @@ const MyPage = () => {
     e.preventDefault();
     console.log(e.target.value);
     console.log(user);
-    const newNickname = e.target.value;
-    if (user) {
-      setUser({ ...user, nickname: newNickname });
-    }
+    setNickname(e.target.value);
   };
   console.log(user?.nickname);
 
-  const handleNewNick = () => {
+  const handleNewNick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     setEdit((edit) => !edit);
     setProfileEdit((edit) => !edit);
+    if (user) {
+      setUser({ ...user, nickname: nickname });
+      updateProfileImage(img);
+    }
   };
 
   console.log(profileEdit);
 
-  // // 파일 객체를 받아서 그 파일을 브라우저에서 바로 사용할 수 있는 URL로 변환하는 역할 -> 미리보기
-  // const handleFileSelect = (file: File) => {
-  //   const imageUrl = URL.createObjectURL(file);
-  //   console.log(imageUrl);
-  //   console.log(typeof imageUrl);
-  // }
+  const handleCancle = () => {
+    if (user && user.nickname) {
+      setNickname(user.nickname);
+    }
+    if (user && user.profile_image) {
+      setImg(user.profile_image);
+    }
+    setEdit((edit) => !edit);
+    setProfileEdit((edit) => !edit);
+  };
+
+  const handleFileSelect = (file: File) => {
+    const imageUrl = URL.createObjectURL(file);
+    console.log(imageUrl);
+    setImg(imageUrl);
+    updateProfileImage(imageUrl);
+    console.log('Selected file:', file);
+    console.log('Image URL:', imageUrl);
+  };
+
+  useEffect(() => {
+    console.log('Current img state:', img);
+  }, [img]);
 
   console.log(user?.profile_image);
 
@@ -82,15 +105,17 @@ const MyPage = () => {
                   {profileEdit ? (
                     <>
                       <ProfileImage
+                        setImg={setImg}
                         updateProfileImage={updateProfileImage}
                         profile_img={user?.profile_image}
+                        onFileSelect={handleFileSelect}
                       />
                     </>
                   ) : (
                     <div>
-                      {user?.profile_image ? (
+                      {img ? (
                         <img
-                          src={user?.profile_image}
+                          src={img}
                           className='h-32 w-32 rounded-full text-3xl'
                         />
                       ) : (
@@ -107,7 +132,7 @@ const MyPage = () => {
                         placeholder='닉네임을 수정해주세요.'
                         className='border-gray my-12 ml-8 rounded-md border border-2'
                         onChange={handleNickname}
-                        value={user?.nickname}
+                        value={nickname}
                       />
                     </>
                   ) : (
@@ -118,12 +143,20 @@ const MyPage = () => {
                 </div>
                 <div className='mr-4 mt-12 flex text-xl'>
                   {edit ? (
-                    <button
-                      onClick={handleNewNick}
-                      className='mr-4 h-[23px] rounded bg-[#28466A] px-2 text-sm text-white'
-                    >
-                      수정
-                    </button>
+                    <>
+                      <button
+                        onClick={handleCancle}
+                        className='mr-4 h-[23px] rounded bg-[#28466A] px-2 text-sm text-white'
+                      >
+                        취소
+                      </button>
+                      <button
+                        onClick={handleNewNick}
+                        className='mr-4 h-[23px] rounded bg-[#28466A] px-2 text-sm text-white'
+                      >
+                        수정
+                      </button>
+                    </>
                   ) : (
                     <FaUserEdit className='mr-4' onClick={handleEdit} />
                   )}

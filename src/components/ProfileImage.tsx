@@ -1,67 +1,93 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react';
 import { FaCamera } from 'react-icons/fa';
+import ProfileModal from './ProfileModal';
 
 interface FileUploadProps {
-    // onFileSelect: (file: File) => void;
-    updateProfileImage: (imageUrl: string) => void;
-    profile_img: (string)
+  // onFileSelect: (file: File) => void;
+  updateProfileImage: (imageUrl: string) => void;
+  profile_img?: string | null;
+  setImg: React.Dispatch<React.SetStateAction<string>>;
+  onFileSelect: (file: File) => void;
 }
 
-const ProfileImage: React.FC<FileUploadProps> = ({ profile_img, updateProfileImage}) => {
-    const fileInputRef = useRef<HTMLInputElement>(null);
-    const [profileImg, setProfileImg] = useState<string | null>(null)
+const ProfileImage: React.FC<FileUploadProps> = ({
+  profile_img,
+  updateProfileImage,
+  setImg,
+  onFileSelect,
+}) => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [croppedImage, setCroppedImage] = useState<string | null>(null);
 
-    const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            // 파일 객체를 받아서 그 파일을 브라우저에서 바로 사용할 수 있는 URL로 변환하는 역할 -> 미리보기
-            const imageUrl = URL.createObjectURL(file);
-            setProfileImg(imageUrl);
-            updateProfileImage(imageUrl);
-            console.log(imageUrl);
-        }
-    };
-
-    console.log(profileImg)
-
-    const handleChange = (e: React.MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault();
-        fileInputRef.current?.click()
+  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result as string);
+        console.log('프로필이미지 - handleFileInput : reader.result as string');
+        console.log('프로필이미지 - handleFileInput : reader.result as string');
+        setIsModalOpen(true);
+      };
+      reader.readAsDataURL(file);
     }
+  };
+
+  const handleCroppedImage = (imageFile: File) => {
+    onFileSelect(imageFile);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setCroppedImage(reader.result as string);
+      setImg(reader.result as string);
+    };
+    reader.readAsDataURL(imageFile);
+    setIsModalOpen(false);
+  };
+  const handleChange = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    fileInputRef.current?.click();
+  };
 
   return (
     <>
-        <div className='relative w-32 h-32 rounded-full rounded-full bg-gray-200'>
-            {
-                profileImg ? (
-                    // object-cover : 가로세로 비율 유지 및 컨테이너 채우기, 잘림, 중앙정렬
-                    <img src={profileImg} alt='프로필 이미지' className='w-full h-full object-cover rounded-full'/>
-                ) : (
-                    <div className='flex items-center justify-center w-full h-full' >
-                        {/* <FaCamera className='text-gray-400 text-3xl'/> */}
-                        {
-                            profile_img ? (
-                                <img src={profile_img} alt='프로필 이미지' className='text-3xl w-full h-full object-cover rounded-full'/>
-                            ) : (
-                                <FaCamera className='text-gray-400 text-3xl'/> 
-                            )
-                        }
-                    </div>
-                )
-            }
-            <input 
-                type='file'
-                ref={fileInputRef}
-                onChange={handleFileInput}
-                accept='image/*'
-                className='hidden'
+      <div className='relative h-32 w-32 rounded-full bg-gray-200'>
+        <div className='flex h-full w-full items-center justify-center'>
+          {/* <FaCamera className='text-gray-400 text-3xl'/> */}
+          {profile_img ? (
+            <img
+              src={profile_img}
+              alt='프로필 이미지'
+              className='h-full w-full rounded-full object-cover text-3xl'
             />
-            <button onClick={handleChange} className='absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white opacity-50 hover:opacity-100 rounded-full transition-opacity duration-200'>
-                프로필 사진 수정
-            </button>
+          ) : (
+            <FaCamera className='text-3xl text-gray-400' />
+          )}
         </div>
+        <input
+          type='file'
+          ref={fileInputRef}
+          onChange={handleFileInput}
+          accept='image/*'
+          className='hidden'
+        />
+        <button
+          onClick={handleChange}
+          className='absolute inset-0 flex items-center justify-center rounded-full bg-black bg-opacity-50 text-white opacity-50 transition-opacity duration-200 hover:opacity-100'
+        >
+          프로필 사진 수정
+        </button>
+        {isModalOpen && preview && (
+          <ProfileModal
+            preview={preview}
+            onClose={() => setIsModalOpen(false)}
+            onCrop={handleCroppedImage}
+          />
+        )}
+      </div>
     </>
-  )
-}
+  );
+};
 
-export default ProfileImage
+export default ProfileImage;

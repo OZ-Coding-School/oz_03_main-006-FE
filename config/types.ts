@@ -3,10 +3,10 @@ export interface NavToggleState {
   toggleOpen: () => void;
 }
 
-// export interface tag {
-//   tag_id: number;
-//   name: string;
-// }
+export interface tag {
+  tag_id: number;
+  name: string;
+}
 
 export interface Post {
   post_id: number;
@@ -19,7 +19,7 @@ export interface Post {
   representative_image_id: string;
   travel_start_date: string;
   travel_end_date: string;
-  tags?: Tag[];
+  tags?: tag[];
 }
 export interface User {
   user_id?: number;
