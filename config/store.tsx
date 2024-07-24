@@ -15,7 +15,7 @@ export const useUserStore = create(
       clearUser: () => set({ user: null }),
       updateProfileImage: (imageUrl: string) => 
         set((state) => ({
-          user: state.user ? {...state.user, profile_img: imageUrl  } : null,
+          user: state.user ? {...state.user, profile_image: imageUrl  } : null,
         }))
     }),
     {
