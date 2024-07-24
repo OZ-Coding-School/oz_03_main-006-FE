@@ -75,7 +75,11 @@ const PostingPage = () => {
         formData.append('image', file);
 
         try {
-          const response = await axios.post('/posts/images', formData);
+          const response = await axios.post('/posts/images', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          });
           console.log(response);
 
           setImageIds((prev) => [...prev, response.data.imaages.id]);
@@ -278,7 +282,7 @@ const PostingPage = () => {
                 <input
                   type='hidden'
                   {...register(`tag${index}`)}
-                  value={tag.content}
+                  value={tag.name}
                 />
               </React.Fragment>
             ))}

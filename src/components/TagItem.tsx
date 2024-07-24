@@ -12,11 +12,11 @@ const TagItem: React.FC<TagItemProps> = ({ tagContent, showDeleteButton }) => {
   const removeTag = useTagStore((state) => state.removeTag);
   return (
     <div className='mr-2 flex h-auto rounded-md border-[#d9264d] bg-[#ffe9ed] px-2 py-1 text-[#d9264d]'>
-      <p className='m-auto text-sm'>{tagContent.content}</p>
+      <p className='m-auto text-sm'>{tagContent.name}</p>
       {showDeleteButton ? (
         <button
           className='ml-2 text-sm text-[#d9264d]'
-          onClick={() => removeTag(tagContent.id)}
+          onClick={() => removeTag(tagContent.tag_id)}
         >
           <RxCross2 />
         </button>
