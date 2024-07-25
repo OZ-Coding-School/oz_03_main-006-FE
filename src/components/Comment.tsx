@@ -129,7 +129,7 @@ const Comment = () => {
         <input
           type='submit'
           value='댓글 작성'
-          className='mb-5 ml-auto mr-2 block h-[34px] w-[96px] cursor-pointer rounded-[6px] bg-[#28466A] font-semibold text-white'
+          className='mb-5 ml-auto mr-2 block h-[34px] w-[96px] cursor-pointer rounded-[6px] bg-[#28466A] font-semibold text-white hover:bg-[#1a2e46]'
         />
       </form>
       {comments?.map((comment) => (

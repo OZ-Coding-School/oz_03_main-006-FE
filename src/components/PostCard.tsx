@@ -26,11 +26,8 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
   return (
     <>
       <Link to={`/post-detail/${post.post_id}`} className='block'>
-        <div
-          key={post.post_id}
-          className='flex rounded-lg bg-white p-6 shadow-md'
-        >
-          <div className='w-[300px] justify-center rounded-xl bg-[#F4F4F4]'>
+        <div key={post.post_id} className='flex rounded-lg bg-white py-2'>
+          <div className='size-[170px] shrink-0 rounded-xl bg-[#F4F4F4]'>
             <img
               src={postImg}
               alt={post.title}
@@ -42,7 +39,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
             <div className='mb-2 flex justify-between'>
               {/* flex-wrap 로 높이 8로 넘어가면 숨기기 -> overflow-hidden  */}
               {/* {어차피 flex-wrap으로 다음줄로 넘어가면 } */}
-              <div className='mr-2 flex h-6 flex-wrap gap-2 overflow-hidden'>
+              <div className='mr-2 flex h-auto flex-wrap gap-2 overflow-hidden'>
                 {post.tags?.map((tag, index) => (
                   <span
                     key={index}

@@ -119,7 +119,7 @@ const DropdownList: React.FC<DropdownListProps> = ({ map, marker }) => {
 
   return (
     <div className='absolute right-[3%] top-[3%]'>
-      <ul className='flex w-[201px] flex-col overflow-hidden rounded-b-lg rounded-t-lg bg-[#F5F5F5] bg-opacity-60'>
+      <ul className='flex w-[201px] flex-col overflow-hidden rounded-b-lg rounded-t-lg bg-[#f5f5f5a5] pb-2 shadow-sm'>
         <li
           className='mb-1 flex cursor-pointer items-center justify-between p-4 pb-0'
           onClick={toggleFold}
