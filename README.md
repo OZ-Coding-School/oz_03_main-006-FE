@@ -9,8 +9,11 @@
 - https://hancycle.site
 
 ## 기술
-![React](https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black)
 ![TypeScript](https://img.shields.io/badge/typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![React](https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![React Quill](https://img.shields.io/badge/react--quill-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![React Image Crop](https://img.shields.io/badge/react--image--crop-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![React Slick](https://img.shields.io/badge/react--slick-DB7093?style=for-the-badge&logo=react&logoColor=white)
 ![Vite](https://img.shields.io/badge/vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
 ![Prettier](https://img.shields.io/badge/prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=black)
 ![ESLint](https://img.shields.io/badge/eslint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white)
@@ -20,12 +23,8 @@
 ![GitHub](https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white)
 ![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)
 ![CI/CD](https://img.shields.io/badge/CI%2FCD-3DDC84?style=for-the-badge&logo=continuous-delivery&logoColor=white)
-![React Slick](https://img.shields.io/badge/react--slick-DB7093?style=for-the-badge&logo=react&logoColor=white)
 ![Navermaps](https://img.shields.io/badge/navermaps-03C75A?style=for-the-badge&logo=naver&logoColor=white)
-![React Slick](https://img.shields.io/badge/react--slick-DB7093?style=for-the-badge&logo=react&logoColor=white)
 ![JS Cookie](https://img.shields.io/badge/js--cookie-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
-![React Quill](https://img.shields.io/badge/react--quill-61DAFB?style=for-the-badge&logo=react&logoColor=black)
-![React Image Crop](https://img.shields.io/badge/react--image--crop-61DAFB?style=for-the-badge&logo=react&logoColor=black)
 ![Slick Carousel](https://img.shields.io/badge/slick--carousel-339AF0?style=for-the-badge&logo=carousel&logoColor=white)
 ![Zustand](https://img.shields.io/badge/zustand-333333?style=for-the-badge&logo=state-machine&logoColor=white)
 ![Amazon S3](https://img.shields.io/badge/Amazon%20S3-569A31?style=for-the-badge&logo=amazon-s3&logoColor=white)
@@ -47,7 +46,7 @@
       <a href="https://github.com/srnnnn">
         <img src="https://avatars.githubusercontent.com/u/137134667?v=4" width="100" height="100" alt="이주희"/>
         <br />
-        <sub><b>r김세림</b></sub>
+        <sub><b>김세림</b></sub>
       </a>
     </td>
     <td align="center">
