@@ -99,7 +99,7 @@ const Community = () => {
     <>
       {/* <div className='container max-w-[1200px] mx-auto px-10 py-8 overflow-hidden h-[100vh]'> */}
       {/* 기본적으로 숨겼다가(hidden) 사이즈가 lg(1024px)가 되면 block */}
-      <div className='h-screen w-[calc(100vw-392px)] overflow-hidden'>
+      <div className='h-screen w-full overflow-hidden'>
         {/* min-w-[1200px]로 1200px보다 작아지면 가로 스크롤이 생김 -> 1200px 화면 유지 */}
         <div
           className={`container mx-auto h-full min-w-[1200px] max-w-[1200px] overflow-hidden px-10 py-8`}
@@ -123,7 +123,7 @@ const Community = () => {
           </div>
           <select
             onChange={handleRegion}
-            className='mb-2 border-2'
+            className='mb-3 cursor-pointer rounded-sm border px-2 py-1 text-sm text-[#6c6c6c] hover:bg-[#eeeeeec8] hover:text-[#5b5b5b] focus:outline-none'
             defaultValue={sortRegionType}
           >
             <option value='default' disabled>
@@ -141,24 +141,24 @@ const Community = () => {
 
           <hr className='border-1.8 mb-5' />
 
-          <div className='h-[calc(100%-100px)] overflow-y-auto'>
+          <div className='search-scroll-community h-[calc(100%-100px)] overflow-y-auto'>
             {/* <div className='  '> */}
             <div className='mb-8 flex'>
               {/* <img src={regionData.locations.logation_img} alt={regionData.locations.city} className='rounded-xl w-[550px] h-[350px]'/> */}
               <div className='w-[500px] rounded-xl'>
                 <Carousel />
               </div>
-              <div className='px-8 py-12'>
-                <h2 className='mx-auto mb-4 text-4xl'>
+              <div className='px-8 pb-12 pt-8'>
+                <h2 className='mx-auto mb-4 text-4xl font-medium'>
                   {regionData.locations.city}
                 </h2>
-                <p className='my-4'>
-                  <span className='text-gray-600/50'>인기도시</span>
+                <p className='mb-4 mt-8'>
+                  <span className='text-gray-600/70'>인기도시</span>
                   <span></span>
                 </p>
-                <div className='my-4 flex'>
-                  <span className='mr-12 text-gray-600/50'>날씨</span>
-                  <div className='flex justify-between text-blue-700/60'>
+                <div className='mb-7 mt-4 flex'>
+                  <span className='mr-12 text-gray-600/70'>날씨</span>
+                  <div className='my-auto flex justify-between text-blue-700/60'>
                     <span className='mx-3'>{regionWeather?.description}</span>
                     <span>|</span>
                     <span className='mx-3'>
@@ -176,13 +176,13 @@ const Community = () => {
                     </span>
                   </div>
                 </div>
-                <p className='mt-6'>{regionData.locations.information}</p>
+                <p className=''>{regionData.locations.information}</p>
               </div>
             </div>
 
             <select
               onChange={handleArray}
-              className='mb-3 border-2'
+              className='mb-3 mt-7 cursor-pointer rounded-sm border px-2 py-1 text-sm text-[#6c6c6c] hover:bg-[#eeeeeec8] hover:text-[#5b5b5b] focus:outline-none'
               defaultValue={sortType}
             >
               <option value='default' disabled>
@@ -192,7 +192,7 @@ const Community = () => {
               <option value='search'>조회순</option>
             </select>
             {/* grid-cols-1 : 기본적으로 (모바일 화면 등 작은 화면에서 한 열로 배치) / md:grid-cols-2 중간 크기(768px) 이상의 화면에서 두열로 배치 */}
-            <div className='grid grid-cols-2 gap-6'>
+            <div className='mr-3 grid grid-cols-2 gap-6'>
               {sortedPosts.map((post) => (
                 <PostCard key={post.post_id} post={post} />
               ))}

@@ -35,6 +35,7 @@ const Article = () => {
   const [postEndDate, setPostEndDate] = useState<string>('');
   const [postCreateDate, setPostCreateDate] = useState<string>('');
   const [postView, setPostView] = useState<string>('');
+  const [postUsername, setpostUsername] = useState<string>('');
 
   useEffect(() => {
     if (user && postUserId && user.user_id === postUserId) {
@@ -56,7 +57,9 @@ const Article = () => {
   useEffect(() => {
     const getPostData = async () => {
       try {
-        const response = await axios.get(`/posts/${postId}`);
+        const response = await axios.get(
+          `http://52.79.207.68:8000/posts/posts/${postId}/`
+        );
         console.log(response.data);
         setPostUserId(response.user_id); //게시글 작성한 유저의 id
         setPostContent(response.content);
@@ -66,8 +69,7 @@ const Article = () => {
         setPostEndDate(response.travel_end_date);
         setPostCreateDate(response.created_at);
         setPostView(response.view_count);
-
-        //유저 아이디로 닉네임 가져와야 함..
+        setpostUsername(response.username);
 
         const tagsArr = response.tag.split(',').map((i) => i.trim());
         setPostTags(tagsArr);
@@ -105,12 +107,12 @@ const Article = () => {
         </div>
         <div className='mb-2 flex w-full'>
           <span className='w-40 text-xl font-semibold'>지역</span>
-          <span className='text-lg'>{'서울'}</span>
+          <span className='text-lg'>{postRegion}서울</span>
         </div>
         <div className='mb-3 flex w-full'>
           <span className='w-40 text-xl font-semibold'>여행기간</span>
           <span className='text-lg'>
-            {'2024.07.09'} ~ {'2024.07. 22'}
+            {postStartDate}2024.07.09 ~ {postEndDate}2024.07. 22
           </span>
         </div>
         <div className='mb-6 flex h-7 w-full'>
@@ -118,13 +120,17 @@ const Article = () => {
             <TagItem tagContent={tag} showDeleteButton={false} key={index} />
           ))}
           <span className='ml-auto flex gap-2'>
-            <p className='m-auto text-sm text-[#777777]'>{'24'}회</p>{' '}
+            <p className='m-auto text-sm text-[#777777]'>{postView} 24회</p>
             <PiEyesFill className='m-auto text-base text-[#777777]' />
           </span>
         </div>
         <div className='mb-2 flex w-full'>
-          <span className='mr-5 font-semibold'>{'나는 한바퀴유저'}</span>
-          <span className='my-auto text-sm text-[#777777]'>{'2024.07.09'}</span>
+          <span className='mr-5 font-semibold'>
+            {postUsername}나는 한바퀴유저
+          </span>
+          <span className='my-auto text-sm text-[#777777]'>
+            {postCreateDate}2024.07.09
+          </span>
           {showButton && (
             <div className='my-auto ml-auto flex justify-center gap-1 align-middle text-sm text-[#777777]'>
               <button className='cursor-pointer hover:text-[#373737]'>
