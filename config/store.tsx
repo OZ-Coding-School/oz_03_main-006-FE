@@ -13,10 +13,10 @@ export const useUserStore = create(
       user: null,
       setUser: (user: User) => set({ user }),
       clearUser: () => set({ user: null }),
-      updateProfileImage: (imageUrl: string) => 
+      updateProfileImage: (imageUrl: string) =>
         set((state) => ({
-          user: state.user ? {...state.user, profile_image: imageUrl  } : null,
-        }))
+          user: state.user ? { ...state.user, profile_image: imageUrl } : null,
+        })),
     }),
     {
       name: 'userInfo',
@@ -43,10 +43,10 @@ export const useTagStore = create<TagState>((set) => ({
   tags: [],
   addTag: (content: string) =>
     set((state) => ({
-      tags: [...state.tags, { id: Date.now(), content }],
+      tags: [...state.tags, { tag_id: Date.now(), content }],
     })),
   removeTag: (id: number) =>
     set((state) => ({
-      tags: state.tags.filter((tag) => tag.id !== id),
+      tags: state.tags.filter((tag) => tag.tag_id !== id),
     })),
 }));

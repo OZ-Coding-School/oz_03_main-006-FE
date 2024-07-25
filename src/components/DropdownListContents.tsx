@@ -21,7 +21,7 @@ const DropdownListContents: React.FC<DropdownListContentsProps> = ({
       {locationList.slice(startIndex, lastIndex).map((item) => (
         <Link to={`/community/${item.location_id}`} key={item.location_id}>
           <li
-            className='group mb-2 flex items-center pl-4 font-chosun hover:bg-[#575757] hover:bg-opacity-10'
+            className='group flex items-center py-2 pl-4 font-chosun hover:bg-[#233e7815]'
             onMouseEnter={() => moveCenter(item.name)}
             onMouseLeave={clearMoveCenterTimeout}
           >
