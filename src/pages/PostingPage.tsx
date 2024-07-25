@@ -8,11 +8,10 @@ import './PostingPage.css';
 import TagItem from '../components/TagItem';
 import { useTagStore, useUserStore, useAlertStore } from '../../config/store';
 import { FaPlus } from 'react-icons/fa6';
-import Alert from '../components/common/Alert';
 import { locationList } from '../data/locationList';
 import axios from 'axios';
 import ImageResize from 'quill-image-resize';
-import { ConfirmAlert } from '../components/common/Alert';
+import Alert, { ConfirmAlert } from '../components/common/Alert';
 Quill.register('modules/ImageResize', ImageResize);
 
 interface FormData {
@@ -53,7 +52,6 @@ const PostingPage = () => {
   const [imageIds, setImageIds] = useState<string[]>([]);
   const [fileName, setFileName] = useState<string | null>(null);
   const quillRef = useRef<ReactQuill>(null);
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -74,13 +72,18 @@ const PostingPage = () => {
       if (file) {
         const formData = new FormData();
         formData.append('image', file);
+        console.log(formData);
 
         try {
-          const response = await axios.post('/posts/images', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          });
+          const response = await axios.post(
+            'http://52.79.207.68:8000/posts/upload_image/',
+            formData,
+            {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+              },
+            }
+          );
           console.log(response);
 
           setImageIds((prev) => [...prev, response.data.imaages.id]);
@@ -221,11 +224,15 @@ const PostingPage = () => {
     }
 
     try {
-      const response = await axios.post('/posts', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const response = await axios.post(
+        'http://52.79.207.68:8000/posts/posts/',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
       console.log(response);
     } catch (error) {
       console.log(error);
@@ -244,6 +251,7 @@ const PostingPage = () => {
     <>
       <div className='fixed left-0 top-0 z-10 w-screen bg-white'>
         <Alert></Alert>
+        <ConfirmAlert></ConfirmAlert>
         <Link to='/' className='flex items-center py-[20px] pl-[30px]'>
           <img src='/logo.svg' alt='한바퀴 로고' className='w-9' />
           <h1 className={'font-okgung text-2xl text-black'}>한바퀴</h1>
@@ -283,7 +291,7 @@ const PostingPage = () => {
                 <input
                   type='hidden'
                   {...register(`tag${index}`)}
-                  value={tag.name}
+                  value={tag.content}
                 />
               </React.Fragment>
             ))}
@@ -375,7 +383,6 @@ const PostingPage = () => {
             >
               발행
             </button>
-            <ConfirmAlert></ConfirmAlert>
           </div>
         </div>
       </form>

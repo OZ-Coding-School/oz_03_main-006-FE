@@ -3,9 +3,9 @@ export interface NavToggleState {
   toggleOpen: () => void;
 }
 
-export interface tag {
+export interface Tag {
   tag_id: number;
-  name: string;
+  content: string;
 }
 
 export interface Post {
@@ -19,7 +19,7 @@ export interface Post {
   representative_image_id: string;
   travel_start_date: string;
   travel_end_date: string;
-  tags?: tag[];
+  tags?: Tag[];
 }
 export interface User {
   user_id?: number;
@@ -55,13 +55,8 @@ export interface AlertState {
   clearAlert: () => void;
 }
 
-export interface Tag {
-  id: number;
-  content: string;
-}
-
 export interface TagState {
   tags: Tag[];
   addTag: (content: string) => void;
-  removeTag: (id: number) => void;
+  removeTag: (tag_id: number) => void;
 }
