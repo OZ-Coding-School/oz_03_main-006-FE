@@ -6,6 +6,7 @@ import { Post } from '../../config/types';
 import PostCard from './PostCard';
 import Carousel from './Carousel';
 import icons from '../data/icons.json';
+import axios from 'axios';
 
 interface Locations {
   location_id: number;
@@ -28,6 +29,21 @@ interface Weather {
   updated_at: string;
 }
 
+interface CommunityEndItem {
+  body: string;
+  created_at: string;
+  id: number;
+  region: number;
+  tag: string;
+  thumbnail: string;
+  title: string;
+  travel_end_date: string;
+  travel_start_date: string;
+  updated_at: string;
+  user_id: number;
+  view_count: number;
+}
+
 interface CommunityPost {
   locations: Locations;
   posts: Post[];
@@ -38,25 +54,51 @@ const community: CommunityPost[] = communityData;
 
 const Community = () => {
   const { location_id } = useParams<{ location_id: string }>();
+
   const [sortedPosts, setSortedPosts] = useState<any[]>([]);
   const [sortType, setSortType] = useState<string>('default');
   const [sortRegionType, setSortRegionType] = useState<string>('default');
 
+  const [community_end, setCommunity_end] = useState<CommunityEndItem>();
+
   const navigate = useNavigate();
 
+  const fetchCommunityData = async () => {
+    try {
+      const response = await axios.get(`http://52.79.207.68:8000/posts/posts/`);
+      console.log(response);
+      setCommunity_end(response.data);
+    } catch {}
+  };
+
+  useEffect(() => {
+    fetchCommunityData();
+  }, []);
+
+  console.log(community_end);
+  console.log(community);
+  console.log(weather);
+  console.log(typeof community_end);
   // 날씨 정보 가져오기
   const regionWeather = weather.find((region) => {
     return region.location_id === parseInt(location_id || '0', 10);
   });
   console.log(regionWeather);
 
-  // 총지역 데이터에서 각 지역 정보 가져오기
+  // 총지역 데이터에서 각 지역 정보 가져오기 -> 더미데이터 이용
   const regionData = community.find((region) => {
     console.log(location_id);
     console.log(region);
     return region.locations.location_id === parseInt(location_id || '0', 10);
   });
   console.log(regionData);
+
+  // // 지역데이터 가져오기 -> 앤드포인트
+  // if (community_end) {
+  //   const regionData_end = community_end.find((region) => {
+  //     return region.region ===
+  //   });
+  // }
 
   // 데이터 정렬 함수 ( 날짜순, 조회순 )
   const sortPosts = (posts: any[], type: string) => {
@@ -99,7 +141,7 @@ const Community = () => {
     <>
       {/* <div className='container max-w-[1200px] mx-auto px-10 py-8 overflow-hidden h-[100vh]'> */}
       {/* 기본적으로 숨겼다가(hidden) 사이즈가 lg(1024px)가 되면 block */}
-      <div className='h-screen w-[calc(100vw-392px)] overflow-hidden'>
+      <div className='h-screen w-full overflow-hidden'>
         {/* min-w-[1200px]로 1200px보다 작아지면 가로 스크롤이 생김 -> 1200px 화면 유지 */}
         <div
           className={`container mx-auto h-full min-w-[1200px] max-w-[1200px] overflow-hidden px-10 py-8`}

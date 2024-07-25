@@ -1,23 +1,21 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { MdLogout } from 'react-icons/md';
-import { CgProfile } from 'react-icons/cg';
 import { FaUserEdit } from 'react-icons/fa';
 import { useEffect, useState } from 'react';
-import userData from '../data/user.json';
 import { useUserStore } from '../../config/store';
 import ProfileImage from '../components/ProfileImage';
 import { FaRegUser } from 'react-icons/fa';
 
 const MyPage = () => {
-  const [edit, setEdit] = useState(false);
-  const [profileEdit, setProfileEdit] = useState(false);
-
   const navigate = useNavigate();
 
   const { user, setUser, updateProfileImage } = useUserStore((state) => state);
 
+  const [edit, setEdit] = useState(false);
+  const [profileEdit, setProfileEdit] = useState(false);
   const [nickname, setNickname] = useState(user?.nickname || '');
   const [img, setImg] = useState(user?.profile_image || '');
+  const [tempImg, setTempImg] = useState<string | null>(null);
 
   const handleLogout = async () => {
     navigate('/');
@@ -25,13 +23,13 @@ const MyPage = () => {
 
   useEffect(() => {
     if (!user) {
-      // setUser({...userData})
-      // updateProfileImage(userData.profile_image)
       navigate('/');
     }
+    if (user && !user.nickname) {
+      setUser({ ...user, nickname: user.username });
+      setNickname(user.username);
+    }
   }, [user]);
-
-  // console.log(userData)
 
   const handleEdit = () => {
     console.log('edit');
@@ -64,18 +62,23 @@ const MyPage = () => {
     if (user && user.nickname) {
       setNickname(user.nickname);
     }
-    if (user && user.profile_image) {
-      setImg(user.profile_image);
+    if (user && user?.profile_image) {
+      setImg(user?.profile_image);
+      console.log(user?.profile_image);
     }
+    console.log('cancle 버튼~~~~~~');
+
     setEdit((edit) => !edit);
     setProfileEdit((edit) => !edit);
   };
 
   const handleFileSelect = (file: File) => {
+    // blob: 프로토콜로 임시 url 생성 -> 브라우저 내에서만 유효
     const imageUrl = URL.createObjectURL(file);
     console.log(imageUrl);
-    setImg(imageUrl);
-    updateProfileImage(imageUrl);
+    // setImg(imageUrl);
+    // updateProfileImage(imageUrl);
+    console.log('mypage!!!!!!!!!! - handleFileSelect');
     console.log('Selected file:', file);
     console.log('Image URL:', imageUrl);
   };
@@ -107,16 +110,17 @@ const MyPage = () => {
                     <>
                       <ProfileImage
                         setImg={setImg}
-                        updateProfileImage={updateProfileImage}
-                        profile_img={user?.profile_image}
                         onFileSelect={handleFileSelect}
+                        img={img}
+                        profile_img={user?.profile_image}
+                        updateProfileImage={updateProfileImage}
                       />
                     </>
                   ) : (
                     <div>
-                      {img ? (
+                      {user?.profile_image ? (
                         <img
-                          src={img}
+                          src={user.profile_image}
                           className='h-32 w-32 rounded-full text-3xl'
                         />
                       ) : (
@@ -178,7 +182,7 @@ const MyPage = () => {
               </div>
 
               <div className='mt-12 grid grid-cols-2 gap-6'>
-                사용자가 좋아요 누른 포스터들
+                유저가 작성한 게시물들
               </div>
             </div>
           </div>
