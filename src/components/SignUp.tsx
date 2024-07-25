@@ -2,8 +2,9 @@ import { Link } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { SignUpUser } from '../../config/types';
 import { useAlertStore } from '../../config/store';
+import { AxiosError } from 'axios';
+import axios from '../api/axios';
 import Alert from './common/Alert';
-import axios, { AxiosError } from 'axios';
 
 const SignUp = () => {
   const setAlert = useAlertStore((state) => state.setAlert);
@@ -26,8 +27,8 @@ const SignUp = () => {
     clearValue();
     try {
       const { nickname, email, password } = data;
-      await axios.post(
-        'http://43.203.170.167:8000/users/accounts/register',
+      const response = await axios.post(
+        '/users/accounts/register',
         {
           nickname,
           email,
@@ -37,13 +38,13 @@ const SignUp = () => {
           withCredentials: true,
         }
       );
-      console.log('회원가입 성공');
+      console.log('response: ', response);
       setAlert('회원가입이 완료되었습니다. 로그인 후 이용해 주세요.');
     } catch (error) {
       if (error instanceof AxiosError && error.response) {
         console.error('회원가입 실패: ', error);
         if (error.response.status === 400) {
-          setAlert('이미 사용중인 닉네임입니다.');
+          setAlert('이미 사용중인 이름입니다.');
         } else {
           setAlert('회원가입에 실패했습니다. 다시 시도해 주세요.');
         }
@@ -81,7 +82,7 @@ const SignUp = () => {
                 className='bg-[#f4f4f4]] light-white h-11 w-full rounded-md border border-[#f9f9f9] bg-[#28466A] p-2 text-sm'
                 type='text'
                 autoComplete='off'
-                placeholder='닉네임'
+                placeholder='사용자 이름'
                 {...register('nickname', {
                   required: '필수 항목입니다.',
                   minLength: 2,
@@ -92,6 +93,21 @@ const SignUp = () => {
               {errors.nickname && (
                 <p className='light-white px-2 text-xs'>
                   * 2~12글자 사이의 한글, 영문, 숫자만 가능합니다
+                </p>
+              )}
+              <input
+                className='bg-[#f4f4f4]] light-white h-11 w-full rounded-md border border-[#f9f9f9] bg-[#28466A] p-2 text-sm'
+                type='email'
+                id='email'
+                placeholder='이메일'
+                {...register('email', {
+                  required: '필수 항목입니다.',
+                  pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i,
+                })}
+              />
+              {errors.email && (
+                <p className='light-white px-2 text-xs'>
+                  * 유효한 이메일 주소를 입력해주세요
                 </p>
               )}
               <input
@@ -129,21 +145,6 @@ const SignUp = () => {
               {errors.confirmPassword && (
                 <p className='light-white px-2 text-xs'>
                   * 비밀번호가 일치하지 않습니다
-                </p>
-              )}
-              <input
-                className='bg-[#f4f4f4]] light-white h-11 w-full rounded-md border border-[#f9f9f9] bg-[#28466A] p-2 text-sm'
-                type='email'
-                id='email'
-                placeholder='이메일'
-                {...register('email', {
-                  required: '필수 항목입니다.',
-                  pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i,
-                })}
-              />
-              {errors.email && (
-                <p className='light-white px-2 text-xs'>
-                  * 유효한 이메일 주소를 입력해주세요
                 </p>
               )}
             </div>

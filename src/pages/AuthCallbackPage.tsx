@@ -1,14 +1,54 @@
+import Cookies from 'js-cookie';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAlertStore, useUserStore } from '../../config/store';
+import { AxiosError } from 'axios';
+import axios from '../api/axios';
+import Alert from '../components/common/Alert';
+
 const AuthCallbackPage = () => {
-  // 확인해야 할 것
-  // header에 쿠키로 토큰을 받을 수 있는건 알겠음
-  // 그럼 body로 유저 정보를 담아줄 수 있는지? (user_id, nickname, profile_image)
-  // 그럼 프론트는 body에 담긴 유저정보를 어떻게 받아보는지?
-  // 아니면 /users/accounts/user 로 유정정보를 요청하면 될지?
-  // 근데 /users/accounts/user 는 어떤 데이터로 유저 정보를 요청할 수 있나? 쿠키에 있는 토큰으로 가져오나?
+  const setUser = useUserStore((state) => state.setUser);
+  const setAlert = useAlertStore((state) => state.setAlert);
+  const navigate = useNavigate();
+
+  const getUserData = async () => {
+    const token = Cookies.get('jwt') || null;
+    if (!token) {
+      console.error('소셜로그인 토큰 확인 실패');
+      setAlert('로그인 중 문제가 발생했습니다. 다시 시도해 주세요.');
+      navigate('/login');
+      return;
+    }
+
+    try {
+      const response = await axios.get('/users/accounts/user', {
+        withCredentials: true,
+      });
+      console.log('response: ', response);
+      setUser(response.data);
+      setAlert('로그인 되었습니다. 홈페이지로 이동합니다.');
+      navigate('/');
+    } catch (error) {
+      if (error instanceof AxiosError && error.response) {
+        console.error('소셜로그인 유저정보 응답 실패: ', error);
+        setAlert('로그인에 실패했습니다. 다시 시도해 주세요.');
+        navigate('/login');
+      } else {
+        console.error('소셜로그인 유저정보 요청 실패: ', error);
+        setAlert('로그인 중 문제가 발생했습니다. 다시 시도해 주세요.');
+        navigate('/login');
+      }
+    }
+  };
+
+  useEffect(() => {
+    getUserData();
+  }, []);
 
   return (
     <div>
       <h2>로그인 처리 중...</h2>
+      {<Alert />}
     </div>
   );
 };

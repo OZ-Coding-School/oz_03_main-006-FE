@@ -2,9 +2,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { LoginUser } from '../../config/types';
 import { useAlertStore } from '../../config/store';
-import Alert from './common/Alert';
-import axios, { AxiosError } from 'axios';
 import { useUserStore } from '../../config/store';
+import { AxiosError } from 'axios';
+import axios from '../api/axios';
+import Alert from './common/Alert';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ const Login = () => {
     try {
       const { nickname, password } = data;
       const response = await axios.post(
-        'http://43.203.170.167:8000/users/accounts/login',
+        '/users/accounts/login',
         {
           nickname,
           password,
@@ -37,9 +38,9 @@ const Login = () => {
           withCredentials: true,
         }
       );
-      console.log('response: ', response);
+      console.log('response: ', response.data);
       // response에 user_id 들어오는지 확인, profile_image null값으로 보내달라할건지?
-      setUser({ nickname });
+      setUser(response.data);
       setAlert('로그인 되었습니다. 홈페이지로 이동합니다.');
       navigate('/');
     } catch (error) {
@@ -80,19 +81,17 @@ const Login = () => {
             <input
               className='h-12 w-full rounded-md border border-solid border-slate-300 p-2 text-sm'
               type='text'
-              id='username'
-              placeholder='닉네임'
+              id='nickname'
+              placeholder='사용자 이름'
               {...register('nickname', {
-                required: '닉네임을 입력해주세요',
+                required: '사용자 이름을 입력해주세요',
                 minLength: 2,
                 maxLength: 12,
                 pattern: /^[ㄱ-ㅎ가-힣a-zA-Z0-9]+$/i,
               })}
             />
             {errors.nickname && (
-              <p className='px-2 text-xs text-red-500'>
-                * 닉네임은 2~12글자 사이입니다
-              </p>
+              <p className='px-2 text-xs text-red-500'>* 2~12글자 사이입니다</p>
             )}
             <input
               className='h-12 w-full rounded-md border border-solid border-slate-300 p-2 text-sm'
@@ -106,9 +105,7 @@ const Login = () => {
               })}
             />
             {errors.password && (
-              <p className='px-2 text-xs text-red-500'>
-                * 비밀번호는 8글자 이상입니다
-              </p>
+              <p className='px-2 text-xs text-red-500'>* 8글자 이상입니다</p>
             )}
             <button
               className='h-12 w-full rounded-md bg-[#28466A] font-chosun text-white'
@@ -125,11 +122,11 @@ const Login = () => {
             <div className='h-[1px] bg-[#BFBFBF]'></div>
           </div>
           <div className='flex h-[100px] items-center justify-center gap-10'>
-            <Link to='https://kauth.kakao.com/oauth/authorize'>
+            <Link to='http://52.79.207.68:8000/users/accounts/kakao/login/callback/'>
               <img src='/kakao-logo.svg' />
             </Link>
             <Link
-              to='https://accounts.google.com/o/oauth2/v2/auth'
+              to='http://52.79.207.68:8000/users/accounts/google/login/callback/'
               className='flex h-[49px] w-[49px] items-center justify-center rounded-full bg-white'
             >
               <img src='/google-logo.svg' className='h-8 w-8' />
