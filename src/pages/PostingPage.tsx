@@ -248,7 +248,7 @@ const PostingPage = () => {
     //   temp_image_ids: temp_image_ids,
     // };
 
-    formData.append('user_id', user?.user_id?.toString() || '1');
+    formData.append('user_id', user?.user_id?.toString() || '');
     formData.append('title', data.title);
     formData.append('tag', tags.map((tag) => tag.content).join(','));
     formData.append('region', data.location);
@@ -277,6 +277,7 @@ const PostingPage = () => {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
+          withCredentials: true,
         }
       );
       console.log(response);
