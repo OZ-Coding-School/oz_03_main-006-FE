@@ -1,26 +1,31 @@
 import { useParams } from 'react-router-dom';
-import PostsData from '../data/posts.json';
 import { useEffect, useRef, useState } from 'react';
 import { useAlertStore, useUserStore } from '../../config/store';
 import Alert from './common/Alert';
-import axios from 'axios';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import axios from '../api/axios';
 
-// 스웨거 보고 응답형태로 변환 필요.
 interface Comment {
-  comment_id: number;
-  user_id: number;
-  comment: string;
+  id: number;
+  nickname: string;
+  content: string;
   created_at: string;
+  updated_at: string;
+  post: number;
+  user_id: number;
 }
 
 interface FormData {
   comment: string;
 }
 
-const Comment = () => {
+interface CommentProps {
+  comments: Comment[];
+}
+
+const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
   const param = useParams();
-  const [comments, setComments] = useState<Comment[] | undefined>(undefined);
+  const [comments, setComments] = useState<Comment[]>();
   const { user } = useUserStore();
   const { setAlert } = useAlertStore();
   const {
@@ -39,21 +44,17 @@ const Comment = () => {
 
   useEffect(() => {
     postId.current = Number(param.post_id);
-    const post = PostsData.find((item) => {
-      return item.post_id === postId.current;
-    });
-    if (post) {
-      setComments(post.comments);
-    }
-  }, [param.post_id]);
+    setComments(initialComments);
+  }, [param.post_id, initialComments]);
 
   const updateComments = async () => {
     try {
-      const response = await axios.get(`/posts/${postId.current}`);
-      setComments(response.data.comments);
+      const response = await axios.get(`/posts/${postId.current}/`);
+      setComments(response.data.post.comments);
       resetCreateForm();
       resetEditForm();
     } catch (error) {
+      console.error(error + '댓글 업데이트에 실패했습니다.');
       setAlert('댓글 업데이트에 실패했습니다.');
     }
   };
@@ -64,49 +65,63 @@ const Comment = () => {
       return;
     }
     try {
-      await axios.post(`/posts/${postId.current}/comments`, {
-        user_id: user.user_id,
-        content: data.comment,
-      });
+      await axios.post(
+        `/posts/${postId.current}/comments/`,
+        {
+          user_id: 3,
+          content: data.comment,
+        },
+        {
+          withCredentials: true,
+        }
+      );
       updateComments();
     } catch (error) {
+      console.error(error + '댓글 작성에 실패했습니다.');
       setAlert('댓글 작성에 실패했습니다.');
     }
   };
 
-  const deleteComment = async (comment_id: number) => {
-    if (user?.user_id !== comment_id) {
+  const deleteComment = async (commentUserId: number, commentId: number) => {
+    if (user?.user_id !== commentUserId) {
       setAlert('댓글 작성자만 삭제할 수 있습니다.');
       return;
     }
     try {
-      // delete에 body..?
-      await axios.delete(`/posts/comments/${comment_id}`, {
+      await axios.delete(`/posts/comments/${commentId}/`, {
         data: {
-          user_id: user.user_id,
+          comment_pk: commentId,
         },
       });
       updateComments();
     } catch (error) {
-      setAlert('댓글 삭제에 실패했습니다.');
+      console.error(error + '댓글 삭제를 실패했습니다.');
+      setAlert('댓글 삭제를 실패했습니다.');
     }
   };
 
-  const startEditComment = (comment_id: number, comment: string) => {
-    setEditingCommentId(comment_id);
+  const startEditComment = (commentId: number, comment: string) => {
+    setEditingCommentId(commentId);
     setEditValue('comment', comment);
   };
 
   const saveEditComment: SubmitHandler<FormData> = async (data) => {
     try {
-      await axios.put(`/posts/comments/${editingCommentId}`, {
-        content: data.comment,
-        user_id: user?.user_id,
-      });
+      await axios.put(
+        `/posts/comments/${editingCommentId}/`,
+        {
+          content: data.comment,
+          user_id: user?.user_id,
+        },
+        {
+          withCredentials: true,
+        }
+      );
       setEditingCommentId(null);
       updateComments();
     } catch (error) {
-      setAlert('댓글 수정에 실패했습니다.');
+      console.error(error + '댓글 수정을 실패했습니다.');
+      setAlert('댓글 수정을 실패했습니다.');
     }
   };
 
@@ -133,17 +148,17 @@ const Comment = () => {
         />
       </form>
       {comments?.map((comment) => (
-        <div key={comment.comment_id} className='border-b-[1px] p-2'>
+        <div key={comment.id} className='border-b-[1px] p-2'>
           <div className='flex justify-between'>
             <div className='flex'>
               <div className='m-2 text-[16px] font-semibold'>
-                {comment.user_id}
+                {comment.nickname}
               </div>
               <div className='m-2 text-[#777777]'>{comment.created_at}</div>
             </div>
             {user?.user_id === comment.user_id && (
               <div>
-                {editingCommentId === comment.comment_id ? (
+                {editingCommentId === comment.id ? (
                   <>
                     <button
                       className='m-2 text-[13px] text-blue-400'
@@ -163,14 +178,14 @@ const Comment = () => {
                     <button
                       className='m-2 text-[13px] text-blue-400'
                       onClick={() =>
-                        startEditComment(comment.comment_id, comment.comment)
+                        startEditComment(comment.id, comment.content)
                       }
                     >
                       수정
                     </button>
                     <button
                       className='m-2 text-[13px] text-red-400'
-                      onClick={() => deleteComment(comment.comment_id)}
+                      onClick={() => deleteComment(comment.user_id, comment.id)}
                     >
                       삭제
                     </button>
@@ -179,7 +194,7 @@ const Comment = () => {
               </div>
             )}
           </div>
-          {editingCommentId === comment.comment_id ? (
+          {editingCommentId === comment.id ? (
             <form onSubmit={handleEditSubmit(saveEditComment)}>
               <textarea
                 {...editRegister('comment')}
@@ -187,7 +202,7 @@ const Comment = () => {
               />
             </form>
           ) : (
-            <div className='py-3'>{comment.comment}</div>
+            <div className='py-3'>{comment.content}</div>
           )}
         </div>
       ))}
