@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface SearchResultItemProps {
+  id: number;
   title: string;
   body: string;
   representative_image_id: string;
@@ -8,6 +10,7 @@ interface SearchResultItemProps {
 }
 
 const SearchResultItem: React.FC<SearchResultItemProps> = ({
+  id,
   title,
   body,
   representative_image_id,
@@ -16,6 +19,7 @@ const SearchResultItem: React.FC<SearchResultItemProps> = ({
   const [imgSrc, setImgSrc] = useState<string>(
     representative_image_id ? representative_image_id : '/logo.svg'
   );
+  const navigate = useNavigate();
 
   const errorLogoWidth = imgSrc === '/logo.svg' ? 'w-12' : '';
   const errorLogoHeight = imgSrc === '/logo.svg' ? 'h-12' : '';
@@ -40,8 +44,16 @@ const SearchResultItem: React.FC<SearchResultItemProps> = ({
         />
       </div>
       <div className='flex w-[220px] flex-col gap-1'>
-        <h2 className={`mt-1 truncate font-semibold ${textColor}`}>{title}</h2>
-        <p className={`flex-grow text-justify text-sm ${textColor}`}>
+        <h2
+          className={`mt-1 truncate font-semibold ${textColor} cursor-pointer`}
+          onClick={() => navigate(`/post-detail/${id}`)}
+        >
+          {title}
+        </h2>
+        <p
+          className={`flex-grow text-justify text-sm ${textColor} cursor-pointer`}
+          onClick={() => navigate(`/post-detail/${id}`)}
+        >
           {contentTruncate(body, 40)}
         </p>
       </div>
