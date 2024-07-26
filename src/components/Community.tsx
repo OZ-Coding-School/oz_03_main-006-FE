@@ -59,7 +59,8 @@ const Community = () => {
   const [sortType, setSortType] = useState<string>('default');
   const [sortRegionType, setSortRegionType] = useState<string>('default');
 
-  const [community_end, setCommunity_end] = useState<CommunityEndItem>();
+  const [community_end, setCommunity_end] = useState<CommunityEndItem[]>([]);
+  const [regionData_end, setRegionData_end] = useState<CommunityEndItem[]>([]);
 
   const navigate = useNavigate();
 
@@ -93,12 +94,23 @@ const Community = () => {
   });
   console.log(regionData);
 
-  // // 지역데이터 가져오기 -> 앤드포인트
+  // 지역데이터 가져오기 -> 앤드포인트
   // if (community_end) {
-  //   const regionData_end = community_end.find((region) => {
-  //     return region.region ===
+  //   const region_end = community_end.find((region) => {
+  //     return region.region === parseInt(location_id || '0', 10);
   //   });
+  //   console.log(region_end);
+  //   setRegionData_end(region_end);
   // }
+
+  useEffect(() => {
+    if (community_end.length > 0 && location_id) {
+      const foundRegions = community_end.filter(
+        (region) => region.region === parseInt(location_id, 10)
+      );
+      setRegionData_end(foundRegions);
+    }
+  }, [community_end, location_id]);
 
   // 데이터 정렬 함수 ( 날짜순, 조회순 )
   const sortPosts = (posts: any[], type: string) => {
@@ -235,8 +247,8 @@ const Community = () => {
             </select>
             {/* grid-cols-1 : 기본적으로 (모바일 화면 등 작은 화면에서 한 열로 배치) / md:grid-cols-2 중간 크기(768px) 이상의 화면에서 두열로 배치 */}
             <div className='mr-3 grid grid-cols-2 gap-6'>
-              {sortedPosts.map((post) => (
-                <PostCard key={post.post_id} post={post} />
+              {regionData_end.map((post) => (
+                <PostCard key={post.id} post={post} />
               ))}
             </div>
           </div>
