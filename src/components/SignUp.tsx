@@ -177,7 +177,7 @@ const SignUp = () => {
           </div>
         </div>
       </div>
-      {<Alert />}
+      <Alert />
     </div>
   );
 };

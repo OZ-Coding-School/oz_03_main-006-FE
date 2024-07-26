@@ -22,10 +22,10 @@ export interface Post {
   tags?: Tag[];
 }
 export interface User {
-  user_id?: number;
+  user_id: number;
   email?: string;
   nickname: string;
-  profile_image?: string | null;
+  profile_image: string | null;
 }
 
 export interface UserState {

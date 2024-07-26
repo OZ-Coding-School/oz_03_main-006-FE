@@ -39,8 +39,7 @@ const Login = () => {
         }
       );
       console.log('response: ', response.data);
-      // response에 user_id 들어오는지 확인, profile_image null값으로 보내달라할건지?
-      setUser(response.data);
+      setUser({ user_id: 3, nickname, profile_image: null });
       setAlert('로그인 되었습니다. 홈페이지로 이동합니다.');
       navigate('/');
     } catch (error) {
@@ -134,7 +133,7 @@ const Login = () => {
           </div>
         </div>
       </div>
-      {<Alert />}
+      <Alert />
     </div>
   );
 };

@@ -48,7 +48,7 @@ const AuthCallbackPage = () => {
   return (
     <div>
       <h2>로그인 처리 중...</h2>
-      {<Alert />}
+      <Alert />
     </div>
   );
 };
