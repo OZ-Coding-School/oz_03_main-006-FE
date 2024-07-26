@@ -2,34 +2,51 @@ import { Link, useNavigate } from 'react-router-dom';
 import { MdLogout } from 'react-icons/md';
 import { FaUserEdit } from 'react-icons/fa';
 import { useEffect, useState } from 'react';
-import { useUserStore } from '../../config/store';
+import { useAlertStore, useUserStore } from '../../config/store';
 import ProfileImage from '../components/ProfileImage';
 import { FaRegUser } from 'react-icons/fa';
+import axios from 'axios';
+import axiosInstance from '../api/axios';
 
 const MyPage = () => {
   const navigate = useNavigate();
 
-  const { user, setUser, updateProfileImage } = useUserStore((state) => state);
+  const { user, setUser, updateProfileImage, clearUser } = useUserStore(
+    (state) => state
+  );
 
   const [edit, setEdit] = useState(false);
   const [profileEdit, setProfileEdit] = useState(false);
   const [nickname, setNickname] = useState(user?.nickname || '');
   const [img, setImg] = useState(user?.profile_image || '');
   const [tempImg, setTempImg] = useState<string | null>(null);
+  const setAlert = useAlertStore((state) => state.setAlert);
 
   const handleLogout = async () => {
-    navigate('/');
+    try {
+      const response = await axiosInstance.post(
+        `/users/accounts/logout`,
+        {},
+        { withCredentials: true }
+      );
+      clearUser();
+      console.log(response.data);
+      navigate('/');
+    } catch (error) {
+      console.error('Logout failed', error);
+    }
   };
 
   useEffect(() => {
     if (!user) {
-      navigate('/');
+      setAlert('로그인이 필요한 페이지 입니다.');
+      navigate('/login');
     }
-    if (user && !user.nickname) {
-      setUser({ ...user, nickname: user.username });
-      setNickname(user.username);
-    }
-  }, [user]);
+    // if (user && !user.nickname) {
+    //   setUser({ ...user, nickname: user.username });
+    //   setNickname(user.username);
+    // }
+  }, [user, navigate]);
 
   const handleEdit = () => {
     console.log('edit');
@@ -46,13 +63,29 @@ const MyPage = () => {
   };
   console.log(user?.nickname);
 
-  const handleNewNick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleNewNick = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setEdit((edit) => !edit);
     setProfileEdit((edit) => !edit);
     if (user) {
       setUser({ ...user, nickname: nickname });
       updateProfileImage(img);
+      try {
+        const response = await axios.post(
+          `/users/accounts/profile/edit`,
+          {
+            id: user.user_id,
+            nickname: nickname,
+            profile_image: img,
+          },
+          {
+            withCredentials: true,
+          }
+        );
+        console.log(response.data);
+      } catch (error) {
+        console.error('Profile update failed', error);
+      }
     }
   };
 

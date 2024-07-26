@@ -66,7 +66,7 @@ const Community = () => {
 
   const fetchCommunityData = async () => {
     try {
-      const response = await axios.get(`http://52.79.207.68:8000/posts/posts/`);
+      const response = await axios.get(`http://52.79.207.68:8000/posts/`);
       console.log(response);
       setCommunity_end(response.data);
     } catch {}
