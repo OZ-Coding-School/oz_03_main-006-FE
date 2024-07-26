@@ -87,8 +87,8 @@ const PostingPage = () => {
           );
           console.log(response);
 
-          setImageIds((prev) => [...prev, response.data.imaages.id]);
-          const imageUrl = response.data.images.image;
+          setImageIds((prev) => [...prev, response.data.images[0].id]);
+          const imageUrl = response.data.images[0].image;
           console.log('업로드된 이미지 URL:', imageUrl);
 
           const quill = quillRef.current?.getEditor();
@@ -240,7 +240,7 @@ const PostingPage = () => {
     console.log(user?.user_id);
 
     // formData.append('user_id', user?.user_id?.toString() || '');
-    formData.append('user_id', '1');
+    formData.append('user_id', '4');
     formData.append('title', data.title);
     formData.append('tag', tags.map((tag) => tag.content).join(','));
     formData.append('region', data.location);
