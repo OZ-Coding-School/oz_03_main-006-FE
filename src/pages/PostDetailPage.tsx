@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import Article from '../components/Article';
 import Comment from '../components/Comment';
-import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { DetailPostArticle } from '../../config/types';
 import Loading from '../components/common/Loading';
+import axios from '../api/axios';
 
 const PostDetailPage = () => {
   const { post_id } = useParams();
@@ -13,12 +13,10 @@ const PostDetailPage = () => {
 
   useEffect(() => {
     axios
-      .get(`http://52.79.207.68:8000/posts/${post_id}/`)
+      .get(`/posts/${post_id}/`)
       .then((res) => {
         setArticle(res.data.post);
         setComments(res.data.post.comments);
-
-        console.log(res);
       })
       .catch((error) =>
         console.error(
@@ -26,6 +24,7 @@ const PostDetailPage = () => {
         )
       );
   }, [post_id]);
+
 
   if (!article || !comments) {
     return <Loading></Loading>;
