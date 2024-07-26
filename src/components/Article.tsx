@@ -7,24 +7,9 @@ import { useUserStore, useAlertStore } from '../../config/store';
 import Alert from './common/Alert';
 import dompurify from 'dompurify';
 import { locationList } from '../data/locationList';
-import { Tag } from '../../config/types';
+import { Tag, DetailPostArticle } from '../../config/types';
 
 const sanitizer = dompurify.sanitize;
-
-interface DetailPostArticle {
-  post_id: number;
-  username: string;
-  title: string;
-  tag: string;
-  region: number;
-  body: string;
-  created_at: string;
-  view_count: number;
-  travel_start_date: string | null;
-  travel_end_date: string | null;
-  user_id: number;
-  likes_count: number;
-}
 
 interface ArticleProps {
   article: DetailPostArticle;
@@ -46,7 +31,7 @@ const Article: React.FC<ArticleProps> = ({ article }) => {
   const [postEndDate, setPostEndDate] = useState<string>('');
   const [postCreateDate, setPostCreateDate] = useState<string>('');
   const [postView, setPostView] = useState<number>(0);
-  const [postUsername, setpostUsername] = useState<string>('');
+  const [postNickname, setPostNickname] = useState<string>('');
   const [postLikesCount, setPostLikesCount] = useState<number>(0);
 
   useEffect(() => {
@@ -69,7 +54,7 @@ const Article: React.FC<ArticleProps> = ({ article }) => {
   useEffect(() => {
     if (article) {
       setPostUserId(article.user_id);
-      setpostUsername(article.username);
+      setPostNickname(article.nickname);
       setPostContent(article.body);
       setPostTitle(article.title);
       matchLocationName(article.region);
@@ -126,7 +111,7 @@ const Article: React.FC<ArticleProps> = ({ article }) => {
           </span>
         </div>
         <div className='mb-2 flex w-full'>
-          <span className='mr-5 font-semibold'>{postUsername}</span>
+          <span className='mr-5 font-semibold'>{postNickname}</span>
           <span className='my-auto text-sm text-[#777777]'>
             {postCreateDate}
           </span>
