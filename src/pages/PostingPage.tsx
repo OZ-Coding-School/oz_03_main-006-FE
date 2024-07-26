@@ -72,7 +72,7 @@ const PostingPage = () => {
       const file = input.files?.[0];
       if (file) {
         const formData = new FormData();
-        formData.append('image', file);
+        formData.append('images', file);
         console.log(formData);
 
         try {
@@ -147,6 +147,7 @@ const PostingPage = () => {
   // }, []);
 
   // 에디터 모듈 설정
+
   const modules = {
     toolbar: {
       container: [
@@ -236,19 +237,10 @@ const PostingPage = () => {
     console.log(data);
     const formData = new FormData();
     const temp_image_ids = imageIds.join(',');
-    // const postData = {
-    //   user_id: user?.user_id,
-    //   title: data.title,
-    //   tag: tags.map((tag) => tag.content).join(','),
-    //   region: data.location,
-    //   body: data.content,
-    //   view_count: 0,
-    //   travel_start_date: data.startDate,
-    //   travel_end_date: data.endDate,
-    //   temp_image_ids: temp_image_ids,
-    // };
+    console.log(user?.user_id);
 
-    formData.append('user_id', user?.user_id?.toString() || '');
+    // formData.append('user_id', user?.user_id?.toString() || '');
+    formData.append('user_id', '1');
     formData.append('title', data.title);
     formData.append('tag', tags.map((tag) => tag.content).join(','));
     formData.append('region', data.location);
@@ -271,7 +263,7 @@ const PostingPage = () => {
 
     try {
       const response = await axios.post(
-        'http://52.79.207.68:8000/posts/posts/',
+        'http://52.79.207.68:8000/posts/',
         formData,
         {
           headers: {
@@ -281,6 +273,10 @@ const PostingPage = () => {
         }
       );
       console.log(response);
+      if (response.status === 201) {
+        setAlert('포스팅 등록이 완료되었습니다!');
+        // navigate('/posts');
+      }
     } catch (error) {
       console.log(error);
     }
