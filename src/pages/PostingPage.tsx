@@ -61,6 +61,7 @@ const PostingPage = () => {
     }
   }, [user, navigate]);
 
+  //이미지 올리기1
   const imageHandler = useCallback(() => {
     const input = document.createElement('input');
     input.setAttribute('type', 'file');
@@ -101,6 +102,49 @@ const PostingPage = () => {
       }
     };
   }, []);
+
+  //이미지 올리기2
+  // const imageHandler = useCallback(() => {
+  //   const input = document.createElement('input');
+  //   input.setAttribute('type', 'file');
+  //   input.setAttribute('accept', 'image/*');
+  //   input.click();
+
+  //   input.onchange = async () => {
+  //     const file = input.files?.[0];
+  //     if (file) {
+  //       const formData = new FormData();
+  //       formData.append('image', file);
+
+  //       try {
+  //         const response = await axios.post(
+  //           'https://api.imgbb.com/1/upload',
+  //           formData,
+  //           {
+  //             params: {
+  //               key: '3dde9cc029ccbb4fb625e9b9854150fc',
+  //             },
+  //           }
+  //         );
+
+  //         const imageUrl = response.data.data.url;
+  //         console.log('업로드된 이미지 URL:', imageUrl);
+
+  //         const quill = quillRef.current?.getEditor();
+  //         if (quill) {
+  //           const range = quill.getSelection(true);
+  //           quill.insertEmbed(range.index, 'image', imageUrl);
+  //         }
+  //       } catch (error) {
+  //         console.error('이미지 업로드 실패:', error);
+  //       } finally {
+  //         for (const pair of formData.entries()) {
+  //           console.log(pair[0] + ':', pair[1]);
+  //         }
+  //       }
+  //     }
+  //   };
+  // }, []);
 
   // 에디터 모듈 설정
   const modules = {
