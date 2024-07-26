@@ -1,13 +1,14 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { LoginUser } from '../../config/types';
 import { useAlertStore } from '../../config/store';
-import Alert from './common/Alert';
-//import axios, { AxiosError } from 'axios';
 import { useUserStore } from '../../config/store';
+import { AxiosError } from 'axios';
+import axios from '../api/axios';
+import Alert from './common/Alert';
 
 const Login = () => {
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
   const setUser = useUserStore((state) => state.setUser);
   const setAlert = useAlertStore((state) => state.setAlert);
   const {
@@ -17,47 +18,48 @@ const Login = () => {
     formState: { errors },
   } = useForm<LoginUser>({
     defaultValues: {
-      username: '',
+      nickname: '',
       password: '',
     },
   });
 
   const onSubmit: SubmitHandler<LoginUser> = async (data) => {
     console.log(data);
-    const { username } = data;
     clearValue();
-    setAlert('테스트');
-    setUser({ username });
-    // try {
-    //   const { username, password } = data;
-    //   const response = await axios.post('/login', {
-    //     username,
-    //     password
-    //   }, {
-    //     withCredentials: true,
-    //   })
-    //   console.log("response: ", response)
-    //   const { nickname, email, profile_image } = response.data
-    //   setUser({ username, nickname, email, profile_image})
-    //   setAlert("로그인 되었습니다. 홈페이지로 이동합니다.")
-    // } catch (error) {
-    //   if (error instanceof AxiosError && error.response) {
-    //     console.error('로그인 실패: ', error)
-    //     if (error.response.status === 403) {
-    //       setAlert("가입되지 않은 사용자입니다. 다시 시도해 주세요.")
-    //     } else {
-    //       setAlert("로그인에 실패했습니다. 다시 시도해 주세요.")
-    //     }
-    //   } else {
-    //     console.error('로그인 실패: ', error);
-    //     setAlert("로그인 중 문제가 발생했습니다. 다시 시도해 주세요.");
-    //   }
-    // }
+    try {
+      const { nickname, password } = data;
+      const response = await axios.post(
+        '/users/accounts/login',
+        {
+          nickname,
+          password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      console.log('response: ', response.data);
+      setUser({ user_id: 3, nickname, profile_image: null });
+      setAlert('로그인 되었습니다. 홈페이지로 이동합니다.');
+      navigate('/');
+    } catch (error) {
+      if (error instanceof AxiosError && error.response) {
+        console.error('로그인 실패: ', error);
+        if (error.response.status === 403) {
+          setAlert('가입되지 않은 사용자입니다. 다시 시도해 주세요.');
+        } else {
+          setAlert('로그인에 실패했습니다. 다시 시도해 주세요.');
+        }
+      } else {
+        console.error('로그인 실패: ', error);
+        setAlert('로그인 중 문제가 발생했습니다. 다시 시도해 주세요.');
+      }
+    }
   };
 
   const clearValue = () => {
     reset({
-      username: '',
+      nickname: '',
       password: '',
     });
   };
@@ -78,19 +80,17 @@ const Login = () => {
             <input
               className='h-12 w-full rounded-md border border-solid border-slate-300 p-2 text-sm'
               type='text'
-              id='username'
-              placeholder='아이디'
-              {...register('username', {
-                required: '아이디를 입력해주세요',
+              id='nickname'
+              placeholder='사용자 이름'
+              {...register('nickname', {
+                required: '사용자 이름을 입력해주세요',
                 minLength: 2,
                 maxLength: 12,
                 pattern: /^[ㄱ-ㅎ가-힣a-zA-Z0-9]+$/i,
               })}
             />
-            {errors.username && (
-              <p className='px-2 text-xs text-red-500'>
-                * 아이디는 2~12글자 사이입니다
-              </p>
+            {errors.nickname && (
+              <p className='px-2 text-xs text-red-500'>* 2~12글자 사이입니다</p>
             )}
             <input
               className='h-12 w-full rounded-md border border-solid border-slate-300 p-2 text-sm'
@@ -104,9 +104,7 @@ const Login = () => {
               })}
             />
             {errors.password && (
-              <p className='px-2 text-xs text-red-500'>
-                * 비밀번호는 8글자 이상입니다
-              </p>
+              <p className='px-2 text-xs text-red-500'>* 8글자 이상입니다</p>
             )}
             <button
               className='h-12 w-full rounded-md bg-[#28466A] font-chosun text-white'
@@ -122,23 +120,20 @@ const Login = () => {
             </p>
             <div className='h-[1px] bg-[#BFBFBF]'></div>
           </div>
-          <div className='flex h-[100px] items-center justify-center gap-6'>
-            <Link to='https://kauth.kakao.com/oauth/authorize'>
+          <div className='flex h-[100px] items-center justify-center gap-10'>
+            <Link to='http://52.79.207.68:8000/users/accounts/kakao/login/callback/'>
               <img src='/kakao-logo.svg' />
             </Link>
             <Link
-              to='https://accounts.google.com/o/oauth2/v2/auth'
+              to='http://52.79.207.68:8000/users/accounts/google/login/callback/'
               className='flex h-[49px] w-[49px] items-center justify-center rounded-full bg-white'
             >
               <img src='/google-logo.svg' className='h-8 w-8' />
             </Link>
-            <Link to='https://nid.naver.com/oauth2.0/authorize'>
-              <img src='/naver-logo.svg' />
-            </Link>
           </div>
         </div>
       </div>
-      {<Alert />}
+      <Alert />
     </div>
   );
 };
