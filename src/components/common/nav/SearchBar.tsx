@@ -73,6 +73,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
           {posts.map((post) => (
             <SearchResultItem
               key={post.post_id}
+              id={post.post_id}
               title={post.title}
               body={post.body}
               representative_image_id={post.representative_image_id}

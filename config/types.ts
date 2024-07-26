@@ -22,12 +22,10 @@ export interface Post {
   tags?: Tag[];
 }
 export interface User {
-  user_id?: number;
+  user_id: number;
   email?: string;
-  nickname?: string;
-  username: string;
-  profile_image?: string | null;
-  password?: string;
+  nickname: string;
+  profile_image: string | null;
 }
 
 export interface UserState {
@@ -37,14 +35,14 @@ export interface UserState {
   updateProfileImage: (imageUrl: string) => void;
 }
 export interface SignUpUser {
-  username: string;
+  nickname: string;
   email: string;
   password: string;
   confirmPassword?: string;
 }
 
 export interface LoginUser {
-  username: string;
+  nickname: string;
   password: string;
 }
 

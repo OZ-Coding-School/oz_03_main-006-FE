@@ -13,7 +13,7 @@ const LoginOrUsername: React.FC<LoginOrUsernameProps> = ({ textColor }) => {
     <Link to='/mypage'>
       <p
         className={`mx-4 text-lg ${textColor} font-chosun`}
-      >{`${user.nickname ? user.nickname : user.username} 님`}</p>
+      >{`${user.nickname} 님`}</p>
     </Link>
   ) : (
     <Link to='/login'>

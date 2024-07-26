@@ -7,7 +7,7 @@ import PostDetailPage from './pages/PostDetailPage';
 import PostingPage from './pages/PostingPage';
 import MyPage from './pages/MyPage';
 import LoginPage from './pages/LoginPage';
-
+import AuthCallbackPage from './pages/AuthCallbackPage';
 
 function App() {
   return (
@@ -22,6 +22,7 @@ function App() {
         <Route path='/posting' element={<PostingPage />} />
         <Route path='/mypage' element={<MyPage />} />
         <Route path='/login' element={<LoginPage />} />
+        <Route path='/auth/callback' element={<AuthCallbackPage />} />
       </Routes>
     </>
   );
