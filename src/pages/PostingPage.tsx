@@ -216,6 +216,8 @@ const PostingPage = () => {
 
     if (data.thumbnail && data.thumbnail.length > 0) {
       formData.append('thumbnail', data.thumbnail[0]);
+    } else {
+      formData.append('thumbnail', '');
     }
 
     console.log('FormData contents:');
