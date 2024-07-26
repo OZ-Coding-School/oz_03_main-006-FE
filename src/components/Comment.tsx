@@ -2,12 +2,12 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import { useAlertStore, useUserStore } from '../../config/store';
 import Alert from './common/Alert';
-import axios from 'axios';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import axios from '../api/axios';
 
 interface Comment {
   id: number;
-  username: string;
+  nickname: string;
   content: string;
   created_at: string;
   updated_at: string;
@@ -49,7 +49,7 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
 
   const updateComments = async () => {
     try {
-      const response = await axios.get(`/posts/${postId.current}`);
+      const response = await axios.get(`/posts/${postId.current}/`);
       setComments(response.data.post.comments);
       resetCreateForm();
       resetEditForm();
@@ -65,26 +65,32 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
       return;
     }
     try {
-      await axios.post(`/posts/${postId.current}/comments`, {
-        user_id: user.user_id,
-        content: data.comment,
-      });
+      await axios.post(
+        `/posts/${postId.current}/comments/`,
+        {
+          user_id: 3,
+          content: data.comment,
+        },
+        {
+          withCredentials: true,
+        }
+      );
       updateComments();
     } catch (error) {
-      console.error(error + '댓글 생성에 실패했습니다.');
+      console.error(error + '댓글 작성에 실패했습니다.');
       setAlert('댓글 작성에 실패했습니다.');
     }
   };
 
-  const deleteComment = async (commentId: number) => {
-    if (user?.user_id !== commentId) {
+  const deleteComment = async (commentUserId: number, commentId: number) => {
+    if (user?.user_id !== commentUserId) {
       setAlert('댓글 작성자만 삭제할 수 있습니다.');
       return;
     }
     try {
-      await axios.delete(`/posts/comments/${commentId}`, {
+      await axios.delete(`/posts/comments/${commentId}/`, {
         data: {
-          user_id: user.user_id,
+          comment_pk: commentId,
         },
       });
       updateComments();
@@ -101,10 +107,16 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
 
   const saveEditComment: SubmitHandler<FormData> = async (data) => {
     try {
-      await axios.put(`/posts/comments/${editingCommentId}`, {
-        content: data.comment,
-        user_id: user?.user_id,
-      });
+      await axios.put(
+        `/posts/comments/${editingCommentId}/`,
+        {
+          content: data.comment,
+          user_id: user?.user_id,
+        },
+        {
+          withCredentials: true,
+        }
+      );
       setEditingCommentId(null);
       updateComments();
     } catch (error) {
@@ -140,7 +152,7 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
           <div className='flex justify-between'>
             <div className='flex'>
               <div className='m-2 text-[16px] font-semibold'>
-                {comment.username}
+                {comment.nickname}
               </div>
               <div className='m-2 text-[#777777]'>{comment.created_at}</div>
             </div>
@@ -173,7 +185,7 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
                     </button>
                     <button
                       className='m-2 text-[13px] text-red-400'
-                      onClick={() => deleteComment(comment.id)}
+                      onClick={() => deleteComment(comment.user_id, comment.id)}
                     >
                       삭제
                     </button>

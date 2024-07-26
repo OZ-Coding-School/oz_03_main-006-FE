@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Article from '../components/Article';
 import Comment from '../components/Comment';
-import axios from 'axios';
+import axios from '../api/axios';
 import { useParams } from 'react-router-dom';
 
 const PostDetailPage = () => {
@@ -11,7 +11,7 @@ const PostDetailPage = () => {
 
   useEffect(() => {
     axios
-      .get(`http://52.79.207.68:8000/posts/posts/${post_id}/`)
+      .get(`/posts/${post_id}/`)
       .then((res) => {
         setArticle(res.data);
         setComments(res.data.post.comments);
