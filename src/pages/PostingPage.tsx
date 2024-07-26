@@ -61,6 +61,7 @@ const PostingPage = () => {
     }
   }, [user, navigate]);
 
+  //이미지 올리기1
   const imageHandler = useCallback(() => {
     const input = document.createElement('input');
     input.setAttribute('type', 'file');
@@ -71,7 +72,7 @@ const PostingPage = () => {
       const file = input.files?.[0];
       if (file) {
         const formData = new FormData();
-        formData.append('image', file);
+        formData.append('images', file);
         console.log(formData);
 
         try {
@@ -86,8 +87,8 @@ const PostingPage = () => {
           );
           console.log(response);
 
-          setImageIds((prev) => [...prev, response.data.imaages.id]);
-          const imageUrl = response.data.images.image;
+          setImageIds((prev) => [...prev, response.data.images[0].id]);
+          const imageUrl = response.data.images[0].image;
           console.log('업로드된 이미지 URL:', imageUrl);
 
           const quill = quillRef.current?.getEditor();
@@ -102,7 +103,51 @@ const PostingPage = () => {
     };
   }, []);
 
+  //이미지 올리기2
+  // const imageHandler = useCallback(() => {
+  //   const input = document.createElement('input');
+  //   input.setAttribute('type', 'file');
+  //   input.setAttribute('accept', 'image/*');
+  //   input.click();
+
+  //   input.onchange = async () => {
+  //     const file = input.files?.[0];
+  //     if (file) {
+  //       const formData = new FormData();
+  //       formData.append('image', file);
+
+  //       try {
+  //         const response = await axios.post(
+  //           'https://api.imgbb.com/1/upload',
+  //           formData,
+  //           {
+  //             params: {
+  //               key: '3dde9cc029ccbb4fb625e9b9854150fc',
+  //             },
+  //           }
+  //         );
+
+  //         const imageUrl = response.data.data.url;
+  //         console.log('업로드된 이미지 URL:', imageUrl);
+
+  //         const quill = quillRef.current?.getEditor();
+  //         if (quill) {
+  //           const range = quill.getSelection(true);
+  //           quill.insertEmbed(range.index, 'image', imageUrl);
+  //         }
+  //       } catch (error) {
+  //         console.error('이미지 업로드 실패:', error);
+  //       } finally {
+  //         for (const pair of formData.entries()) {
+  //           console.log(pair[0] + ':', pair[1]);
+  //         }
+  //       }
+  //     }
+  //   };
+  // }, []);
+
   // 에디터 모듈 설정
+
   const modules = {
     toolbar: {
       container: [
@@ -192,19 +237,10 @@ const PostingPage = () => {
     console.log(data);
     const formData = new FormData();
     const temp_image_ids = imageIds.join(',');
-    // const postData = {
-    //   user_id: user?.user_id,
-    //   title: data.title,
-    //   tag: tags.map((tag) => tag.content).join(','),
-    //   region: data.location,
-    //   body: data.content,
-    //   view_count: 0,
-    //   travel_start_date: data.startDate,
-    //   travel_end_date: data.endDate,
-    //   temp_image_ids: temp_image_ids,
-    // };
+    console.log(user?.user_id);
 
-    formData.append('user_id', user?.user_id?.toString() || '1');
+    // formData.append('user_id', user?.user_id?.toString() || '');
+    formData.append('user_id', '4');
     formData.append('title', data.title);
     formData.append('tag', tags.map((tag) => tag.content).join(','));
     formData.append('region', data.location);
@@ -216,6 +252,8 @@ const PostingPage = () => {
 
     if (data.thumbnail && data.thumbnail.length > 0) {
       formData.append('thumbnail', data.thumbnail[0]);
+    } else {
+      formData.append('thumbnail', '');
     }
 
     console.log('FormData contents:');
@@ -225,15 +263,20 @@ const PostingPage = () => {
 
     try {
       const response = await axios.post(
-        'http://52.79.207.68:8000/posts/posts/',
+        'http://52.79.207.68:8000/posts/',
         formData,
         {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
+          withCredentials: true,
         }
       );
       console.log(response);
+      if (response.status === 201) {
+        setAlert('포스팅 등록이 완료되었습니다!');
+        // navigate('/posts');
+      }
     } catch (error) {
       console.log(error);
     }

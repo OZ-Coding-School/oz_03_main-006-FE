@@ -58,3 +58,18 @@ export interface TagState {
   addTag: (content: string) => void;
   removeTag: (tag_id: number) => void;
 }
+
+export interface DetailPostArticle {
+  post_id: number;
+  nickname: string;
+  title: string;
+  tag: string;
+  region: number;
+  body: string;
+  created_at: string;
+  view_count: number;
+  travel_start_date: string | null;
+  travel_end_date: string | null;
+  user_id: number;
+  likes_count: number;
+}
