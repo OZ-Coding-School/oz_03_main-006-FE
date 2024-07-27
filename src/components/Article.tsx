@@ -22,17 +22,10 @@ const Article: React.FC<ArticleProps> = ({ article }) => {
 
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const [showButton, setShowButton] = useState<boolean>(false);
-  const [postUserId, setPostUserId] = useState<number | null>(null);
-  const [postContent, setPostContent] = useState<string>('');
-  const [postTitle, setPostTitle] = useState<string>('');
-  const [postRegion, setPostRegion] = useState<string>('');
-  const [postTags, setPostTags] = useState<Tag[]>([]);
-  const [postStartDate, setPostStartDate] = useState<string>('');
-  const [postEndDate, setPostEndDate] = useState<string>('');
-  const [postCreateDate, setPostCreateDate] = useState<string>('');
-  const [postView, setPostView] = useState<number>(0);
-  const [postNickname, setPostNickname] = useState<string>('');
-  const [postLikesCount, setPostLikesCount] = useState<number>(0);
+  const [postUserId, setPostUserId] = useState<number | null>(article.user_id);
+  const [postLikesCount, setPostLikesCount] = useState<number>(
+    article.likes_count
+  );
 
   useEffect(() => {
     if (user && postUserId && user.user_id === postUserId) {
@@ -42,39 +35,34 @@ const Article: React.FC<ArticleProps> = ({ article }) => {
     }
   }, [user, postUserId]);
 
-  const handleHeartToggle = () => {
+  const handleHeartToggle = async () => {
     if (!user) {
       setAlert('로그인 후 이용해주세요.');
       return;
     }
-    setIsLiked(!isLiked);
-    //count 올리기
+    try {
+      const response = await axios.post(
+        `http://43.202.53.249:8000/posts/${article.post_id}/like/`,
+        {
+          likes_count: postLikesCount + (isLiked ? -1 : 1),
+        }
+      );
+      setIsLiked(!isLiked);
+      setPostLikesCount(response.data.likes_count);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  useEffect(() => {
-    if (article) {
-      setPostUserId(article.user_id);
-      setPostNickname(article.nickname);
-      setPostContent(article.body);
-      setPostTitle(article.title);
-      matchLocationName(article.region);
-      setPostStartDate(article.travel_start_date || '');
-      setPostEndDate(article.travel_end_date || '');
-      const datePart = article.created_at.split('T')[0];
-      setPostCreateDate(datePart);
-      setPostView(article.view_count);
-      setPostLikesCount(article.likes_count);
-
-      const tagsArr = article.tag.split(',').map((content, index) => {
-        return { tag_id: index + 1, content: content.trim() };
-      });
-      setPostTags(tagsArr);
-    }
-  }, [article]);
+  const getTagsArray = (tags: string): Tag[] => {
+    return tags.split(',').map((content, index) => {
+      return { tag_id: index + 1, content: content.trim() };
+    });
+  };
 
   const matchLocationName = (value: number) => {
     const location = locationList.find((loc) => loc.location_id === value);
-    location ? setPostRegion(location.name) : setPostRegion('');
+    return location ? location.name : '';
   };
 
   const handleDelete = async () => {
@@ -90,30 +78,32 @@ const Article: React.FC<ArticleProps> = ({ article }) => {
     <>
       <div className='mx-auto mt-8 flex max-w-[1052px] flex-wrap'>
         <Alert></Alert>
-        <div className='mb-8 w-full text-4xl font-bold'>{postTitle}</div>
+        <div className='mb-8 w-full text-4xl font-bold'>{article.title}</div>
         <div className='mb-2 flex w-full'>
           <span className='w-40 text-xl font-semibold'>지역</span>
-          <span className='text-lg'>{postRegion}</span>
+          <span className='text-lg'>{matchLocationName(article.region)}</span>
         </div>
         <div className='mb-3 flex w-full'>
           <span className='w-40 text-xl font-semibold'>여행기간</span>
           <span className='text-lg'>
-            {postStartDate}~ {postEndDate}
+            {article.travel_start_date}~ {article.travel_end_date}
           </span>
         </div>
         <div className='mb-6 flex h-7 w-full'>
-          {postTags.map((tag, index) => (
+          {getTagsArray(article.tag).map((tag, index) => (
             <TagItem tagContent={tag} showDeleteButton={false} key={index} />
           ))}
           <span className='ml-auto flex gap-2'>
-            <p className='m-auto text-sm text-[#777777]'>{postView} 회</p>
+            <p className='m-auto text-sm text-[#777777]'>
+              {article.view_count} 회
+            </p>
             <PiEyesFill className='m-auto text-base text-[#777777]' />
           </span>
         </div>
         <div className='mb-2 flex w-full'>
-          <span className='mr-5 font-semibold'>{postNickname}</span>
+          <span className='mr-5 font-semibold'>{article.nickname}</span>
           <span className='my-auto text-sm text-[#777777]'>
-            {postCreateDate}
+            {article.created_at.split('T')[0]}
           </span>
           {showButton && (
             <div className='my-auto ml-auto flex justify-center gap-1 align-middle text-sm text-[#777777]'>
@@ -133,7 +123,7 @@ const Article: React.FC<ArticleProps> = ({ article }) => {
         <div className='w-full border-y pb-32 pt-4'>
           <div
             className='ql-editor'
-            dangerouslySetInnerHTML={{ __html: sanitizer(postContent) }}
+            dangerouslySetInnerHTML={{ __html: sanitizer(article.body) }}
           />
         </div>
         <div className='mb-10 mt-4 flex w-full justify-end gap-2 text-lg'>
