@@ -4,7 +4,7 @@ import LogoAndTitle from './nav/LogoAndTitle';
 import Subtitle from './nav/Subtitle';
 import OpenMenuIcon from './nav/OpenMenuIcon';
 import CloseMenuIcon from './nav/CloseMenuIcon';
-import SearchBar from './nav/SearchBar';
+import Tab from './nav/Tab';
 
 const NavBar = () => {
   const isOpen = useNavToggleStore((state) => state.isOpen);
@@ -31,11 +31,7 @@ const NavBar = () => {
       {isOpen && <LogoAndTitle textColor={textColor} />}
       {isOpen && <Subtitle textColor={textColor} />}
       {isOpen && (
-        <SearchBar
-          textColor={textColor}
-          iconColor={iconColor}
-          backgroundColor={backgroundColor}
-        />
+        <Tab textColor={textColor} backgroundColor={backgroundColor} />
       )}
     </div>
   );

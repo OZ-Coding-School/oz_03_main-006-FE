@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { IoSearchSharp } from 'react-icons/io5';
 import { Post } from '../../../../config/types';
-import postsData from '../../../data/posts.json';
+import axios from '../../../api/axios';
 import SearchResultItem from '../../SearchResultItem';
+//import postData from '../../../data/posts.json';
 
 type Inputs = {
   searchValue: string;
@@ -11,26 +13,42 @@ type Inputs = {
 
 interface SearchBarProps {
   textColor: string;
-  iconColor: string;
   backgroundColor: string;
+  clickedHover: string;
 }
-
-const posts: Post[] = postsData;
 
 const SearchBar: React.FC<SearchBarProps> = ({
   textColor,
-  iconColor,
   backgroundColor,
+  clickedHover,
 }) => {
+  const { pathname } = useLocation();
   const { register, handleSubmit, reset } = useForm<Inputs>();
   const [searchError, setSearchError] = useState(false);
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
+  const [posts, setPosts] = useState<Post[]>([]);
+
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
     if (data.searchValue.trim() === '') {
       setSearchError(true);
     } else {
       clearSearch();
-      // 검색 로직
       console.log(data);
+      //검색 로직
+      const { searchValue } = data;
+      try {
+        const response = await axios.get(`/api/search/?q=${searchValue}`);
+        console.log(response.data);
+        const { posts } = response.data.results;
+        //const posts: Post[] = postData;
+        if (posts.length > 0) {
+          setPosts(posts);
+        } else {
+          setSearchError(true);
+        }
+      } catch (error) {
+        console.error('검색 실패: ', error);
+        setSearchError(true);
+      }
     }
   };
 
@@ -39,16 +57,24 @@ const SearchBar: React.FC<SearchBarProps> = ({
     setSearchError(false);
   };
 
+  const isHomePage = pathname === '/';
+  const border = isHomePage ? 'border-2' : 'border-2 border-[#868e96]';
+  const iconColor = isHomePage ? 'text-[#727272]' : 'text-[#868e96]';
+
   return (
-    <div className='my-8 flex flex-col items-center justify-center gap-8'>
-      <form className='min-w-[328px] px-2' onSubmit={handleSubmit(onSubmit)}>
-        <div className='mx-auto flex items-center justify-center gap-2 border-b-2 py-1'>
-          <IoSearchSharp className={`text-2xl ${iconColor}`} />
+    <div className='flex w-full flex-col items-center justify-center gap-5'>
+      <form className='w-full px-2' onSubmit={handleSubmit(onSubmit)}>
+        <div
+          className={`mx-auto flex h-11 w-full items-center justify-center gap-2 rounded-3xl ${border} gap-2`}
+        >
+          <IoSearchSharp
+            className={`text-2xl ${iconColor} ml-3 cursor-pointer`}
+          />
           <input
-            className={`flex-grow bg-[#f9f9f9] text-lg ${textColor} outline-0`}
+            className={`flex-grow bg-[#f9f9f9] ${textColor} outline-0`}
             style={{ backgroundColor }}
             type='text'
-            placeholder='전체 게시글 중 검색'
+            placeholder='게시글을 검색해 보세요'
             autoComplete='off'
             {...register('searchValue', {
               required: true,
@@ -57,7 +83,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
             })}
           />
           <button
-            className={`${iconColor}`}
+            className={`${iconColor} mr-3`}
             type='button'
             onClick={clearSearch}
           >
@@ -66,10 +92,10 @@ const SearchBar: React.FC<SearchBarProps> = ({
         </div>
       </form>
       {searchError && (
-        <span className={`${textColor}`}>검색 결과가 없습니다.</span>
+        <span className={`${textColor}`}>준비된 여행 이야기가 없습니다.</span>
       )}
-      <div className='mx-auto flex max-w-[360px] flex-col items-center justify-center gap-4 overflow-x-hidden'>
-        <div className='search-scroll flex max-h-[calc(100vh-318px)] max-w-[360px] flex-col gap-4 scroll-smooth px-5'>
+      <div className='flex w-full flex-col items-center justify-center gap-4 overflow-x-hidden'>
+        <div className='search-scroll flex max-h-[calc(100vh-360px)] w-full flex-col scroll-smooth'>
           {posts.map((post) => (
             <SearchResultItem
               key={post.post_id}
@@ -78,6 +104,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
               body={post.body}
               representative_image_id={post.representative_image_id}
               textColor={textColor}
+              clickedHover={clickedHover}
             />
           ))}
         </div>

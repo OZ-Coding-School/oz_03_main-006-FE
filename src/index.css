@@ -137,3 +137,24 @@
 :root::-webkit-scrollbar {
   display: none;
 }
+
+.waviy {
+  position: relative;
+  -webkit-box-reflect: below -20px linear-gradient(transparent, rgba(0, 0, 0, 0.1));
+}
+.waviy span {
+  position: relative;
+  display: inline-block;
+  animation: waviy 1.8s infinite;
+  animation-delay: calc(0.1s * var(--i));
+}
+@keyframes waviy {
+  0%,
+  40%,
+  100% {
+    transform: translateY(0);
+  }
+  20% {
+    transform: translateY(-20px);
+  }
+}
