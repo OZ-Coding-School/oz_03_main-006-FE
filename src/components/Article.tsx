@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from '../api/axios';
 import TagItem from './TagItem';
 import { PiEyesFill } from 'react-icons/pi';
 import { IoMdHeart, IoMdHeartEmpty } from 'react-icons/io';
@@ -8,6 +8,7 @@ import Alert from './common/Alert';
 import dompurify from 'dompurify';
 import { locationList } from '../data/locationList';
 import { Tag, DetailPostArticle } from '../../config/types';
+import { useNavigate } from 'react-router-dom';
 
 const sanitizer = dompurify.sanitize;
 
@@ -26,9 +27,18 @@ const Article: React.FC<ArticleProps> = ({ article }) => {
   const [postLikesCount, setPostLikesCount] = useState<number>(
     article.likes_count
   );
+  const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   if (user && postUserId && user.user_id === postUserId) {
+  //     setShowButton(true);
+  //   } else {
+  //     setShowButton(false);
+  //   }
+  // }, [user, postUserId]);
 
   useEffect(() => {
-    if (user && postUserId && user.user_id === postUserId) {
+    if (1 === postUserId) {
       setShowButton(true);
     } else {
       setShowButton(false);
@@ -41,12 +51,7 @@ const Article: React.FC<ArticleProps> = ({ article }) => {
       return;
     }
     try {
-      const response = await axios.post(
-        `http://43.202.53.249:8000/posts/${article.post_id}/like/`,
-        {
-          likes_count: postLikesCount + (isLiked ? -1 : 1),
-        }
-      );
+      const response = await axios.post(`/posts/${article.post_id}/like/`);
       setIsLiked(!isLiked);
       setPostLikesCount(response.data.likes_count);
     } catch (error) {
@@ -60,18 +65,23 @@ const Article: React.FC<ArticleProps> = ({ article }) => {
     });
   };
 
-  const matchLocationName = (value: number) => {
-    const location = locationList.find((loc) => loc.location_id === value);
-    return location ? location.name : '';
-  };
+  // const matchLocationName = (value: number) => {
+  //   const location = locationList.find((loc) => loc.location_id === value);
+  //   return location ? location.name : '';
+  // };
 
   const handleDelete = async () => {
     try {
-      const response = await axios.delete(`/posts/${article.post_id}`);
+      const response = await axios.delete(`/posts/${article.id}`);
       console.log(response.data);
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const handleEdit = () => {
+    console.log(article.id);
+    navigate(`/posting/${article.id}`);
   };
 
   return (
@@ -81,7 +91,7 @@ const Article: React.FC<ArticleProps> = ({ article }) => {
         <div className='mb-8 w-full text-4xl font-bold'>{article.title}</div>
         <div className='mb-2 flex w-full'>
           <span className='w-40 text-xl font-semibold'>지역</span>
-          <span className='text-lg'>{matchLocationName(article.region)}</span>
+          <span className='text-lg'>{article.location}</span>
         </div>
         <div className='mb-3 flex w-full'>
           <span className='w-40 text-xl font-semibold'>여행기간</span>
@@ -107,7 +117,10 @@ const Article: React.FC<ArticleProps> = ({ article }) => {
           </span>
           {showButton && (
             <div className='my-auto ml-auto flex justify-center gap-1 align-middle text-sm text-[#777777]'>
-              <button className='cursor-pointer hover:text-[#373737]'>
+              <button
+                className='cursor-pointer hover:text-[#373737]'
+                onClick={handleEdit}
+              >
                 수정
               </button>
               <p>/</p>
