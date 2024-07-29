@@ -6,7 +6,7 @@ import { FaArrowRight } from 'react-icons/fa';
 interface DropdownListContentsProps {
   startIndex: number;
   lastIndex: number;
-  moveCenter: (name: string) => void;
+  moveCenter: (name: string, locationId: number) => void;
   clearMoveCenterTimeout: () => void;
 }
 
@@ -22,7 +22,7 @@ const DropdownListContents: React.FC<DropdownListContentsProps> = ({
         <Link to={`/community/${item.location_id}`} key={item.location_id}>
           <li
             className='group flex items-center py-2 pl-4 font-chosun hover:bg-[#233e7815]'
-            onMouseEnter={() => moveCenter(item.name)}
+            onMouseEnter={() => moveCenter(item.name, item.location_id)}
             onMouseLeave={clearMoveCenterTimeout}
           >
             <img

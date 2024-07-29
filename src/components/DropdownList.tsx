@@ -1,11 +1,17 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { IoMdArrowDropdown } from 'react-icons/io';
 import { locationList } from '../data/locationList';
 import DropdownListContents from './DropdownListContents';
+import axios from '../api/axios';
 
 interface DropdownListProps {
   map: naver.maps.Map | undefined;
   marker: naver.maps.Marker[] | null;
+}
+
+interface Highlights {
+  location_id: number;
+  highlights: string;
 }
 
 const DropdownList: React.FC<DropdownListProps> = ({ map, marker }) => {
@@ -13,13 +19,16 @@ const DropdownList: React.FC<DropdownListProps> = ({ map, marker }) => {
   const choosedMarkerRef = useRef<naver.maps.Marker | null>(null);
   const infoWindowRef = useRef<naver.maps.InfoWindow | null>(null);
   const [isFold, setIsFold] = useState<boolean>(true);
+  const [locationHighlights, setLocationHighlights] = useState<
+    Highlights[] | null
+  >(null);
 
   const toggleFold = () => {
     setIsFold((prev) => !prev);
   };
 
   // 선택된 지역으로 지도가 움직이는 함수
-  const moveCenter = (location: string): void => {
+  const moveCenter = (location: string, locationId: number): void => {
     const selectedLocation = locationList.find(
       (item) => item.name === location
     );
@@ -44,7 +53,7 @@ const DropdownList: React.FC<DropdownListProps> = ({ map, marker }) => {
       timeoutRef.current = window.setTimeout(() => {
         morphMap().then(() => {
           updateMarkerAnimation(location);
-          showInfoWindow(location);
+          showInfoWindow(location, locationId);
         });
       }, 300);
     }
@@ -81,11 +90,28 @@ const DropdownList: React.FC<DropdownListProps> = ({ map, marker }) => {
     }
   };
 
+  useEffect(() => {
+    axios
+      .get('/locations/highlights/')
+      .then((res) => setLocationHighlights(res.data));
+  }, []);
+
   // infowindow 생성
-  const showInfoWindow = (location: string): void => {
+  const showInfoWindow = (location: string, locationId: number): void => {
     const selectedLocation = locationList.find(
       (item) => item.name === location
     );
+    let selectedLocationHighlight: Highlights | undefined;
+    let selectedLocationArray: string[] = [];
+    if (locationHighlights !== null) {
+      selectedLocationHighlight = locationHighlights.find(
+        (item) => item.location_id === locationId
+      );
+    }
+    if (selectedLocationHighlight) {
+      selectedLocationArray = selectedLocationHighlight.highlights.split(', ');
+    }
+
     if (selectedLocation && map !== null) {
       const colors = ['#42c2f4', '#E894C1', '#f47575', '#44d0b0', '#8d7cf6'];
       const newInfoWindow = new naver.maps.InfoWindow({
@@ -94,7 +120,7 @@ const DropdownList: React.FC<DropdownListProps> = ({ map, marker }) => {
           <div class='info-tail'></div>
             <h3 class='info-window_title'><img class="info-title_img" src="${selectedLocation.src}"></img>${selectedLocation.name}</h3>
           <p class='info-window_activity'>${selectedLocation.highlights.메세지.활동.join(', ')}</p>
-          ${selectedLocation.highlights.메세지.명소
+          ${selectedLocationArray
             .map((item, index) => {
               return `<div class='info-window_sights' style="background-color: ${colors[index % colors.length]}"><img class='info-img' src='marker.svg'></img>${item}</div>`;
             })

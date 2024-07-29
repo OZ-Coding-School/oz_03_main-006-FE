@@ -68,7 +68,7 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
       await axios.post(
         `/posts/${postId.current}/comments/`,
         {
-          user_id: 3,
+          user_id: 1,
           content: data.comment,
         },
         {
