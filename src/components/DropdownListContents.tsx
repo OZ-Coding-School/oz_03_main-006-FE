@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { locationList } from '../data/locationList';
 import { FaArrowRight } from 'react-icons/fa';
@@ -8,6 +7,7 @@ interface DropdownListContentsProps {
   lastIndex: number;
   moveCenter: (name: string, locationId: number) => void;
   clearMoveCenterTimeout: () => void;
+  confettiRef;
 }
 
 const DropdownListContents: React.FC<DropdownListContentsProps> = ({
@@ -15,11 +15,16 @@ const DropdownListContents: React.FC<DropdownListContentsProps> = ({
   lastIndex,
   moveCenter,
   clearMoveCenterTimeout,
+  confettiRef,
 }) => {
   return (
     <>
       {locationList.slice(startIndex, lastIndex).map((item) => (
-        <Link to={`/community/${item.location_id}`} key={item.location_id}>
+        <Link
+          to={`/community/${item.location_id}`}
+          key={item.location_id}
+          onClick={() => confettiRef.reset()}
+        >
           <li
             className='group flex items-center py-2 pl-4 font-chosun hover:bg-[#233e7815]'
             onMouseEnter={() => moveCenter(item.name, item.location_id)}
