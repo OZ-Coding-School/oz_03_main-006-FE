@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import ReactQuill, { Quill } from 'react-quill';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import 'react-quill/dist/quill.snow.css';
@@ -10,6 +10,7 @@ import { useTagStore, useUserStore, useAlertStore } from '../../config/store';
 import { FaPlus } from 'react-icons/fa6';
 import { locationList } from '../data/locationList';
 import axios from 'axios';
+import { getLocations } from '../utils/postPageHelper';
 import ImageResize from 'quill-image-resize';
 import Alert, { ConfirmAlert } from '../components/common/Alert';
 Quill.register('modules/ImageResize', ImageResize);
@@ -42,24 +43,74 @@ const PostingPage = () => {
     },
   });
 
-  const { tags, addTag } = useTagStore((state) => ({
+  const { tags, addTag, clearTags } = useTagStore((state) => ({
     tags: state.tags,
     addTag: state.addTag,
+    clearTags: state.clearTags,
   }));
   const user = useUserStore((state) => state.user);
   const setAlert = useAlertStore((state) => state.setAlert);
   const [travelPeriodError, setTravelPeriodError] = useState<string>('');
   const [imageIds, setImageIds] = useState<string[]>([]);
   const [fileName, setFileName] = useState<string | null>(null);
+  const [viewCount, setViewCount] = useState<number>(0);
+  const [quillContent, setQuillContent] = useState('');
   const quillRef = useRef<ReactQuill>(null);
   const navigate = useNavigate();
+  const { post_id } = useParams();
+  console.log(post_id);
+
+  const isEditMode = post_id ? true : false;
 
   useEffect(() => {
-    if (!user) {
-      setAlert('로그인이 필요한 페이지 입니다.');
-      navigate('/login');
+    if (isEditMode) {
+      const fetchPostData = async () => {
+        try {
+          const response = await axios.get(
+            `http://43.202.53.249:8000/posts/${post_id}/`
+          );
+          const postData = response.data.post;
+          console.log(postData);
+
+          setViewCount(postData.view_count);
+
+          setValue('title', postData.title);
+          setValue('location', postData.location);
+          setValue('startDate', postData.travel_start_date);
+          setValue('endDate', postData.travel_end_date);
+          setQuillContent(postData.body);
+          setValue('content', postData.body);
+
+          // 태그 설정
+          clearTags();
+          const tagArray = postData.tag.split(',');
+          tagArray.forEach((tag: string) => {
+            addTag(tag.trim(), Math.random());
+          });
+
+          // 썸네일 파일 이름 설정 (만약 있다면)
+          if (postData.thumbnail) {
+            setFileName(postData.thumbnail.split('/').pop());
+          }
+
+          // 이미지 ID 설정
+          setImageIds(postData.image_ids || []);
+        } catch (error) {
+          console.error('기존 글 데이터를 불러오는데 실패했습니다:', error);
+          // setAlert('글 데이터를 불러오는데 실패했습니다.');
+        }
+      };
+
+      fetchPostData();
     }
-  }, [user, navigate]);
+  }, [isEditMode, post_id, setValue, addTag, setAlert]);
+
+  // useEffect(() => {
+  //   if (!user) {
+  //     setAlert('로그인이 필요한 페이지 입니다.');
+  //     navigate('/login');
+  //   }
+  // }, [user, navigate]);
 
   //이미지 올리기1
   const imageHandler = useCallback(() => {
@@ -103,51 +154,7 @@ const PostingPage = () => {
     };
   }, []);
 
-  //이미지 올리기2
-  // const imageHandler = useCallback(() => {
-  //   const input = document.createElement('input');
-  //   input.setAttribute('type', 'file');
-  //   input.setAttribute('accept', 'image/*');
-  //   input.click();
-
-  //   input.onchange = async () => {
-  //     const file = input.files?.[0];
-  //     if (file) {
-  //       const formData = new FormData();
-  //       formData.append('image', file);
-
-  //       try {
-  //         const response = await axios.post(
-  //           'https://api.imgbb.com/1/upload',
-  //           formData,
-  //           {
-  //             params: {
-  //               key: '3dde9cc029ccbb4fb625e9b9854150fc',
-  //             },
-  //           }
-  //         );
-
-  //         const imageUrl = response.data.data.url;
-  //         console.log('업로드된 이미지 URL:', imageUrl);
-
-  //         const quill = quillRef.current?.getEditor();
-  //         if (quill) {
-  //           const range = quill.getSelection(true);
-  //           quill.insertEmbed(range.index, 'image', imageUrl);
-  //         }
-  //       } catch (error) {
-  //         console.error('이미지 업로드 실패:', error);
-  //       } finally {
-  //         for (const pair of formData.entries()) {
-  //           console.log(pair[0] + ':', pair[1]);
-  //         }
-  //       }
-  //     }
-  //   };
-  // }, []);
-
   // 에디터 모듈 설정
-
   const modules = {
     toolbar: {
       container: [
@@ -243,9 +250,8 @@ const PostingPage = () => {
     formData.append('user_id', '1');
     formData.append('title', data.title);
     formData.append('tag', tags.map((tag) => tag.content).join(','));
-    formData.append('region', data.location);
+    formData.append('location', data.location);
     formData.append('body', data.content);
-    formData.append('view_count', '0');
     formData.append('travel_start_date', data.startDate);
     formData.append('travel_end_date', data.endDate);
     formData.append('temp_image_ids', temp_image_ids);
@@ -262,25 +268,50 @@ const PostingPage = () => {
     }
 
     try {
-      const response = await axios.post(
-        'http://43.202.53.249:8000/posts/',
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-          withCredentials: true,
-        }
-      );
-      console.log(response);
-      if (response.status === 201) {
-        setAlert('포스팅 등록이 완료되었습니다!');
-        // navigate('/posts');
+      let response;
+      if (isEditMode) {
+        formData.append('view_count', viewCount.toString());
+        response = await axios.put(
+          `http://43.202.53.249:8000/posts/${post_id}/`,
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+            withCredentials: true,
+          }
+        );
+      } else {
+        formData.append('view_count', '0');
+        response = await axios.post(
+          'http://43.202.53.249:8000/posts/',
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+            withCredentials: true,
+          }
+        );
+        console.log(response);
+      }
+      if (response.status === 200 || response.status === 201) {
+        setAlert(
+          isEditMode
+            ? '글 수정이 완료되었습니다!'
+            : '포스팅 등록이 완료되었습니다!'
+        );
+        navigate(`/post-detail/${post_id}`);
       }
     } catch (error) {
       console.log(error);
     }
   };
+
+  // const matchLocationId = (value: string) => {
+  //   const location = locationList.find((loc) => loc.name === value);
+  //   return location ? location.location_id : 0;
+  // };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const fileList = event.currentTarget.files;
@@ -311,7 +342,7 @@ const PostingPage = () => {
               <option value='' disabled>
                 지역을 선택해주세요
               </option>
-              {locationList.map((location) => (
+              {getLocations().map((location) => (
                 <option key={location.location_id} value={location.location_id}>
                   {location.name}
                 </option>
@@ -409,6 +440,7 @@ const PostingPage = () => {
             placeholder='당신의 여행 이야기를 들려주세요..'
             className={'quill-toolbar'}
             onChange={handleQuillChange}
+            value={quillContent}
           />
           <input type='hidden' {...register('content')} />
           <div className='sticky bottom-0 flex w-full justify-end gap-2 border-t border-[#cdcdcd] bg-white py-2'>

@@ -5,11 +5,13 @@ import { useParams } from 'react-router-dom';
 import { DetailPostArticle } from '../../config/types';
 import Loading from '../components/common/Loading';
 import axios from '../api/axios';
+import Error from '../components/common/Error';
 
 const PostDetailPage = () => {
   const { post_id } = useParams();
   const [article, setArticle] = useState<DetailPostArticle | null>(null);
   const [comments, setComments] = useState([]);
+  const [errorStatus, setErrorStatus] = useState<number | null>(null);
 
   useEffect(() => {
     axios
@@ -17,16 +19,25 @@ const PostDetailPage = () => {
       .then((res) => {
         setArticle(res.data.post);
         setComments(res.data.post.comments);
+        setErrorStatus(null);
       })
-      .catch((error) =>
+      .catch((error) => {
+        if (error.response) {
+          setErrorStatus(error.response.status);
+        } else {
+          setErrorStatus(500);
+        }
         console.error(
           error + '에러가 발생하여 데이터를 불러오는데 실패했습니다.'
-        )
-      );
+        );
+      });
   }, [post_id]);
 
+  if (errorStatus) {
+    return <Error status={errorStatus} />;
+  }
 
-  if (!article || !comments) {
+  if (!article || comments === null) {
     return <Loading></Loading>;
   }
 

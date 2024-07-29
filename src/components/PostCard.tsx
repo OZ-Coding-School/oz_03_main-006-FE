@@ -1,8 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { Post } from '../../config/types';
+// import { Post } from '../../config/types';
 import { Link } from 'react-router-dom';
 import { IoMdHeart } from 'react-icons/io';
 import TagItem from './TagItem';
+import axios from 'axios';
+
+interface Post {
+  body: string;
+  created_at: string;
+  id: number;
+  location: number;
+  tag: string;
+  thumbnail: string;
+  title: string;
+  travel_end_date: string;
+  travel_start_date: string;
+  updated_at: string;
+  user_id: number;
+  view_count: number;
+}
 
 interface PostCardProps {
   post: Post;
@@ -10,10 +26,17 @@ interface PostCardProps {
 
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
   const [postImg, setPostImg] = useState(
-    post.representative_image_id && post.representative_image_id !== ''
-      ? post.representative_image_id
-      : '/logo.svg'
+    post.thumbnail && post.thumbnail !== '' ? post.thumbnail : '/logo.svg'
   );
+
+  const fetchPostDetail = async () => {
+    try {
+      const response = await axios.get(
+        `http://43.202.53.249:8000/posts/${post.id}`
+      );
+      console.log(response);
+    } catch {}
+  };
 
   const errorLogoWidth = postImg === '/logo.svg' ? 'w-20' : '';
   const errorLogoHeight = postImg === '/logo.svg' ? 'h-20' : '';
@@ -25,8 +48,8 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
 
   return (
     <>
-      <Link to={`/post-detail/${post.post_id}`} className='block'>
-        <div key={post.post_id} className='flex rounded-lg bg-white py-2'>
+      <Link to={`/post-detail/${post.id}`} className='block'>
+        <div key={post.id} className='flex rounded-lg bg-white py-2'>
           <div className='size-[170px] shrink-0 rounded-xl bg-[#F4F4F4]'>
             <img
               src={postImg}
@@ -40,18 +63,19 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
               {/* flex-wrap 로 높이 8로 넘어가면 숨기기 -> overflow-hidden  */}
               {/* {어차피 flex-wrap으로 다음줄로 넘어가면 } */}
               <div className='mr-2 flex h-auto flex-wrap gap-2 overflow-hidden'>
-                {post.tags?.map((tag, index) => (
+                {/* {post.tags?.map((tag, index) => (
                   <span
                     key={index}
                     className='mr-0.3 rounded-md bg-yellow-400 px-2 py-1 text-sm'
                   >
-                    {tag.name}
+                    {tag.content}
                   </span>
                   // <TagItem ={tag} showDeleteButton={false} key={index} />
-                ))}
+                ))} */}
+                {post.tag}
               </div>
               <div className='mt-1 flex'>
-                <span className='mr-1 text-sm'>99</span>
+                <span className='mr-1 text-sm'>{post.view_count}</span>
                 {/* <img src='/full-heart.svg' alt='Likes' className='w-5 h-5'/> */}
                 <IoMdHeart className='mt-0.5 text-red-500' />
               </div>

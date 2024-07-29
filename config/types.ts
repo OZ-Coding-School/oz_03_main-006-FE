@@ -57,10 +57,11 @@ export interface TagState {
   tags: Tag[];
   addTag: (content: string) => void;
   removeTag: (tag_id: number) => void;
+  clearTags: () => void;
 }
 
 export interface DetailPostArticle {
-  post_id: number;
+  id: number;
   nickname: string;
   title: string;
   tag: string;
