@@ -3,12 +3,13 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { IoMdHeart } from 'react-icons/io';
 import TagItem from './TagItem';
+import axios from 'axios';
 
 interface Post {
   body: string;
   created_at: string;
   id: number;
-  region: number;
+  location: number;
   tag: string;
   thumbnail: string;
   title: string;
@@ -19,11 +20,6 @@ interface Post {
   view_count: number;
 }
 
-interface Tag {
-  tag_id: number;
-  content: string;
-}
-
 interface PostCardProps {
   post: Post;
 }
@@ -32,6 +28,15 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
   const [postImg, setPostImg] = useState(
     post.thumbnail && post.thumbnail !== '' ? post.thumbnail : '/logo.svg'
   );
+
+  const fetchPostDetail = async () => {
+    try {
+      const response = await axios.get(
+        `http://43.202.53.249:8000/posts/${post.id}`
+      );
+      console.log(response);
+    } catch {}
+  };
 
   const errorLogoWidth = postImg === '/logo.svg' ? 'w-20' : '';
   const errorLogoHeight = postImg === '/logo.svg' ? 'h-20' : '';
