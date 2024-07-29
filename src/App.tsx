@@ -19,7 +19,7 @@ function App() {
           {/* <Route path='/post-detail/' element={<PostDetailPage />} /> */}
           <Route path='/post-detail/:post_id' element={<PostDetailPage />} />
         </Route>
-        <Route path='/posting' element={<PostingPage />} />
+        <Route path='/posting/:post_id?' element={<PostingPage />} />
         <Route path='/mypage' element={<MyPage />} />
         <Route path='/login' element={<LoginPage />} />
         <Route path='/auth/callback' element={<AuthCallbackPage />} />

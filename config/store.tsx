@@ -41,12 +41,13 @@ export const useAlertStore = create<AlertState>((set) => ({
 
 export const useTagStore = create<TagState>((set) => ({
   tags: [],
-  addTag: (content: string) =>
+  addTag: (content: string, id?: number) =>
     set((state) => ({
-      tags: [...state.tags, { tag_id: Date.now(), content }],
+      tags: [...state.tags, { tag_id: id ?? Math.random(), content }],
     })),
   removeTag: (id: number) =>
     set((state) => ({
       tags: state.tags.filter((tag) => tag.tag_id !== id),
     })),
+  clearTags: () => set({ tags: [] }),
 }));
