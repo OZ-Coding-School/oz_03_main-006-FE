@@ -95,7 +95,6 @@ const DropdownList: React.FC<DropdownListProps> = ({ map, marker }) => {
       .get('/locations/highlights/')
       .then((res) => setLocationHighlights(res.data));
   }, []);
-  console.log(locationHighlights);
 
   // infowindow 생성
   const showInfoWindow = (location: string, locationId: number): void => {
