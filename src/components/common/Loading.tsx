@@ -20,7 +20,7 @@ export const LoadingRanking = () => {
   const { pathname } = useLocation();
 
   const textColor = pathname === '/' ? '' : 'light-white';
-  const spinnerColor = pathname === '/' ? '#005CB5' : '#f9f9f9';
+  const spinnerColor = pathname === '/' ? '#005CB5' : '#fff';
 
   return (
     <div className='my-10 flex w-full flex-col items-center justify-center gap-6'>
@@ -30,7 +30,7 @@ export const LoadingRanking = () => {
         <span>여행 이야기를 준비 중이에요!</span>
         <span>잠시만 기다려 주세요.</span>
       </div>
-      <BeatLoader className='mx-auto' color={`${spinnerColor}`} size={18} />
+      <BeatLoader className='mx-auto' color={`${spinnerColor}`} size={15} />
     </div>
   );
 };

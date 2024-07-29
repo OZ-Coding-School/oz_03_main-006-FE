@@ -36,7 +36,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
       //검색 로직
       const { searchValue } = data;
       try {
-        const response = await axios.get(`/api/search/?q=${searchValue}`);
+        const response = await axios.get(`/search/?q=${searchValue}`);
         console.log(response.data);
         const { posts } = response.data.results;
         //const posts: Post[] = postData;
@@ -98,11 +98,11 @@ const SearchBar: React.FC<SearchBarProps> = ({
         <div className='search-scroll flex max-h-[calc(100vh-360px)] w-full flex-col scroll-smooth'>
           {posts.map((post) => (
             <SearchResultItem
-              key={post.post_id}
-              id={post.post_id}
+              key={post.id}
+              id={post.id}
               title={post.title}
               body={post.body}
-              representative_image_id={post.representative_image_id}
+              thumbnail={post.thumbnail}
               textColor={textColor}
               clickedHover={clickedHover}
             />

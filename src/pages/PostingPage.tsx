@@ -77,7 +77,7 @@ const PostingPage = () => {
 
         try {
           const response = await axios.post(
-            'http://52.79.207.68:8000/posts/upload_image/',
+            'http://43.202.53.249:8000/posts/upload_image/',
             formData,
             {
               headers: {
@@ -240,7 +240,7 @@ const PostingPage = () => {
     console.log(user?.user_id);
 
     // formData.append('user_id', user?.user_id?.toString() || '');
-    formData.append('user_id', '4');
+    formData.append('user_id', '1');
     formData.append('title', data.title);
     formData.append('tag', tags.map((tag) => tag.content).join(','));
     formData.append('region', data.location);
@@ -263,7 +263,7 @@ const PostingPage = () => {
 
     try {
       const response = await axios.post(
-        'http://52.79.207.68:8000/posts/',
+        'http://43.202.53.249:8000/posts/',
         formData,
         {
           headers: {

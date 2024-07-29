@@ -27,7 +27,7 @@ const Login = () => {
     console.log(data);
     clearValue();
     const { nickname } = data;
-    setUser({ user_id: 4, nickname, profile_image: null });
+    setUser({ user_id: 1, nickname, profile_image: null });
     navigate('/');
     // try {
     //   const { nickname, password } = data;
@@ -123,11 +123,11 @@ const Login = () => {
             <div className='h-[1px] bg-[#BFBFBF]'></div>
           </div>
           <div className='flex h-[100px] items-center justify-center gap-10'>
-            <Link to='http://52.79.207.68:8000/users/accounts/kakao/login/callback/'>
+            <Link to='http://43.202.53.249:8000/users/accounts/kakao/login/callback/'>
               <img src='/kakao-logo.svg' />
             </Link>
             <Link
-              to='http://52.79.207.68:8000/users/accounts/google/login/callback/'
+              to='http://43.202.53.249:8000/users/accounts/google/login/callback/'
               className='flex h-[49px] w-[49px] items-center justify-center rounded-full bg-white'
             >
               <img src='/google-logo.svg' className='h-8 w-8' />

@@ -21,7 +21,7 @@ const Tab: React.FC<TabProps> = ({ textColor, backgroundColor }) => {
   const isHomePage = pathname === '/';
   const clickedHover = isHomePage
     ? 'hover:bg-white hover:shadow-md'
-    : 'hover:bg-[#1F3653] hover:shadow-xl';
+    : 'hover:bg-[#243A57] hover:shadow-xl';
   const clickedTabRankingHome =
     activeTab === 'ranking' ? 'border-[#28466A] text-lg' : '';
   const clickedTabSearchingHome =
@@ -31,9 +31,9 @@ const Tab: React.FC<TabProps> = ({ textColor, backgroundColor }) => {
   const clickedTabSearching =
     activeTab === 'searching' ? 'border-[#f9f9f9] text-lg' : 'border-[#868e96]';
   const clickedTabHome =
-    'flex h-full cursor-pointer items-center justify-center rounded-t-lg border-b-2 text-center text-black font-chosun hover:text-lg hover:border-[#28466A]';
+    'flex h-full cursor-pointer items-center justify-center rounded-t-lg border-b-2 text-center text-black font-chosun';
   const clickedTab =
-    'flex h-full cursor-pointer items-center justify-center rounded-t-lg border-b-2 text-center light-white font-chosun hover:text-lg hover:border-[#f9f9f9]';
+    'flex h-full cursor-pointer items-center justify-center rounded-t-lg border-b-2 text-center light-white font-chosun';
 
   return (
     <div className='mx-auto my-6 flex h-[calc(100vh-216px)] w-[340px] flex-col items-center justify-center gap-6'>

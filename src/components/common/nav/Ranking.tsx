@@ -3,7 +3,6 @@ import SearchResultItem from '../../SearchResultItem';
 import { Post } from '../../../../config/types';
 import { LoadingRanking } from '../Loading';
 import axios from '../../../api/axios';
-//import postData from '../../../data/posts.json';
 
 interface RankingProps {
   textColor: string;
@@ -19,14 +18,15 @@ const Ranking: React.FC<RankingProps> = ({
   const [posts, setPosts] = useState<Post[]>([]);
 
   const getTopPosts = async () => {
-    //const posts: Post[] = postData;
     try {
       const response = await axios.get('/posts/');
       console.log(response.data);
-      const posts: Post[] = response.data.results.posts;
-      const sortedPosts = posts.sort((a, b) => b.view_count - a.view_count);
-      const topPosts = sortedPosts.slice(0, 5);
-      setPosts(topPosts);
+      const posts: Post[] = response.data;
+      if (posts.length > 0) {
+        const sortedPosts = posts.sort((a, b) => b.view_count - a.view_count);
+        const topPosts = sortedPosts.slice(0, 5);
+        setPosts(topPosts);
+      }
     } catch (error) {
       console.log('데이터 요청 실패: ', error);
     }
@@ -44,11 +44,11 @@ const Ranking: React.FC<RankingProps> = ({
     <div className='flex w-full flex-col items-center justify-center py-1'>
       {posts.map((post, index) => (
         <SearchResultItem
-          key={post.post_id}
-          id={post.post_id}
+          key={post.id}
+          id={post.id}
           title={post.title}
           body={post.body}
-          representative_image_id={post.representative_image_id}
+          thumbnail={post.thumbnail}
           textColor={textColor}
           clickedHover={clickedHover}
           activeTab={activeTab}

@@ -7,10 +7,10 @@ interface SubtitleProps {
 const Subtitle: React.FC<SubtitleProps> = ({ textColor }) => {
   return (
     <div
-      className={`waviy mx-auto my-4 w-[312px] text-center font-chosun text-xl ${textColor}`}
+      className={`mx-auto my-4 w-[312px] text-center font-chosun text-xl ${textColor}`}
     >
-      {/* 한국을 한(韓)바퀴 돌아보세요 */}
-      <span style={{ '--i': 1 } as React.CSSProperties}>한</span>
+      한국을 한(韓)바퀴 돌아보세요
+      {/* <span style={{ '--i': 1 } as React.CSSProperties}>한</span>
       <span style={{ '--i': 2 } as React.CSSProperties}>국</span>
       <span style={{ '--i': 3 } as React.CSSProperties}>을</span>
       <span style={{ '--i': 4 } as React.CSSProperties}>&nbsp;</span>
@@ -23,7 +23,7 @@ const Subtitle: React.FC<SubtitleProps> = ({ textColor }) => {
       <span style={{ '--i': 11 } as React.CSSProperties}>아</span>
       <span style={{ '--i': 12 } as React.CSSProperties}>보</span>
       <span style={{ '--i': 13 } as React.CSSProperties}>세</span>
-      <span style={{ '--i': 14 } as React.CSSProperties}>요</span>
+      <span style={{ '--i': 14 } as React.CSSProperties}>요</span> */}
     </div>
   );
 };
