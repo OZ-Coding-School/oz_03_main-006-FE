@@ -154,7 +154,9 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
               <div className='m-2 text-[16px] font-semibold'>
                 {comment.nickname}
               </div>
-              <div className='m-2 text-[#777777]'>{comment.created_at}</div>
+              <div className='m-2 text-[#777777]'>
+                {comment.created_at.substring(0, 10)}
+              </div>
             </div>
             {user?.user_id === comment.user_id && (
               <div>
