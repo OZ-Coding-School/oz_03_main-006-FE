@@ -4,6 +4,8 @@ import { useAlertStore, useUserStore } from '../../config/store';
 import Alert from './common/Alert';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import axios from '../api/axios';
+import { FaRegUser } from 'react-icons/fa';
+import Pagination from 'react-js-pagination';
 
 interface Comment {
   id: number;
@@ -25,7 +27,7 @@ interface CommentProps {
 
 const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
   const param = useParams();
-  const [comments, setComments] = useState<Comment[]>();
+  const [comments, setComments] = useState<Comment[]>([]);
   const { user } = useUserStore();
   const { setAlert } = useAlertStore();
   const {
@@ -41,6 +43,8 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
   } = useForm<FormData>();
   const postId = useRef<number | undefined>();
   const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const commentsPerPage = 10;
 
   useEffect(() => {
     postId.current = Number(param.post_id);
@@ -68,7 +72,7 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
       await axios.post(
         `/posts/${postId.current}/comments/`,
         {
-          user_id: 1,
+          user_id: user.id,
           content: data.comment,
         },
         {
@@ -83,7 +87,7 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
   };
 
   const deleteComment = async (commentUserId: number, commentId: number) => {
-    if (user?.user_id !== commentUserId) {
+    if (user?.id !== commentUserId) {
       setAlert('댓글 작성자만 삭제할 수 있습니다.');
       return;
     }
@@ -111,7 +115,7 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
         `/posts/comments/${editingCommentId}/`,
         {
           content: data.comment,
-          user_id: user?.user_id,
+          user_id: user?.id,
         },
         {
           withCredentials: true,
@@ -128,6 +132,17 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
   const cancelEditComment = () => {
     setEditingCommentId(null);
   };
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const indexOfLastComment = currentPage * commentsPerPage;
+  const indexOfFirstComment = indexOfLastComment - commentsPerPage;
+  const currentComments = comments.slice(
+    indexOfFirstComment,
+    indexOfLastComment
+  );
 
   return (
     <div className='mx-auto min-w-[1052px] max-w-[1052px]'>
@@ -147,67 +162,103 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
           className='mb-5 ml-auto mr-2 block h-[34px] w-[96px] cursor-pointer rounded-[6px] bg-[#28466A] font-semibold text-white hover:bg-[#1a2e46]'
         />
       </form>
-      {comments?.map((comment) => (
-        <div key={comment.id} className='border-b-[1px] p-2'>
-          <div className='flex justify-between'>
-            <div className='flex'>
-              <div className='m-2 text-[16px] font-semibold'>
-                {comment.nickname}
-              </div>
-              <div className='m-2 text-[#777777]'>
-                {comment.created_at.substring(0, 10)}
-              </div>
-            </div>
-            {user?.user_id === comment.user_id && (
-              <div>
-                {editingCommentId === comment.id ? (
-                  <>
-                    <button
-                      className='m-2 text-[13px] text-blue-400'
-                      onClick={handleEditSubmit(saveEditComment)}
-                    >
-                      저장
-                    </button>
-                    <button
-                      className='m-2 text-[13px] text-red-400'
-                      onClick={cancelEditComment}
-                    >
-                      취소
-                    </button>
-                  </>
+      <div className='pb-10'>
+        {currentComments.map((comment) => (
+          <div key={comment.id} className='border-b-[1px] p-2 last:border-none'>
+            <div className='flex justify-between'>
+              <div className='flex items-center'>
+                {comment.user_id !== user?.id ? (
+                  <div className='flex h-[30px] w-[30px] items-center justify-center rounded-full bg-[#28466A]'>
+                    <FaRegUser className='light-white'></FaRegUser>
+                  </div>
                 ) : (
-                  <>
-                    <button
-                      className='m-2 text-[13px] text-blue-400'
-                      onClick={() =>
-                        startEditComment(comment.id, comment.content)
-                      }
-                    >
-                      수정
-                    </button>
-                    <button
-                      className='m-2 text-[13px] text-red-400'
-                      onClick={() => deleteComment(comment.user_id, comment.id)}
-                    >
-                      삭제
-                    </button>
-                  </>
+                  <img
+                    className='h-[30px] w-[30px] rounded-full'
+                    src={`${user?.profile_image}`}
+                  ></img>
                 )}
+                <div className='m-2 text-[16px] font-semibold'>
+                  {comment.nickname}
+                </div>
+                <div className='m-2 text-[#777777]'>
+                  {comment.created_at.substring(0, 10)}
+                </div>
               </div>
+              {user?.id === comment.user_id && (
+                <div>
+                  {editingCommentId === comment.id ? (
+                    <>
+                      <button
+                        className='m-2 text-[13px] text-blue-400'
+                        onClick={handleEditSubmit(saveEditComment)}
+                      >
+                        저장
+                      </button>
+                      <button
+                        className='m-2 text-[13px] text-red-400'
+                        onClick={cancelEditComment}
+                      >
+                        취소
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        className='m-2 text-[13px] text-blue-400'
+                        onClick={() =>
+                          startEditComment(comment.id, comment.content)
+                        }
+                      >
+                        수정
+                      </button>
+                      <button
+                        className='m-2 text-[13px] text-red-400'
+                        onClick={() =>
+                          deleteComment(comment.user_id, comment.id)
+                        }
+                      >
+                        삭제
+                      </button>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
+            {editingCommentId === comment.id ? (
+              <form onSubmit={handleEditSubmit(saveEditComment)}>
+                <textarea
+                  {...editRegister('comment')}
+                  className='h-[108px] w-full flex-grow resize-none border p-2'
+                />
+              </form>
+            ) : (
+              <div className='py-3'>{comment.content}</div>
             )}
           </div>
-          {editingCommentId === comment.id ? (
-            <form onSubmit={handleEditSubmit(saveEditComment)}>
-              <textarea
-                {...editRegister('comment')}
-                className='h-[108px] w-full flex-grow resize-none border p-2'
-              />
-            </form>
-          ) : (
-            <div className='py-3'>{comment.content}</div>
-          )}
-        </div>
-      ))}
+        ))}
+        {comments.length === 0 ? (
+          ''
+        ) : (
+          <Pagination
+            activePage={currentPage}
+            itemsCountPerPage={commentsPerPage}
+            totalItemsCount={comments.length}
+            pageRangeDisplayed={5}
+            onChange={handlePageChange}
+            itemClass='pagination-item'
+            linkClass='pagination-link'
+            activeClass='active'
+            activeLinkClass=''
+            firstPageText='<<'
+            lastPageText='>>'
+            itemClassFirst='pagination-nav'
+            itemClassLast='pagination-nav'
+            itemClassPrev='pagination-nav'
+            itemClassNext='pagination-nav'
+            disabledClass='disabled'
+          />
+        )}
+      </div>
     </div>
   );
 };

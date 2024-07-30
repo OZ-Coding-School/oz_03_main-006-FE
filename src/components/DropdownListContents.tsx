@@ -7,7 +7,7 @@ interface DropdownListContentsProps {
   lastIndex: number;
   moveCenter: (name: string, locationId: number) => void;
   clearMoveCenterTimeout: () => void;
-  confettiRef;
+  confettiRef: any;
 }
 
 const DropdownListContents: React.FC<DropdownListContentsProps> = ({

@@ -65,6 +65,7 @@ export interface UserState {
   clearUser: () => void;
   updateProfileImage: (imageUrl: string) => void;
 }
+
 export interface SignUpUser {
   nickname: string;
   email: string;
