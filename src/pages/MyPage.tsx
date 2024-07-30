@@ -5,10 +5,9 @@ import { useEffect, useState } from 'react';
 import { useAlertStore, useUserStore } from '../../config/store';
 import ProfileImage from '../components/ProfileImage';
 import { FaRegUser } from 'react-icons/fa';
-import axios from 'axios';
 import axiosInstance from '../api/axios';
 import { FaPersonWalkingLuggage } from 'react-icons/fa6';
-import { ConfirmAlert, MyPageConfirmAlert } from '../components/common/Alert';
+import { MyPageConfirmAlert } from '../components/common/Alert';
 
 const MyPage = () => {
   const navigate = useNavigate();

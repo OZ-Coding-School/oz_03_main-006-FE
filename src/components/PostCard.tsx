@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { IoMdHeart } from 'react-icons/io';
-import axios from 'axios';
+// import axios from 'axios';
 import { Post } from '../../config/types';
 import TagItem from './TagItem';
 import dompurify from 'dompurify';
@@ -17,14 +17,19 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
     post.thumbnail && post.thumbnail !== '' ? post.thumbnail : '/logo.svg'
   );
 
-  const fetchPostDetail = async () => {
-    try {
-      const response = await axios.get(
-        `http://43.202.53.249:8000/posts/${post.id}`
-      );
-      console.log(response);
-    } catch {}
-  };
+  // const fetchPostDetail = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       `http://43.202.53.249:8000/posts/${post.id}`
+  //     );
+  //     setPostImg('');
+  //     console.log(response);
+  //   } catch {}
+  // };
+
+  useEffect(() => {
+    setPostImg('');
+  }, []);
 
   const errorLogoWidth = postImg === '/logo.svg' ? 'w-20' : '';
   const errorLogoHeight = postImg === '/logo.svg' ? 'h-20' : '';
