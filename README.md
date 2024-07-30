@@ -3,12 +3,27 @@
 <p align='center'><img src="https://github.com/user-attachments/assets/562aac17-7c2a-4c33-81a5-24c342011c97"/></p>
 
 ## 프로젝트 소개
-장기 여행자를 위한 정보 공유 커뮤니티입니다. 각 지역별로 최소 5일 동안의 여행 후기와 정보를 공유하고, 찾고 싶은 정보를 검색하세요.
+
+장기 여행자를 위한 정보 공유 커뮤니티입니다. 각 지역별로 최소 5일 동안의 여행
+후기와 정보를 공유하고, 찾고 싶은 정보를 검색하세요.
+
+## 주요 기능
+
+- **게시글 작성 및 공유** : 이미지가 포함된 게시물을 작성하고 공유할 수
+  있습니다.
+- **지역 기반 정보** : 여행 지역에 대한 상세 정보 (날씨, 인기 명소, 추천 여행
+  코스 등)를 제공합니다.
+- **소셜 로그인** : 간편하게 구글, 카카오 계정으로 로그인할 수 있습니다.
+- **댓글 및 좋아요** : 게시글에 댓글을 달고 좋아요를 표시하여 다른 사용자와
+  소통할 수 있습니다.
+- **검색 기능** : 원하는 지역이나 키워드로 게시글을 검색할 수 있습니다.
 
 ## 배포 주소
+
 - https://hancycle.site
 
 ## 기술
+
 ![TypeScript](https://img.shields.io/badge/typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
 ![React](https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black)
 ![React Quill](https://img.shields.io/badge/react--quill-61DAFB?style=for-the-badge&logo=react&logoColor=black)
@@ -31,8 +46,8 @@
 ![CloudFront](https://img.shields.io/badge/CloudFront-FF9900?style=for-the-badge&logo=amazon-cloudfront&logoColor=white)
 ![Gabia](https://img.shields.io/badge/Gabia-005BAC?style=for-the-badge&logo=gabia&logoColor=white)
 
+## 프론트 개발자
 
-## 개발자
 <table>
   <tr>
     <td align="center">
@@ -66,7 +81,14 @@
   </tr>
 </table>
 
+- 김보람 : main page - navermaps, community list / detail post page - comment
+- 김세림 : posting page - react quill / detail post page - article
+- 이주희 : community page - react slick, pagination / mypage - image crop, edit
+  profile
+- 이희주 : login page - signIn, signOut, js-cookie / sidebar - search, ranking
+
 ### 커밋 규칙
+
 - feat: 새로운 기능 추가
 - fix: 버그 수정
 - docs: 문서 수정
@@ -79,10 +101,13 @@
 - rename: 파일, 폴더명 수정
 
 ### 플로우 차트
+
 - https://www.figma.com/board/uIL7a34yCsAnGEGlXgTjsU/FigJam-basics?node-id=0-1&t=KJAmA6yjVxbyIPEP-0
 
 ### 와이어 프레임
+
 - https://www.figma.com/design/dJXYBReeYw9DMP4HLnpDlb/한바퀴?node-id=0-1&t=k2y2rjrsCm4An5wt-0
 
 ### 사용자 요구사항 정의서
+
 - https://www.notion.so/d1c35a028c9f4456b2166381a4ea6fed?pvs=4

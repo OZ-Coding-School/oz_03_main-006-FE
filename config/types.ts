@@ -22,7 +22,7 @@ export interface Post {
   thumbnail: string | null;
 }
 export interface User {
-  user_id: number;
+  id: number;
   email?: string;
   nickname: string;
   profile_image: string | null;
@@ -34,6 +34,7 @@ export interface UserState {
   clearUser: () => void;
   updateProfileImage: (imageUrl: string) => void;
 }
+
 export interface SignUpUser {
   nickname: string;
   email: string;

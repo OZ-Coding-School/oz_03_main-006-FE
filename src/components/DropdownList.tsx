@@ -23,7 +23,7 @@ const DropdownList: React.FC<DropdownListProps> = ({ map, marker }) => {
   const [locationHighlights, setLocationHighlights] = useState<
     Highlights[] | null
   >(null);
-  const confettiRef = useRef();
+  const confettiRef = useRef<Promise<void> | null>(null);
 
   const toggleFold = () => {
     setIsFold((prev) => !prev);
@@ -134,7 +134,6 @@ const DropdownList: React.FC<DropdownListProps> = ({ map, marker }) => {
       infoWindowRef.current = newInfoWindow;
       if (map) {
         newInfoWindow.open(map, position);
-        // Adjusted confetti effect
         const h3Element = document.querySelector('.info-window_title');
         const rect = h3Element?.getBoundingClientRect();
         const confettiOrigin = rect
@@ -144,16 +143,17 @@ const DropdownList: React.FC<DropdownListProps> = ({ map, marker }) => {
             }
           : { x: 0.5, y: 0.4 };
         confettiRef.current = confetti({
-          spread: 70, // Less spread
+          spread: 70,
           angle: 90,
           ticks: 50,
-          gravity: 3, // Increased gravity for a more subtle effect
+          gravity: 3,
           decay: 0.94,
-          startVelocity: 20, // Reduced velocity
+          startVelocity: 20,
           shapes: ['star'],
-          particleCount: 30, // Fewer particles
-          scalar: 0.7, // Normal size
+          particleCount: 30,
+          scalar: 0.7,
           origin: confettiOrigin,
+          colors: ['#42c2f4', '#E894C1', '#f47575', '#44d0b0', '#8d7cf6'],
         });
       }
     }
