@@ -27,6 +27,7 @@ export const useUserStore = create(
 export const useAlertStore = create<AlertState>((set) => ({
   showAlert: false,
   alertMessage: '',
+  confirmResult: null,
   setAlert: (message) =>
     set(() => ({
       showAlert: true,
@@ -37,6 +38,17 @@ export const useAlertStore = create<AlertState>((set) => ({
       showAlert: false,
       alertMessage: '',
     })),
+  showConfirmAlert: (message) =>
+    new Promise<boolean>((resolve) => {
+      set(() => ({
+        showAlert: true,
+        alertMessage: message,
+        confirmResult: (result: boolean) => {
+          resolve(result),
+            set({ showAlert: false, alertMessage: '', confirmResult: null });
+        },
+      }));
+    }),
 }));
 
 export const useTagStore = create<TagState>((set) => ({

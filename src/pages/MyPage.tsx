@@ -8,6 +8,7 @@ import { FaRegUser } from 'react-icons/fa';
 import axios from 'axios';
 import axiosInstance from '../api/axios';
 import { FaPersonWalkingLuggage } from 'react-icons/fa6';
+import { ConfirmAlert, MyPageConfirmAlert } from '../components/common/Alert';
 
 const MyPage = () => {
   const navigate = useNavigate();
@@ -21,18 +22,23 @@ const MyPage = () => {
   const [nickname, setNickname] = useState(user?.nickname || '');
   const [img, setImg] = useState(user?.profile_image || '');
   const [tempImg, setTempImg] = useState<string | null>(null);
-  const setAlert = useAlertStore((state) => state.setAlert);
+  // const { setAlert, showAlert } = useAlertStore((state) => state);
   const [userPost, setUserPost] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const handleLogout = async () => {
     try {
-      await axiosInstance.post(
-        `/users/accounts/logout`,
-        {},
-        { withCredentials: true }
-      );
-      clearUser();
+      const { showConfirmAlert } = useAlertStore.getState();
+      const confirmed = await showConfirmAlert('로그아웃 하시겠습니까?');
+      if (confirmed) {
+        await axiosInstance.post(
+          `/users/accounts/logout`,
+          {},
+          { withCredentials: true }
+        );
+        clearUser();
+        navigate('/');
+      }
     } catch (error) {
       console.error('Logout failed', error);
     }
@@ -62,12 +68,12 @@ const MyPage = () => {
       setUser({ ...user, nickname: nickname });
       updateProfileImage(img);
       try {
-        const response = await axios.post(
+        const response = await axiosInstance.post(
           `/users/accounts/profile/edit`,
           {
             id: user.id,
             nickname: nickname,
-            profile_image: img,
+            // profile_image: img,
           },
           {
             withCredentials: true,
@@ -111,6 +117,7 @@ const MyPage = () => {
       </div>
 
       <main className='flex-grow'>
+        <MyPageConfirmAlert></MyPageConfirmAlert>
         <div className='mx-auto w-[1200px]'>
           <div className='mt-12 h-full px-8'>
             <div className='flex justify-between'>
