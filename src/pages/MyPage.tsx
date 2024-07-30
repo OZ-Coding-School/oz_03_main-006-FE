@@ -128,8 +128,8 @@ const MyPage = () => {
                     setImg={setImg}
                     onFileSelect={handleFileSelect}
                     img={img}
-                    profile_img={user?.profile_image}
-                    updateProfileImage={updateProfileImage}
+                    // profile_img={user?.profile_image}
+                    // updateProfileImage={updateProfileImage}
                   />
                 ) : (
                   <div>

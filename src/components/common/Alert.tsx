@@ -77,8 +77,7 @@ export const ConfirmAlert = () => {
 };
 
 export const MyPageConfirmAlert = () => {
-  const { showAlert, alertMessage, clearAlert, confirmResult } =
-    useAlertStore();
+  const { showAlert, alertMessage, confirmResult } = useAlertStore();
 
   if (!showAlert) return null;
 
