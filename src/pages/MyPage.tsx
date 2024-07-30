@@ -135,40 +135,47 @@ const MyPage = () => {
                     {user?.profile_image ? (
                       <img
                         src={user.profile_image}
-                        className='h-32 w-32 rounded-full text-3xl'
+                        className='size-28 rounded-full text-3xl'
                         alt='프로필 이미지'
                       />
                     ) : (
-                      <div className='flex h-32 w-32 items-center justify-center overflow-hidden rounded-full bg-[#28466A]'>
-                        <FaRegUser className='light-white bg-[#28466A] text-[100px]' />
+                      <div className='flex size-28 items-center justify-center overflow-hidden rounded-full bg-[#28466A]'>
+                        <FaRegUser className='light-white bg-[#28466A] text-[60px]' />
                       </div>
                     )}
                   </div>
                 )}
 
                 {edit ? (
-                  <input
-                    placeholder='닉네임을 수정해주세요.'
-                    className='border-gray my-12 ml-8 rounded-md border border-2'
-                    onChange={handleNickname}
-                    value={nickname}
-                  />
+                  <div className='my-auto ml-8'>
+                    <div className='mb-2 pl-1 text-sm font-semibold'>
+                      닉네임
+                    </div>
+                    <input
+                      placeholder='닉네임을 수정해주세요.'
+                      className='rounded-md border border-gray-300 py-1 pl-3 text-lg focus:border-[#28466A] focus:outline-none'
+                      onChange={handleNickname}
+                      value={nickname}
+                    />
+                  </div>
                 ) : (
-                  <span className='ml-8 mt-12 font-bold'>{user?.nickname}</span>
+                  <span className='ml-8 mt-12 text-xl font-bold'>
+                    {user?.nickname}
+                  </span>
                 )}
               </div>
-              <div className='mr-4 mt-12 flex text-xl'>
+              <div className='my-auto mr-4 flex text-xl'>
                 {edit ? (
                   <>
                     <button
                       onClick={handleCancle}
-                      className='mr-4 h-[23px] rounded bg-[#28466A] px-2 text-sm text-white'
+                      className='mr-2 rounded-lg px-3 py-1 text-sm text-[#28466A]'
                     >
                       취소
                     </button>
                     <button
                       onClick={handleNewNick}
-                      className='mr-4 h-[23px] rounded bg-[#28466A] px-2 text-sm text-white'
+                      className='mr-5 rounded-lg bg-[#28466A] px-3 py-1 text-sm text-white hover:bg-[#1a2e46]'
                     >
                       수정
                     </button>
@@ -179,7 +186,10 @@ const MyPage = () => {
                     onClick={handleEdit}
                   />
                 )}
-                <MdLogout className='cursor-pointer' onClick={handleLogout} />
+                <MdLogout
+                  className='my-auto cursor-pointer'
+                  onClick={handleLogout}
+                />
               </div>
             </div>
 
@@ -189,7 +199,7 @@ const MyPage = () => {
               <p className='text-2xl'>나의 게시글</p>
               <Link
                 to={'/posting'}
-                className='rounded bg-[#28466A] px-2 py-2 text-[10px] text-white'
+                className='my-auto rounded-lg border border-[#28466A] bg-white px-4 py-1 text-sm font-semibold text-[#28466A] hover:bg-[#f9fbff]'
               >
                 게시글 작성
               </Link>
@@ -199,9 +209,11 @@ const MyPage = () => {
                 유저가 작성한 글이 있다고 치고!
               </div>
             ) : (
-              <div className='mx-auto mt-52 flex items-center justify-center text-3xl text-gray-700'>
-                <span className='font-semibold'>{`${user?.nickname}`}</span>
-                님의 여행이야기를 들려주세요!
+              <div className='mx-auto mt-52 flex items-center justify-center text-2xl text-gray-700'>
+                <span className='font-semibold'>
+                  {`${user?.nickname}`}&nbsp;
+                </span>
+                님의 여행이야기를 들려주세요.
                 <FaPersonWalkingLuggage className='ml-3' />
               </div>
             )}

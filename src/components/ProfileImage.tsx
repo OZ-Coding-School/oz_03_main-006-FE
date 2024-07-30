@@ -56,7 +56,7 @@ const ProfileImage: React.FC<FileUploadProps> = ({
 
   return (
     <>
-      <div className='relative h-32 w-32 rounded-full bg-gray-200'>
+      <div className='relative size-28 rounded-full bg-gray-200'>
         <div className='flex h-full w-full items-center justify-center'>
           {/* <FaCamera className='text-gray-400 text-3xl'/> */}
           {img ? (

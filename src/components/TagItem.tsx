@@ -16,6 +16,7 @@ const TagItem: React.FC<TagItemProps> = ({ tagContent, showDeleteButton }) => {
       {showDeleteButton ? (
         <button
           className='ml-2 text-sm text-[#d9264d]'
+          type='button'
           onClick={() => removeTag(tagContent.tag_id)}
         >
           <RxCross2 />

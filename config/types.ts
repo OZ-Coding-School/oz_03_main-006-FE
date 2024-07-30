@@ -110,3 +110,14 @@ export interface DetailPostArticle {
   user_id: number;
   likes_count: number;
 }
+
+export interface PostingFormData {
+  title: string;
+  location: string;
+  startDate: string;
+  endDate: string;
+  content: string;
+  tagValue: string;
+  thumbnail: FileList;
+  [key: string]: string | FileList;
+}

@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 import { useUserStore, useAlertStore } from '../../config/store';
 import Alert from './common/Alert';
 import dompurify from 'dompurify';
-import { locationList } from '../data/locationList';
 import { Tag, DetailPostArticle } from '../../config/types';
 import { useNavigate } from 'react-router-dom';
 
@@ -17,28 +16,18 @@ interface ArticleProps {
 }
 
 const Article: React.FC<ArticleProps> = ({ article }) => {
-  console.log(article);
   const user = useUserStore((state) => state.user);
   const setAlert = useAlertStore((state) => state.setAlert);
-
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const [showButton, setShowButton] = useState<boolean>(false);
-  const [postUserId, setPostUserId] = useState<number | null>(article.user_id);
   const [postLikesCount, setPostLikesCount] = useState<number>(
     article.likes_count
   );
+  const postUserId = article.user_id;
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   if (user && postUserId && user.user_id === postUserId) {
-  //     setShowButton(true);
-  //   } else {
-  //     setShowButton(false);
-  //   }
-  // }, [user, postUserId]);
-
   useEffect(() => {
-    if (1 === postUserId) {
+    if (user && postUserId && user.id === postUserId) {
       setShowButton(true);
     } else {
       setShowButton(false);
@@ -51,9 +40,10 @@ const Article: React.FC<ArticleProps> = ({ article }) => {
       return;
     }
     try {
-      const response = await axios.post(`/posts/${article.post_id}/like/`);
+      await axios.post(`/posts/${article.id}/like/`, {
+        withCredentials: true,
+      });
       setIsLiked(!isLiked);
-      setPostLikesCount(response.data.likes_count);
     } catch (error) {
       console.error(error);
     }
@@ -65,15 +55,14 @@ const Article: React.FC<ArticleProps> = ({ article }) => {
     });
   };
 
-  // const matchLocationName = (value: number) => {
-  //   const location = locationList.find((loc) => loc.location_id === value);
-  //   return location ? location.name : '';
-  // };
-
   const handleDelete = async () => {
     try {
       const response = await axios.delete(`/posts/${article.id}`);
       console.log(response.data);
+      setAlert('게시글이 삭제되었습니다.');
+      setTimeout(() => {
+        navigate('/');
+      }, 2000);
     } catch (error) {
       console.error(error);
     }
@@ -88,15 +77,15 @@ const Article: React.FC<ArticleProps> = ({ article }) => {
     <>
       <div className='mx-auto mt-8 flex max-w-[1052px] flex-wrap'>
         <Alert></Alert>
-        <div className='mb-8 w-full text-4xl font-bold'>{article.title}</div>
+        <div className='mb-10 w-full text-4xl font-bold'>{article.title}</div>
         <div className='mb-2 flex w-full'>
-          <span className='w-40 text-xl font-semibold'>지역</span>
+          <span className='w-36 text-xl font-semibold'>지역</span>
           <span className='text-lg'>{article.location}</span>
         </div>
         <div className='mb-3 flex w-full'>
-          <span className='w-40 text-xl font-semibold'>여행기간</span>
+          <span className='w-36 text-xl font-semibold'>여행기간</span>
           <span className='text-lg'>
-            {article.travel_start_date}~ {article.travel_end_date}
+            {article.travel_start_date} ~ {article.travel_end_date}
           </span>
         </div>
         <div className='mb-6 flex h-7 w-full'>
