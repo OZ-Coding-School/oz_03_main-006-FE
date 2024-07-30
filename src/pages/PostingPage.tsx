@@ -7,24 +7,13 @@ import 'react-quill/dist/quill.snow.css';
 import './PostingPage.css';
 import TagItem from '../components/TagItem';
 import { useTagStore, useUserStore, useAlertStore } from '../../config/store';
+import { PostingFormData } from '../../config/types';
 import { FaPlus } from 'react-icons/fa6';
 import { locationList } from '../data/locationList';
-import axios from 'axios';
-import { getLocations } from '../utils/postPageHelper';
+import axios, { AxiosResponse } from 'axios';
 import ImageResize from 'quill-image-resize';
 import Alert, { ConfirmAlert } from '../components/common/Alert';
 Quill.register('modules/ImageResize', ImageResize);
-
-interface FormData {
-  title: string;
-  location: string;
-  startDate: string;
-  endDate: string;
-  content: string;
-  tagValue: string;
-  thumbnail: FileList;
-  [key: string]: string | FileList;
-}
 
 const PostingPage = () => {
   const {
@@ -33,7 +22,7 @@ const PostingPage = () => {
     watch,
     setValue,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<PostingFormData>({
     defaultValues: {
       title: '',
       location: '',
@@ -58,20 +47,25 @@ const PostingPage = () => {
   const quillRef = useRef<ReactQuill>(null);
   const navigate = useNavigate();
   const { post_id } = useParams();
-  console.log(post_id);
 
   const isEditMode = post_id ? true : false;
 
   useEffect(() => {
+    if (!user) {
+      setAlert('로그인이 필요한 페이지 입니다.');
+      navigate('/login');
+    }
+  }, [user]);
+
+  useEffect(() => {
+    clearTags();
     if (isEditMode) {
       const fetchPostData = async () => {
         try {
           const response = await axios.get(
-            `http://43.202.53.249:8000/posts/${post_id}/`
+            `http://13.125.183.76:8000/posts/${post_id}/`
           );
           const postData = response.data.post;
-          console.log(postData);
-
           setViewCount(postData.view_count);
 
           setValue('title', postData.title);
@@ -81,36 +75,23 @@ const PostingPage = () => {
           setQuillContent(postData.body);
           setValue('content', postData.body);
 
-          // 태그 설정
-          clearTags();
           const tagArray = postData.tag.split(',');
           tagArray.forEach((tag: string) => {
-            addTag(tag.trim(), Math.random());
+            addTag(tag.trim());
           });
 
-          // 썸네일 파일 이름 설정 (만약 있다면)
           if (postData.thumbnail) {
             setFileName(postData.thumbnail.split('/').pop());
           }
 
-          // 이미지 ID 설정
           setImageIds(postData.image_ids || []);
         } catch (error) {
           console.error('기존 글 데이터를 불러오는데 실패했습니다:', error);
-          // setAlert('글 데이터를 불러오는데 실패했습니다.');
         }
       };
-
       fetchPostData();
     }
-  }, [isEditMode, post_id, setValue, addTag, setAlert]);
-
-  // useEffect(() => {
-  //   if (!user) {
-  //     setAlert('로그인이 필요한 페이지 입니다.');
-  //     navigate('/login');
-  //   }
-  // }, [user, navigate]);
+  }, [post_id]);
 
   //이미지 올리기1
   const imageHandler = useCallback(() => {
@@ -124,11 +105,10 @@ const PostingPage = () => {
       if (file) {
         const formData = new FormData();
         formData.append('images', file);
-        console.log(formData);
 
         try {
           const response = await axios.post(
-            'http://43.202.53.249:8000/posts/upload_image/',
+            'http://13.125.183.76:8000/posts/upload_image/',
             formData,
             {
               headers: {
@@ -136,11 +116,9 @@ const PostingPage = () => {
               },
             }
           );
-          console.log(response);
 
           setImageIds((prev) => [...prev, response.data.images[0].id]);
           const imageUrl = response.data.images[0].image;
-          console.log('업로드된 이미지 URL:', imageUrl);
 
           const quill = quillRef.current?.getEditor();
           if (quill) {
@@ -198,7 +176,7 @@ const PostingPage = () => {
     const checkDateValidity = () => {
       const start = new Date(startDate);
       const end = new Date(endDate);
-      const dayDiff = (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24); // 일수로 변환
+      const dayDiff = (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24);
 
       if (startDate && endDate) {
         if (start > end) {
@@ -215,12 +193,14 @@ const PostingPage = () => {
       }
     };
     checkDateValidity();
-  }, [startDate, endDate, setValue]);
+  }, [startDate, endDate]);
 
   //quill에디터로 작성한 내용
   const handleQuillChange = (content: string) => {
-    setValue('content', content === '<p><br></p>' ? '' : content);
-    console.log(content);
+    content === '<p><br></p>'
+      ? setValue('content', '')
+      : setValue('content', content);
+    setQuillContent(content);
   };
 
   //태그입력하고 엔터쳤을 때
@@ -231,7 +211,7 @@ const PostingPage = () => {
       if (
         tagValue.trim() !== '' &&
         tags.length < 5 &&
-        event.nativeEvent.isComposing === false //마지막글자남지않도록
+        event.nativeEvent.isComposing === false
       ) {
         addTag(tagValue);
         setValue('tagValue', '');
@@ -240,17 +220,13 @@ const PostingPage = () => {
   };
 
   //서버에 보낼때
-  const onSubmit: SubmitHandler<FormData> = async (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<PostingFormData> = async (data) => {
     const formData = new FormData();
     const temp_image_ids = imageIds.join(',');
-    console.log(user?.user_id);
 
-    // formData.append('user_id', user?.user_id?.toString() || '');
-    formData.append('user_id', '1');
+    formData.append('user_id', user?.id?.toString() || '');
     formData.append('title', data.title);
     formData.append('tag', tags.map((tag) => tag.content).join(','));
-    formData.append('location', data.location);
     formData.append('body', data.content);
     formData.append('travel_start_date', data.startDate);
     formData.append('travel_end_date', data.endDate);
@@ -262,17 +238,14 @@ const PostingPage = () => {
       formData.append('thumbnail', '');
     }
 
-    console.log('FormData contents:');
-    for (const [key, value] of formData.entries()) {
-      console.log(key, value);
-    }
-
     try {
-      let response;
+      let response: AxiosResponse;
       if (isEditMode) {
+        const matchLocId = matchLocationId(data.location);
+        formData.append('location', matchLocId.toString());
         formData.append('view_count', viewCount.toString());
         response = await axios.put(
-          `http://43.202.53.249:8000/posts/${post_id}/`,
+          `http://13.125.183.76:8000/posts/${post_id}/`,
           formData,
           {
             headers: {
@@ -281,10 +254,19 @@ const PostingPage = () => {
             withCredentials: true,
           }
         );
+        if (response.status === 200 || response.status === 201) {
+          setAlert('글 수정이 완료되었습니다!');
+        } else {
+          setAlert('글 수정에 실패했습니다.');
+        }
+        setTimeout(() => {
+          navigate(`/post-detail/${post_id}`);
+        }, 2000);
       } else {
         formData.append('view_count', '0');
+        formData.append('location', data.location);
         response = await axios.post(
-          'http://43.202.53.249:8000/posts/',
+          'http://13.125.183.76:8000/posts/',
           formData,
           {
             headers: {
@@ -293,25 +275,27 @@ const PostingPage = () => {
             withCredentials: true,
           }
         );
-        console.log(response);
-      }
-      if (response.status === 200 || response.status === 201) {
-        setAlert(
-          isEditMode
-            ? '글 수정이 완료되었습니다!'
-            : '포스팅 등록이 완료되었습니다!'
-        );
-        navigate(`/post-detail/${post_id}`);
+        if (response.status === 200 || response.status === 201) {
+          setAlert('글 등록이 완료되었습니다!');
+          setTimeout(() => {
+            navigate(`/post-detail/${response.data.id}`);
+          }, 2000);
+        } else {
+          setAlert('글 등록에 실패하였습니다. 다시 시도해 주세요.');
+          setTimeout(() => {
+            navigate('/');
+          }, 2000);
+        }
       }
     } catch (error) {
       console.log(error);
     }
   };
 
-  // const matchLocationId = (value: string) => {
-  //   const location = locationList.find((loc) => loc.name === value);
-  //   return location ? location.location_id : 0;
-  // };
+  const matchLocationId = (value: string) => {
+    const location = locationList.find((loc) => loc.city === value);
+    return location ? location.location_id : 0;
+  };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const fileList = event.currentTarget.files;
@@ -342,8 +326,12 @@ const PostingPage = () => {
               <option value='' disabled>
                 지역을 선택해주세요
               </option>
-              {getLocations().map((location) => (
-                <option key={location.location_id} value={location.location_id}>
+              {locationList.map((location) => (
+                <option
+                  key={location.location_id}
+                  value={location.location_id}
+                  selected={location.city === watch('location')}
+                >
                   {location.name}
                 </option>
               ))}
@@ -446,6 +434,7 @@ const PostingPage = () => {
           <div className='sticky bottom-0 flex w-full justify-end gap-2 border-t border-[#cdcdcd] bg-white py-2'>
             <button
               className='rounded-lg border border-[#28466A] bg-white px-5 py-1 text-sm text-[#28466A] hover:bg-[#f9fbff]'
+              type='button'
               onClick={() => {
                 setAlert('정말 작성을 취소하고 돌아가시겠습니까?');
               }}

@@ -22,7 +22,7 @@ export interface Post {
   thumbnail: string | null;
 }
 export interface User {
-  user_id: number;
+  id: number;
   email?: string;
   nickname: string;
   profile_image: string | null;
@@ -73,4 +73,15 @@ export interface DetailPostArticle {
   travel_end_date: string | null;
   user_id: number;
   likes_count: number;
+}
+
+export interface PostingFormData {
+  title: string;
+  location: string;
+  startDate: string;
+  endDate: string;
+  content: string;
+  tagValue: string;
+  thumbnail: FileList;
+  [key: string]: string | FileList;
 }

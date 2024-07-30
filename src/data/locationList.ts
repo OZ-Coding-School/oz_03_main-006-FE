@@ -12,6 +12,7 @@ export const locationList = [
         활동: ['몸과 마음이 쉬어가는 힐링 여행을 즐겨보세요.'],
       },
     },
+    city: '서울특별시',
   },
   {
     location_id: 2,
@@ -25,6 +26,7 @@ export const locationList = [
         활동: ['다양한 명소에서 휴식을 취하며 경기도의 매력을 느껴보세요.'],
       },
     },
+    city: '경기도',
   },
   {
     location_id: 3,
@@ -38,6 +40,7 @@ export const locationList = [
         활동: ['바다와 도시가 만나는 여행을 즐겨보세요.'],
       },
     },
+    city: '인천광역시',
   },
   {
     location_id: 4,
@@ -51,6 +54,7 @@ export const locationList = [
         활동: ['자연과 함께하는 힐링 여행을 즐겨보세요.'],
       },
     },
+    city: '강원특별자치도',
   },
   {
     location_id: 5,
@@ -64,6 +68,7 @@ export const locationList = [
         활동: ['역사와 자연이 어우러진 여행을 즐겨보세요.'],
       },
     },
+    city: '경상북도',
   },
   {
     location_id: 6,
@@ -77,6 +82,7 @@ export const locationList = [
         활동: ['다양한 자연경관과 역사 탐방을 즐겨보세요.'],
       },
     },
+    city: '경상남도',
   },
   {
     location_id: 7,
@@ -90,6 +96,7 @@ export const locationList = [
         활동: ['도심 속에서의 힐링 여행을 즐겨보세요.'],
       },
     },
+    city: '대구광역시',
   },
   {
     location_id: 8,
@@ -103,6 +110,7 @@ export const locationList = [
         활동: ['해양과 자연을 즐기는 여행을 떠나보세요.'],
       },
     },
+    city: '울산광역시',
   },
   {
     location_id: 9,
@@ -116,6 +124,7 @@ export const locationList = [
         활동: ['해변과 도시를 만끽하는 여행을 즐겨보세요.'],
       },
     },
+    city: '부산광역시',
   },
   {
     location_id: 10,
@@ -129,6 +138,7 @@ export const locationList = [
         활동: ['산과 호수가 어우러진 여행을 즐겨보세요.'],
       },
     },
+    city: '충청북도',
   },
   {
     location_id: 11,
@@ -142,6 +152,7 @@ export const locationList = [
         활동: ['역사와 자연을 즐기는 여행을 떠나보세요.'],
       },
     },
+    city: '충청남도',
   },
   {
     location_id: 12,
@@ -155,6 +166,7 @@ export const locationList = [
         활동: ['현대적인 도시와 자연이 조화된 여행을 즐겨보세요.'],
       },
     },
+    city: '세종특별자치시',
   },
   {
     location_id: 13,
@@ -168,6 +180,7 @@ export const locationList = [
         활동: ['과학과 자연을 탐험하는 여행을 즐겨보세요.'],
       },
     },
+    city: '대전광역시',
   },
   {
     location_id: 14,
@@ -181,6 +194,7 @@ export const locationList = [
         활동: ['역사와 문화를 만나는 여행을 즐겨보세요.'],
       },
     },
+    city: '전북특별자치도',
   },
   {
     location_id: 15,
@@ -194,6 +208,7 @@ export const locationList = [
         활동: ['자연과 해양을 즐기는 여행을 떠나보세요.'],
       },
     },
+    city: '전라남도',
   },
   {
     location_id: 16,
@@ -207,6 +222,7 @@ export const locationList = [
         활동: ['예술과 자연을 체험하는 여행을 즐겨보세요.'],
       },
     },
+    city: '광주광역시',
   },
   {
     location_id: 17,
@@ -220,5 +236,6 @@ export const locationList = [
         활동: ['해변과 산을 즐기는 여행을 떠나보세요.'],
       },
     },
+    city: '제주특별자치도',
   },
 ];
