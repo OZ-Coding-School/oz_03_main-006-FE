@@ -9,7 +9,7 @@ import { useTagStore, useUserStore, useAlertStore } from '../../config/store';
 import { PostingFormData, PostResponse } from '../../config/types';
 import { FaPlus } from 'react-icons/fa6';
 import { locationList } from '../data/locationList';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import ImageResize from 'quill-image-resize';
 import Alert, { ConfirmAlert } from '../components/common/Alert';
 Quill.register('modules/ImageResize', ImageResize);
@@ -238,7 +238,7 @@ const PostingPage = () => {
     }
 
     try {
-      let response: PostResponse;
+      let response: AxiosResponse<PostResponse>;
       if (isEditMode) {
         const matchLocId = matchLocationId(data.location);
         formData.append('location', matchLocId.toString());
