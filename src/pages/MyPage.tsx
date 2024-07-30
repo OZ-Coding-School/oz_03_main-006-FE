@@ -23,17 +23,16 @@ const MyPage = () => {
   const [tempImg, setTempImg] = useState<string | null>(null);
   const setAlert = useAlertStore((state) => state.setAlert);
   const [userPost, setUserPost] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const handleLogout = async () => {
     try {
-      const response = await axiosInstance.post(
+      await axiosInstance.post(
         `/users/accounts/logout`,
         {},
         { withCredentials: true }
       );
       clearUser();
-      console.log(response.data);
-      navigate('/');
     } catch (error) {
       console.error('Logout failed', error);
     }
@@ -41,7 +40,6 @@ const MyPage = () => {
 
   useEffect(() => {
     if (!user) {
-      setAlert('로그인이 필요한 페이지 입니다.');
       navigate('/login');
     }
   }, [user, navigate]);
@@ -67,7 +65,7 @@ const MyPage = () => {
         const response = await axios.post(
           `/users/accounts/profile/edit`,
           {
-            id: user.user_id,
+            id: user.id,
             nickname: nickname,
             profile_image: img,
           },
@@ -217,9 +215,9 @@ const MyPage = () => {
       </main>
 
       <footer className='w-full p-4 text-right'>
-        <Link to='/' className='text-sm text-red-500'>
+        <p className='text-sm text-red-500' onClick={handleLogout}>
           회원탈퇴
-        </Link>
+        </p>
       </footer>
     </div>
   );

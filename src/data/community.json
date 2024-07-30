@@ -160,6 +160,842 @@
           { "tag_id": 4, "centent": "전통" },
           { "tag_id": 5, "centent": "현대" }
         ]
+      },
+      {
+        "post_id": 11,
+        "user_id": 111,
+        "title": "수원의 역사 탐방",
+        "body": "수원화성과 화성행궁을 방문했습니다. 수원의 역사적인 장소에서 많은 것을 배웠습니다.",
+        "created_at": "2024-08-10",
+        "updated_at": "2024-08-11",
+        "view_count": 150,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-08-05",
+        "travel_end_date": "2024-08-10",
+        "tags": [
+          { "tag_id": 1, "centent": "경기도" },
+          { "tag_id": 2, "centent": "수원" },
+          { "tag_id": 3, "centent": "역사" }
+        ]
+      },
+      {
+        "post_id": 12,
+        "user_id": 112,
+        "title": "수원의 맛집 투어",
+        "body": "수원의 다양한 맛집을 탐방했습니다. 팔달문 시장에서 맛있는 음식을 즐겼습니다.",
+        "created_at": "2024-08-15",
+        "updated_at": "2024-08-16",
+        "view_count": 200,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-08-10",
+        "travel_end_date": "2024-08-15",
+        "tags": [
+          { "tag_id": 1, "centent": "경기도" },
+          { "tag_id": 2, "centent": "수원" },
+          { "tag_id": 3, "centent": "맛집" }
+        ]
+      },
+      {
+        "post_id": 13,
+        "user_id": 113,
+        "title": "인천의 차이나타운 탐방",
+        "body": "인천의 차이나타운을 방문했습니다. 다양한 중국 음식을 맛보고 문화를 체험했습니다.",
+        "created_at": "2024-09-01",
+        "updated_at": "2024-09-02",
+        "view_count": 180,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-08-25",
+        "travel_end_date": "2024-08-30",
+        "tags": [
+          { "tag_id": 1, "centent": "인천" },
+          { "tag_id": 2, "centent": "차이나타운" }
+        ]
+      },
+      {
+        "post_id": 14,
+        "user_id": 114,
+        "title": "인천의 바다를 즐기다",
+        "body": "인천의 다양한 해변을 방문했습니다. 월미도와 을왕리 해수욕장에서 해변의 매력을 즐겼습니다.",
+        "created_at": "2024-09-10",
+        "updated_at": "2024-09-11",
+        "view_count": 210,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-09-01",
+        "travel_end_date": "2024-09-05",
+        "tags": [
+          { "tag_id": 1, "centent": "인천" },
+          { "tag_id": 2, "centent": "바다" }
+        ]
+      },
+      {
+        "post_id": 15,
+        "user_id": 115,
+        "title": "강릉의 해변을 즐기다",
+        "body": "강릉의 경포대 해변에서 여름 휴가를 보냈습니다. 맑은 바다와 시원한 바람이 인상적이었습니다.",
+        "created_at": "2024-07-01",
+        "updated_at": "2024-07-02",
+        "view_count": 150,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-06-25",
+        "travel_end_date": "2024-07-01",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "해변" }
+        ]
+      },
+      {
+        "post_id": 16,
+        "user_id": 116,
+        "title": "강릉의 전통과 현대",
+        "body": "강릉의 전통 한옥 마을과 현대적인 카페 거리를 방문했습니다. 강릉의 다양한 매력을 경험했습니다.",
+        "created_at": "2024-08-01",
+        "updated_at": "2024-08-02",
+        "view_count": 180,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-07-25",
+        "travel_end_date": "2024-07-31",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "전통" },
+          { "tag_id": 4, "centent": "현대" }
+        ]
+      },
+      {
+        "post_id": 15,
+        "user_id": 115,
+        "title": "강릉의 해변을 즐기다",
+        "body": "강릉의 경포대 해변에서 여름 휴가를 보냈습니다. 맑은 바다와 시원한 바람이 인상적이었습니다.",
+        "created_at": "2024-07-01",
+        "updated_at": "2024-07-02",
+        "view_count": 150,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-06-25",
+        "travel_end_date": "2024-07-01",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "해변" }
+        ]
+      },
+      {
+        "post_id": 16,
+        "user_id": 116,
+        "title": "강릉의 전통과 현대",
+        "body": "강릉의 전통 한옥 마을과 현대적인 카페 거리를 방문했습니다. 강릉의 다양한 매력을 경험했습니다.",
+        "created_at": "2024-08-01",
+        "updated_at": "2024-08-02",
+        "view_count": 180,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-07-25",
+        "travel_end_date": "2024-07-31",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "전통" },
+          { "tag_id": 4, "centent": "현대" }
+        ]
+      },
+      {
+        "post_id": 15,
+        "user_id": 115,
+        "title": "강릉의 해변을 즐기다",
+        "body": "강릉의 경포대 해변에서 여름 휴가를 보냈습니다. 맑은 바다와 시원한 바람이 인상적이었습니다.",
+        "created_at": "2024-07-01",
+        "updated_at": "2024-07-02",
+        "view_count": 150,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-06-25",
+        "travel_end_date": "2024-07-01",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "해변" }
+        ]
+      },
+      {
+        "post_id": 16,
+        "user_id": 116,
+        "title": "강릉의 전통과 현대",
+        "body": "강릉의 전통 한옥 마을과 현대적인 카페 거리를 방문했습니다. 강릉의 다양한 매력을 경험했습니다.",
+        "created_at": "2024-08-01",
+        "updated_at": "2024-08-02",
+        "view_count": 180,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-07-25",
+        "travel_end_date": "2024-07-31",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "전통" },
+          { "tag_id": 4, "centent": "현대" }
+        ]
+      },
+      {
+        "post_id": 15,
+        "user_id": 115,
+        "title": "강릉의 해변을 즐기다",
+        "body": "강릉의 경포대 해변에서 여름 휴가를 보냈습니다. 맑은 바다와 시원한 바람이 인상적이었습니다.",
+        "created_at": "2024-07-01",
+        "updated_at": "2024-07-02",
+        "view_count": 150,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-06-25",
+        "travel_end_date": "2024-07-01",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "해변" }
+        ]
+      },
+      {
+        "post_id": 16,
+        "user_id": 116,
+        "title": "강릉의 전통과 현대",
+        "body": "강릉의 전통 한옥 마을과 현대적인 카페 거리를 방문했습니다. 강릉의 다양한 매력을 경험했습니다.",
+        "created_at": "2024-08-01",
+        "updated_at": "2024-08-02",
+        "view_count": 180,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-07-25",
+        "travel_end_date": "2024-07-31",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "전통" },
+          { "tag_id": 4, "centent": "현대" }
+        ]
+      },
+      {
+        "post_id": 15,
+        "user_id": 115,
+        "title": "강릉의 해변을 즐기다",
+        "body": "강릉의 경포대 해변에서 여름 휴가를 보냈습니다. 맑은 바다와 시원한 바람이 인상적이었습니다.",
+        "created_at": "2024-07-01",
+        "updated_at": "2024-07-02",
+        "view_count": 150,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-06-25",
+        "travel_end_date": "2024-07-01",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "해변" }
+        ]
+      },
+      {
+        "post_id": 16,
+        "user_id": 116,
+        "title": "강릉의 전통과 현대",
+        "body": "강릉의 전통 한옥 마을과 현대적인 카페 거리를 방문했습니다. 강릉의 다양한 매력을 경험했습니다.",
+        "created_at": "2024-08-01",
+        "updated_at": "2024-08-02",
+        "view_count": 180,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-07-25",
+        "travel_end_date": "2024-07-31",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "전통" },
+          { "tag_id": 4, "centent": "현대" }
+        ]
+      },
+      {
+        "post_id": 15,
+        "user_id": 115,
+        "title": "강릉의 해변을 즐기다",
+        "body": "강릉의 경포대 해변에서 여름 휴가를 보냈습니다. 맑은 바다와 시원한 바람이 인상적이었습니다.",
+        "created_at": "2024-07-01",
+        "updated_at": "2024-07-02",
+        "view_count": 150,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-06-25",
+        "travel_end_date": "2024-07-01",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "해변" }
+        ]
+      },
+      {
+        "post_id": 16,
+        "user_id": 116,
+        "title": "강릉의 전통과 현대",
+        "body": "강릉의 전통 한옥 마을과 현대적인 카페 거리를 방문했습니다. 강릉의 다양한 매력을 경험했습니다.",
+        "created_at": "2024-08-01",
+        "updated_at": "2024-08-02",
+        "view_count": 180,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-07-25",
+        "travel_end_date": "2024-07-31",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "전통" },
+          { "tag_id": 4, "centent": "현대" }
+        ]
+      },
+      {
+        "post_id": 15,
+        "user_id": 115,
+        "title": "강릉의 해변을 즐기다",
+        "body": "강릉의 경포대 해변에서 여름 휴가를 보냈습니다. 맑은 바다와 시원한 바람이 인상적이었습니다.",
+        "created_at": "2024-07-01",
+        "updated_at": "2024-07-02",
+        "view_count": 150,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-06-25",
+        "travel_end_date": "2024-07-01",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "해변" }
+        ]
+      },
+      {
+        "post_id": 16,
+        "user_id": 116,
+        "title": "강릉의 전통과 현대",
+        "body": "강릉의 전통 한옥 마을과 현대적인 카페 거리를 방문했습니다. 강릉의 다양한 매력을 경험했습니다.",
+        "created_at": "2024-08-01",
+        "updated_at": "2024-08-02",
+        "view_count": 180,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-07-25",
+        "travel_end_date": "2024-07-31",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "전통" },
+          { "tag_id": 4, "centent": "현대" }
+        ]
+      },
+      {
+        "post_id": 15,
+        "user_id": 115,
+        "title": "강릉의 해변을 즐기다",
+        "body": "강릉의 경포대 해변에서 여름 휴가를 보냈습니다. 맑은 바다와 시원한 바람이 인상적이었습니다.",
+        "created_at": "2024-07-01",
+        "updated_at": "2024-07-02",
+        "view_count": 150,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-06-25",
+        "travel_end_date": "2024-07-01",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "해변" }
+        ]
+      },
+      {
+        "post_id": 16,
+        "user_id": 116,
+        "title": "강릉의 전통과 현대",
+        "body": "강릉의 전통 한옥 마을과 현대적인 카페 거리를 방문했습니다. 강릉의 다양한 매력을 경험했습니다.",
+        "created_at": "2024-08-01",
+        "updated_at": "2024-08-02",
+        "view_count": 180,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-07-25",
+        "travel_end_date": "2024-07-31",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "전통" },
+          { "tag_id": 4, "centent": "현대" }
+        ]
+      },
+      {
+        "post_id": 15,
+        "user_id": 115,
+        "title": "강릉의 해변을 즐기다",
+        "body": "강릉의 경포대 해변에서 여름 휴가를 보냈습니다. 맑은 바다와 시원한 바람이 인상적이었습니다.",
+        "created_at": "2024-07-01",
+        "updated_at": "2024-07-02",
+        "view_count": 150,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-06-25",
+        "travel_end_date": "2024-07-01",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "해변" }
+        ]
+      },
+      {
+        "post_id": 16,
+        "user_id": 116,
+        "title": "강릉의 전통과 현대",
+        "body": "강릉의 전통 한옥 마을과 현대적인 카페 거리를 방문했습니다. 강릉의 다양한 매력을 경험했습니다.",
+        "created_at": "2024-08-01",
+        "updated_at": "2024-08-02",
+        "view_count": 180,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-07-25",
+        "travel_end_date": "2024-07-31",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "전통" },
+          { "tag_id": 4, "centent": "현대" }
+        ]
+      },
+      {
+        "post_id": 15,
+        "user_id": 115,
+        "title": "강릉의 해변을 즐기다",
+        "body": "강릉의 경포대 해변에서 여름 휴가를 보냈습니다. 맑은 바다와 시원한 바람이 인상적이었습니다.",
+        "created_at": "2024-07-01",
+        "updated_at": "2024-07-02",
+        "view_count": 150,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-06-25",
+        "travel_end_date": "2024-07-01",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "해변" }
+        ]
+      },
+      {
+        "post_id": 16,
+        "user_id": 116,
+        "title": "강릉의 전통과 현대",
+        "body": "강릉의 전통 한옥 마을과 현대적인 카페 거리를 방문했습니다. 강릉의 다양한 매력을 경험했습니다.",
+        "created_at": "2024-08-01",
+        "updated_at": "2024-08-02",
+        "view_count": 180,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-07-25",
+        "travel_end_date": "2024-07-31",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "전통" },
+          { "tag_id": 4, "centent": "현대" }
+        ]
+      },
+      {
+        "post_id": 15,
+        "user_id": 115,
+        "title": "강릉의 해변을 즐기다",
+        "body": "강릉의 경포대 해변에서 여름 휴가를 보냈습니다. 맑은 바다와 시원한 바람이 인상적이었습니다.",
+        "created_at": "2024-07-01",
+        "updated_at": "2024-07-02",
+        "view_count": 150,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-06-25",
+        "travel_end_date": "2024-07-01",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "해변" }
+        ]
+      },
+      {
+        "post_id": 16,
+        "user_id": 116,
+        "title": "강릉의 전통과 현대",
+        "body": "강릉의 전통 한옥 마을과 현대적인 카페 거리를 방문했습니다. 강릉의 다양한 매력을 경험했습니다.",
+        "created_at": "2024-08-01",
+        "updated_at": "2024-08-02",
+        "view_count": 180,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-07-25",
+        "travel_end_date": "2024-07-31",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "전통" },
+          { "tag_id": 4, "centent": "현대" }
+        ]
+      },
+      {
+        "post_id": 15,
+        "user_id": 115,
+        "title": "강릉의 해변을 즐기다",
+        "body": "강릉의 경포대 해변에서 여름 휴가를 보냈습니다. 맑은 바다와 시원한 바람이 인상적이었습니다.",
+        "created_at": "2024-07-01",
+        "updated_at": "2024-07-02",
+        "view_count": 150,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-06-25",
+        "travel_end_date": "2024-07-01",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "해변" }
+        ]
+      },
+      {
+        "post_id": 16,
+        "user_id": 116,
+        "title": "강릉의 전통과 현대",
+        "body": "강릉의 전통 한옥 마을과 현대적인 카페 거리를 방문했습니다. 강릉의 다양한 매력을 경험했습니다.",
+        "created_at": "2024-08-01",
+        "updated_at": "2024-08-02",
+        "view_count": 180,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-07-25",
+        "travel_end_date": "2024-07-31",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "전통" },
+          { "tag_id": 4, "centent": "현대" }
+        ]
+      },
+      {
+        "post_id": 15,
+        "user_id": 115,
+        "title": "강릉의 해변을 즐기다",
+        "body": "강릉의 경포대 해변에서 여름 휴가를 보냈습니다. 맑은 바다와 시원한 바람이 인상적이었습니다.",
+        "created_at": "2024-07-01",
+        "updated_at": "2024-07-02",
+        "view_count": 150,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-06-25",
+        "travel_end_date": "2024-07-01",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "해변" }
+        ]
+      },
+      {
+        "post_id": 16,
+        "user_id": 116,
+        "title": "강릉의 전통과 현대",
+        "body": "강릉의 전통 한옥 마을과 현대적인 카페 거리를 방문했습니다. 강릉의 다양한 매력을 경험했습니다.",
+        "created_at": "2024-08-01",
+        "updated_at": "2024-08-02",
+        "view_count": 180,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-07-25",
+        "travel_end_date": "2024-07-31",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "전통" },
+          { "tag_id": 4, "centent": "현대" }
+        ]
+      },
+      {
+        "post_id": 15,
+        "user_id": 115,
+        "title": "강릉의 해변을 즐기다",
+        "body": "강릉의 경포대 해변에서 여름 휴가를 보냈습니다. 맑은 바다와 시원한 바람이 인상적이었습니다.",
+        "created_at": "2024-07-01",
+        "updated_at": "2024-07-02",
+        "view_count": 150,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-06-25",
+        "travel_end_date": "2024-07-01",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "해변" }
+        ]
+      },
+      {
+        "post_id": 16,
+        "user_id": 116,
+        "title": "강릉의 전통과 현대",
+        "body": "강릉의 전통 한옥 마을과 현대적인 카페 거리를 방문했습니다. 강릉의 다양한 매력을 경험했습니다.",
+        "created_at": "2024-08-01",
+        "updated_at": "2024-08-02",
+        "view_count": 180,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-07-25",
+        "travel_end_date": "2024-07-31",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "전통" },
+          { "tag_id": 4, "centent": "현대" }
+        ]
+      },
+      {
+        "post_id": 15,
+        "user_id": 115,
+        "title": "강릉의 해변을 즐기다",
+        "body": "강릉의 경포대 해변에서 여름 휴가를 보냈습니다. 맑은 바다와 시원한 바람이 인상적이었습니다.",
+        "created_at": "2024-07-01",
+        "updated_at": "2024-07-02",
+        "view_count": 150,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-06-25",
+        "travel_end_date": "2024-07-01",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "해변" }
+        ]
+      },
+      {
+        "post_id": 16,
+        "user_id": 116,
+        "title": "강릉의 전통과 현대",
+        "body": "강릉의 전통 한옥 마을과 현대적인 카페 거리를 방문했습니다. 강릉의 다양한 매력을 경험했습니다.",
+        "created_at": "2024-08-01",
+        "updated_at": "2024-08-02",
+        "view_count": 180,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-07-25",
+        "travel_end_date": "2024-07-31",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "전통" },
+          { "tag_id": 4, "centent": "현대" }
+        ]
+      },
+      {
+        "post_id": 15,
+        "user_id": 115,
+        "title": "강릉의 해변을 즐기다",
+        "body": "강릉의 경포대 해변에서 여름 휴가를 보냈습니다. 맑은 바다와 시원한 바람이 인상적이었습니다.",
+        "created_at": "2024-07-01",
+        "updated_at": "2024-07-02",
+        "view_count": 150,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-06-25",
+        "travel_end_date": "2024-07-01",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "해변" }
+        ]
+      },
+      {
+        "post_id": 16,
+        "user_id": 116,
+        "title": "강릉의 전통과 현대",
+        "body": "강릉의 전통 한옥 마을과 현대적인 카페 거리를 방문했습니다. 강릉의 다양한 매력을 경험했습니다.",
+        "created_at": "2024-08-01",
+        "updated_at": "2024-08-02",
+        "view_count": 180,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-07-25",
+        "travel_end_date": "2024-07-31",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "전통" },
+          { "tag_id": 4, "centent": "현대" }
+        ]
+      },
+      {
+        "post_id": 15,
+        "user_id": 115,
+        "title": "강릉의 해변을 즐기다",
+        "body": "강릉의 경포대 해변에서 여름 휴가를 보냈습니다. 맑은 바다와 시원한 바람이 인상적이었습니다.",
+        "created_at": "2024-07-01",
+        "updated_at": "2024-07-02",
+        "view_count": 150,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-06-25",
+        "travel_end_date": "2024-07-01",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "해변" }
+        ]
+      },
+      {
+        "post_id": 16,
+        "user_id": 116,
+        "title": "강릉의 전통과 현대",
+        "body": "강릉의 전통 한옥 마을과 현대적인 카페 거리를 방문했습니다. 강릉의 다양한 매력을 경험했습니다.",
+        "created_at": "2024-08-01",
+        "updated_at": "2024-08-02",
+        "view_count": 180,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-07-25",
+        "travel_end_date": "2024-07-31",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "전통" },
+          { "tag_id": 4, "centent": "현대" }
+        ]
+      },
+      {
+        "post_id": 15,
+        "user_id": 115,
+        "title": "강릉의 해변을 즐기다",
+        "body": "강릉의 경포대 해변에서 여름 휴가를 보냈습니다. 맑은 바다와 시원한 바람이 인상적이었습니다.",
+        "created_at": "2024-07-01",
+        "updated_at": "2024-07-02",
+        "view_count": 150,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-06-25",
+        "travel_end_date": "2024-07-01",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "해변" }
+        ]
+      },
+      {
+        "post_id": 16,
+        "user_id": 116,
+        "title": "강릉의 전통과 현대",
+        "body": "강릉의 전통 한옥 마을과 현대적인 카페 거리를 방문했습니다. 강릉의 다양한 매력을 경험했습니다.",
+        "created_at": "2024-08-01",
+        "updated_at": "2024-08-02",
+        "view_count": 180,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-07-25",
+        "travel_end_date": "2024-07-31",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "전통" },
+          { "tag_id": 4, "centent": "현대" }
+        ]
+      },
+      {
+        "post_id": 15,
+        "user_id": 115,
+        "title": "강릉의 해변을 즐기다",
+        "body": "강릉의 경포대 해변에서 여름 휴가를 보냈습니다. 맑은 바다와 시원한 바람이 인상적이었습니다.",
+        "created_at": "2024-07-01",
+        "updated_at": "2024-07-02",
+        "view_count": 150,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-06-25",
+        "travel_end_date": "2024-07-01",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "해변" }
+        ]
+      },
+      {
+        "post_id": 16,
+        "user_id": 116,
+        "title": "강릉의 전통과 현대",
+        "body": "강릉의 전통 한옥 마을과 현대적인 카페 거리를 방문했습니다. 강릉의 다양한 매력을 경험했습니다.",
+        "created_at": "2024-08-01",
+        "updated_at": "2024-08-02",
+        "view_count": 180,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-07-25",
+        "travel_end_date": "2024-07-31",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "전통" },
+          { "tag_id": 4, "centent": "현대" }
+        ]
+      },
+      {
+        "post_id": 15,
+        "user_id": 115,
+        "title": "강릉의 해변을 즐기다",
+        "body": "강릉의 경포대 해변에서 여름 휴가를 보냈습니다. 맑은 바다와 시원한 바람이 인상적이었습니다.",
+        "created_at": "2024-07-01",
+        "updated_at": "2024-07-02",
+        "view_count": 150,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-06-25",
+        "travel_end_date": "2024-07-01",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "해변" }
+        ]
+      },
+      {
+        "post_id": 16,
+        "user_id": 116,
+        "title": "강릉의 전통과 현대",
+        "body": "강릉의 전통 한옥 마을과 현대적인 카페 거리를 방문했습니다. 강릉의 다양한 매력을 경험했습니다.",
+        "created_at": "2024-08-01",
+        "updated_at": "2024-08-02",
+        "view_count": 180,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-07-25",
+        "travel_end_date": "2024-07-31",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "전통" },
+          { "tag_id": 4, "centent": "현대" }
+        ]
+      },
+      {
+        "post_id": 15,
+        "user_id": 115,
+        "title": "강릉의 해변을 즐기다",
+        "body": "강릉의 경포대 해변에서 여름 휴가를 보냈습니다. 맑은 바다와 시원한 바람이 인상적이었습니다.",
+        "created_at": "2024-07-01",
+        "updated_at": "2024-07-02",
+        "view_count": 150,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-06-25",
+        "travel_end_date": "2024-07-01",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "해변" }
+        ]
+      },
+      {
+        "post_id": 16,
+        "user_id": 116,
+        "title": "강릉의 전통과 현대",
+        "body": "강릉의 전통 한옥 마을과 현대적인 카페 거리를 방문했습니다. 강릉의 다양한 매력을 경험했습니다.",
+        "created_at": "2024-08-01",
+        "updated_at": "2024-08-02",
+        "view_count": 180,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-07-25",
+        "travel_end_date": "2024-07-31",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "전통" },
+          { "tag_id": 4, "centent": "현대" }
+        ]
+      },
+      {
+        "post_id": 15,
+        "user_id": 115,
+        "title": "강릉의 해변을 즐기다",
+        "body": "강릉의 경포대 해변에서 여름 휴가를 보냈습니다. 맑은 바다와 시원한 바람이 인상적이었습니다.",
+        "created_at": "2024-07-01",
+        "updated_at": "2024-07-02",
+        "view_count": 150,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-06-25",
+        "travel_end_date": "2024-07-01",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "해변" }
+        ]
+      },
+      {
+        "post_id": 16,
+        "user_id": 116,
+        "title": "강릉의 전통과 현대",
+        "body": "강릉의 전통 한옥 마을과 현대적인 카페 거리를 방문했습니다. 강릉의 다양한 매력을 경험했습니다.",
+        "created_at": "2024-08-01",
+        "updated_at": "2024-08-02",
+        "view_count": 180,
+        "representative_image_id": "https://via.placeholder.com/200x200",
+        "travel_start_date": "2024-07-25",
+        "travel_end_date": "2024-07-31",
+        "tags": [
+          { "tag_id": 1, "centent": "강원도" },
+          { "tag_id": 2, "centent": "강릉" },
+          { "tag_id": 3, "centent": "전통" },
+          { "tag_id": 4, "centent": "현대" }
+        ]
       }
     ]
   },
