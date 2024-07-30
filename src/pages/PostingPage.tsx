@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import ReactQuill, { Quill } from 'react-quill';
@@ -7,7 +6,7 @@ import 'react-quill/dist/quill.snow.css';
 import './PostingPage.css';
 import TagItem from '../components/TagItem';
 import { useTagStore, useUserStore, useAlertStore } from '../../config/store';
-import { PostingFormData } from '../../config/types';
+import { PostingFormData, PostResponse } from '../../config/types';
 import { FaPlus } from 'react-icons/fa6';
 import { locationList } from '../data/locationList';
 import axios from 'axios';
@@ -239,7 +238,7 @@ const PostingPage = () => {
     }
 
     try {
-      let response;
+      let response: PostResponse;
       if (isEditMode) {
         const matchLocId = matchLocationId(data.location);
         formData.append('location', matchLocId.toString());

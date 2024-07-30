@@ -24,19 +24,6 @@ export interface Locations {
   top_posts?: Post[];
 }
 
-// export interface Post {
-//   id: number;
-//   user_id: number;
-//   title: string;
-//   body: string;
-//   created_at: string;
-//   updated_at: string;
-//   view_count: number;
-//   travel_start_date: string;
-//   travel_end_date: string;
-//   tags?: Tag[];
-//   thumbnail: string | null;
-// }
 export interface Post {
   body: string;
   content?: string;
@@ -109,6 +96,7 @@ export interface DetailPostArticle {
   travel_end_date: string | null;
   user_id: number;
   likes_count: number;
+  location: string;
 }
 
 export interface PostingFormData {
@@ -120,4 +108,20 @@ export interface PostingFormData {
   tagValue: string;
   thumbnail: FileList;
   [key: string]: string | FileList;
+}
+
+export interface PostResponse {
+  id: number;
+  images: string[] | null;
+  title: string;
+  tag: string | null;
+  body: string;
+  created_at: string;
+  updated_at: string;
+  view_count: number;
+  travel_start_date: string;
+  travel_end_date: string;
+  thumbnail: string | null;
+  user_id: number;
+  location: number;
 }
