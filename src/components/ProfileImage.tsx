@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { FaCamera } from 'react-icons/fa';
 import ProfileModal from './ProfileModal';
 
@@ -6,16 +6,14 @@ interface FileUploadProps {
   setImg: React.Dispatch<React.SetStateAction<string>>;
   onFileSelect: (file: File) => void;
   img?: string | null;
-  profile_img?: string | null;
-  updateProfileImage: (imageUrl: string) => void;
+  // profile_img?: string | null;
+  // updateProfileImage: (imageUrl: string) => void;
 }
 
 const ProfileImage: React.FC<FileUploadProps> = ({
   setImg,
   onFileSelect,
   img,
-  profile_img,
-  updateProfileImage,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -30,6 +28,7 @@ const ProfileImage: React.FC<FileUploadProps> = ({
         setPreview(reader.result as string);
         console.log('프로필이미지 - handleFileInput : reader.result as string');
         console.log('프로필이미지 - handleFileInput : reader.result as string');
+        console.log(croppedImage);
         setIsModalOpen(true);
       };
       reader.readAsDataURL(file);
