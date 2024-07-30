@@ -5,6 +5,7 @@ import Alert from './common/Alert';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import axios from '../api/axios';
 import { FaRegUser } from 'react-icons/fa';
+import Pagination from 'react-js-pagination';
 
 interface Comment {
   id: number;
@@ -26,7 +27,7 @@ interface CommentProps {
 
 const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
   const param = useParams();
-  const [comments, setComments] = useState<Comment[]>();
+  const [comments, setComments] = useState<Comment[]>([]);
   const { user } = useUserStore();
   const { setAlert } = useAlertStore();
   const {
@@ -42,6 +43,8 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
   } = useForm<FormData>();
   const postId = useRef<number | undefined>();
   const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const commentsPerPage = 10;
 
   useEffect(() => {
     postId.current = Number(param.post_id);
@@ -130,6 +133,17 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
     setEditingCommentId(null);
   };
 
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const indexOfLastComment = currentPage * commentsPerPage;
+  const indexOfFirstComment = indexOfLastComment - commentsPerPage;
+  const currentComments = comments.slice(
+    indexOfFirstComment,
+    indexOfLastComment
+  );
+
   return (
     <div className='mx-auto min-w-[1052px] max-w-[1052px]'>
       <Alert />
@@ -149,7 +163,7 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
         />
       </form>
       <div className='pb-10'>
-        {comments?.map((comment) => (
+        {currentComments.map((comment) => (
           <div key={comment.id} className='border-b-[1px] p-2 last:border-none'>
             <div className='flex justify-between'>
               <div className='flex items-center'>
@@ -222,6 +236,28 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
             )}
           </div>
         ))}
+        {comments.length === 0 ? (
+          ''
+        ) : (
+          <Pagination
+            activePage={currentPage}
+            itemsCountPerPage={commentsPerPage}
+            totalItemsCount={comments.length}
+            pageRangeDisplayed={5}
+            onChange={handlePageChange}
+            itemClass='pagination-item'
+            linkClass='pagination-link'
+            activeClass='active'
+            activeLinkClass=''
+            firstPageText='<<'
+            lastPageText='>>'
+            itemClassFirst='pagination-nav'
+            itemClassLast='pagination-nav'
+            itemClassPrev='pagination-nav'
+            itemClassNext='pagination-nav'
+            disabledClass='disabled'
+          />
+        )}
       </div>
     </div>
   );
