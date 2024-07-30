@@ -1,24 +1,13 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import communityData from '../data/community.json';
-import weatherData from '../data/weather.json';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Post } from '../../config/types';
+import { Locations, Post } from '../../config/types';
 import PostCard from './PostCard';
 import Carousel from './Carousel';
 import icons from '../data/icons.json';
-import axios from 'axios';
-import Loading from './common/Loading';
-
-interface Locations {
-  location_id: number;
-  city: string;
-  description: string;
-  images: string;
-  popular_cities: string;
-  district: string;
-  highlights?: string;
-  l_category: string;
-}
+import axiosInstance from '../api/axios';
+import { useAlertStore } from '../../config/store';
+import Pagination from 'react-js-pagination';
+import './pagination.scss';
 
 interface Weather {
   POP: number;
@@ -31,25 +20,9 @@ interface Weather {
   fcst_date?: string;
 }
 
-interface CommunityEndItem {
-  body: string;
-  created_at: string;
-  id: number;
-  location: number;
-  tag: string;
-  thumbnail: string;
-  title: string;
-  travel_end_date: string;
-  travel_start_date: string;
-  updated_at: string;
-  user_id: number;
-  view_count: number;
-}
-
 const Community = () => {
   const { location_id } = useParams<{ location_id: string }>();
 
-  const [sortedPosts, setSortedPosts] = useState<any[]>([]);
   const [sortType, setSortType] = useState<string>('default');
   const [sortRegionType, setSortRegionType] = useState<string>('default');
   const [community, setCommunity] = useState<Locations>();
@@ -58,23 +31,46 @@ const Community = () => {
   const [forecast, setForecast] = useState<Weather>();
   const [isLoading, setIsLoading] = useState(true);
 
-  const [communityPosts, setCommunityPosts] = useState<CommunityEndItem[]>([]);
-  const [regionData_end, setRegionData_end] = useState<CommunityEndItem[]>([]);
+  // const [communityPosts, setCommunityPosts] = useState<Post[]>([]);
+  const [currentPosts, setCurrentPosts] = useState<Post[]>([]);
+  const [page, setPage] = useState<number>(1);
 
   const navigate = useNavigate();
 
+  const { setAlert } = useAlertStore();
+
+  const postPerPage: number = 8;
+  const indexOfLastPost: number = page * postPerPage;
+  const indexOfFirstPost: number = indexOfLastPost - postPerPage;
+
+  const handlePageChange = (page: number) => {
+    setPage(page);
+  };
+
+  useEffect(() => {
+    if (currentPosts) {
+      setCurrentPosts(currentPosts.slice(indexOfFirstPost, indexOfLastPost));
+    } else {
+      setCurrentPosts([]);
+    }
+    console.log(currentPosts.length);
+  }, []);
+
   const fetchPosts = async () => {
     try {
-      const response = await axios.get(`http://43.202.53.249:8000/posts/`);
+      const response = await axiosInstance.get(`/posts/${location_id}/posts/`);
       console.log(response.data);
-      setCommunityPosts(response.data);
-    } catch {}
+      setCurrentPosts(response.data);
+    } catch (error) {
+      console.error('게시물을 불러오는데 실패했습니다.', error);
+      setAlert(`게시물을 불러오는데 실패했습니다.`);
+    }
   };
   const fetchWeather = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get(
-        `http://43.202.53.249:8000/weather/weather/latest/${location_id}`
+      const response = await axiosInstance.get(
+        `/weather/weather/latest/${location_id}`
       );
       setWeather(response.data);
       console.log(response);
@@ -88,13 +84,13 @@ const Community = () => {
   const fetchForecastWeather = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get(
-        `http://43.202.53.249:8000/weather/weather/forecast/${location_id}`
+      const response = await axiosInstance.get(
+        `/weather/weather/forecast/${location_id}`
       );
       setForecast(response.data);
       console.log(response);
     } catch (error) {
-      console.error('날씨 데이터를 가져오는데 실패했습니다:', error);
+      console.error('날씨 데이터를 가져오는데 실패했습니다: ', error);
     } finally {
       setIsLoading(false);
     }
@@ -102,23 +98,25 @@ const Community = () => {
 
   const fetchLocations = async () => {
     try {
-      const response = await axios.get(
-        `http://43.202.53.249:8000/locations/${location_id}`
-      );
+      const response = await axiosInstance.get(`/locations/${location_id}`);
       setCommunity(response.data);
       console.log(response);
       console.log(response.data);
     } catch (error) {
-      console.log(error);
+      console.log('지역 정보를 불러오는데 실패했습니다: ', error);
+      setAlert('지역 정보를 불러오는데 실패했습니다.');
     }
   };
 
   const fetchCommunitys = async () => {
     try {
-      const response = await axios.get(`http://43.202.53.249:8000/locations/`);
+      const response = await axiosInstance.get(`/locations/`);
       setCommunitys(response.data);
       console.log(response);
-    } catch {}
+    } catch (error) {
+      console.log('지역 목록을 불러오는데 실패했습니다: ', error);
+      setAlert('지역 목록을 불러오는데 실패했습니다.');
+    }
   };
 
   useEffect(() => {
@@ -129,24 +127,11 @@ const Community = () => {
     fetchForecastWeather();
   }, [location_id]);
 
-  console.log(communityPosts);
+  console.log(setCurrentPosts);
   console.log(community);
   console.log(community);
   console.log(weather);
-  console.log(typeof communityPosts);
-
-  // 데이터 정렬 함수 ( 날짜순, 조회순 )
-  const sortPosts = useCallback((posts: Post[], type: string) => {
-    if (type === 'date') {
-      return [...posts].sort(
-        (a, b) =>
-          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-      );
-    } else if (type === 'search') {
-      return [...posts].sort((a, b) => b.view_count - a.view_count);
-    }
-    return posts;
-  }, []);
+  console.log(typeof setCurrentPosts);
 
   const handleRegion = (e: React.ChangeEvent<HTMLSelectElement>) => (
     setSortRegionType(e.target.value),
@@ -211,7 +196,7 @@ const Community = () => {
                 <div className='mb-8 flex'>
                   {/* <img src={regionData.locations.logation_img} alt={regionData.locations.city} className='rounded-xl w-[550px] h-[350px]'/> */}
                   <div className='w-[500px] rounded-xl'>
-                    <Carousel />
+                    <Carousel images={community.images} community={community} />
                   </div>
                   <div className='px-8 pb-12 pt-8'>
                     <h2 className='mx-auto mb-4 text-4xl font-medium'>
@@ -236,10 +221,7 @@ const Community = () => {
                       <span className='mr-12 text-gray-600/70'>날씨</span>
                       <div className='my-auto flex justify-between text-blue-700/60'>
                         {isLoading ? (
-                          <p>
-                            {/* <Loading /> */}
-                            날씨 정보를 불러오는 중...
-                          </p>
+                          <p>날씨 정보를 불러오는 중...</p>
                         ) : (
                           <React.Fragment>
                             <span className='mx-3'>{weather?.sky_status}</span>
@@ -259,10 +241,7 @@ const Community = () => {
                       </span>
                       <div className='my-auto flex justify-between text-blue-700/60'>
                         {isLoading ? (
-                          <p>
-                            {/* <Loading /> */}
-                            날씨 정보를 불러오는 중...
-                          </p>
+                          <p>날씨 정보를 불러오는 중...</p>
                         ) : (
                           <React.Fragment>
                             <span className='mx-3'>{forecast?.sky_status}</span>
@@ -294,15 +273,30 @@ const Community = () => {
                 </select>
                 {/* grid-cols-1 : 기본적으로 (모바일 화면 등 작은 화면에서 한 열로 배치) / md:grid-cols-2 중간 크기(768px) 이상의 화면에서 두열로 배치 */}
                 <div className='mr-3 grid grid-cols-2 gap-6'>
-                  {communityPosts
-                    .filter(
-                      (post) =>
-                        post.location === parseInt(location_id || '0', 10)
-                    )
-                    .map((post) => (
-                      <PostCard key={post.id} post={post} />
-                    ))}
+                  {currentPosts.map((post) => (
+                    <PostCard key={post.id} post={post} />
+                  ))}
                 </div>
+                <Pagination
+                  activePage={page} // 현재 페이지
+                  itemsCountPerPage={postPerPage} // 한 페이지당 보여줄 아이템 갯수
+                  totalItemsCount={currentPosts.length} // 총 아이템 갯수
+                  pageRangeDisplayed={5} // paginator의 페이지 범위
+                  prevPageText={'<'}
+                  nextPageText={'>'}
+                  onChange={handlePageChange}
+                  itemClass='pagination-item'
+                  linkClass='pagination-link'
+                  activeClass='active'
+                  activeLinkClass=''
+                  firstPageText='<<'
+                  lastPageText='>>'
+                  itemClassFirst='pagination-nav'
+                  itemClassLast='pagination-nav'
+                  itemClassPrev='pagination-nav'
+                  itemClassNext='pagination-nav'
+                  disabledClass='disabled'
+                />
               </div>
             </div>
           </div>
