@@ -1,24 +1,12 @@
 import React, { useEffect, useState } from 'react';
-// import { Post } from '../../config/types';
 import { Link } from 'react-router-dom';
 import { IoMdHeart } from 'react-icons/io';
-import TagItem from './TagItem';
 import axios from 'axios';
+import { Post } from '../../config/types';
+import TagItem from './TagItem';
+import dompurify from 'dompurify';
 
-interface Post {
-  body: string;
-  created_at: string;
-  id: number;
-  location: number;
-  tag: string;
-  thumbnail: string;
-  title: string;
-  travel_end_date: string;
-  travel_start_date: string;
-  updated_at: string;
-  user_id: number;
-  view_count: number;
-}
+const sanitizer = dompurify.sanitize;
 
 interface PostCardProps {
   post: Post;
@@ -46,6 +34,17 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
     return str?.length > n ? str.substring(0, n) + '...' : str;
   };
 
+  console.log(post);
+
+  const splitTags = (tagString: string) => {
+    return tagString.split(',').map((tag, index) => ({
+      tag_id: index,
+      content: tag.trim(),
+    }));
+  };
+
+  const tags = splitTags(post.tag);
+
   return (
     <>
       <Link to={`/post-detail/${post.id}`} className='block'>
@@ -63,26 +62,27 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
               {/* flex-wrap 로 높이 8로 넘어가면 숨기기 -> overflow-hidden  */}
               {/* {어차피 flex-wrap으로 다음줄로 넘어가면 } */}
               <div className='mr-2 flex h-auto flex-wrap gap-2 overflow-hidden'>
-                {/* {post.tags?.map((tag, index) => (
-                  <span
-                    key={index}
-                    className='mr-0.3 rounded-md bg-yellow-400 px-2 py-1 text-sm'
-                  >
-                    {tag.content}
-                  </span>
-                  // <TagItem ={tag} showDeleteButton={false} key={index} />
-                ))} */}
-                {post.tag}
+                {tags.map((t) => (
+                  <TagItem
+                    tagContent={t}
+                    showDeleteButton={false}
+                    key={t.tag_id}
+                  />
+                ))}
               </div>
               <div className='mt-1 flex'>
-                <span className='mr-1 text-sm'>{post.view_count}</span>
-                {/* <img src='/full-heart.svg' alt='Likes' className='w-5 h-5'/> */}
+                <span className='mr-1 text-sm'>{post.likes_count}</span>
                 <IoMdHeart className='mt-0.5 text-red-500' />
               </div>
             </div>
-            <p className='mb-4 text-gray-600'>{bodyLength(post.body, 50)}</p>
+            <p
+              className='mb-4 text-gray-600'
+              dangerouslySetInnerHTML={{
+                __html: sanitizer(bodyLength(post.body, 50)),
+              }}
+            />
             <div className='flex justify-between text-sm text-gray-500'>
-              <span>{post.created_at}</span>
+              <span>{post.created_at.split('T')[0]}</span>
               <span className='py-1 text-xs'>{post.view_count} 조회수</span>
             </div>
           </div>

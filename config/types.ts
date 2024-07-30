@@ -8,19 +8,50 @@ export interface Tag {
   content: string;
 }
 
+export interface Image {
+  image_url: string;
+}
+
+export interface Locations {
+  location_id: number;
+  city: string;
+  description: string;
+  images: Image[];
+  popular_cities: string;
+  district: string;
+  highlights?: string;
+  l_category: string;
+  top_posts?: Post[];
+}
+
+// export interface Post {
+//   id: number;
+//   user_id: number;
+//   title: string;
+//   body: string;
+//   created_at: string;
+//   updated_at: string;
+//   view_count: number;
+//   travel_start_date: string;
+//   travel_end_date: string;
+//   tags?: Tag[];
+//   thumbnail: string | null;
+// }
 export interface Post {
-  id: number;
-  user_id: number;
-  title: string;
   body: string;
   content?: string;
   created_at: string;
-  updated_at: string;
-  view_count: number;
-  travel_start_date: string;
+  id: number;
+  location: number;
+  tag: string;
+  thumbnail: string;
+  title: string;
   travel_end_date: string;
-  tags?: Tag[];
-  thumbnail: string | null;
+  travel_start_date: string;
+  updated_at: string;
+  user_id: number;
+  view_count: number;
+  likes_count: number;
 }
 export interface User {
   id: number;
