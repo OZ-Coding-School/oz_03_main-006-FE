@@ -16,7 +16,6 @@ function App() {
         <Route path='/' element={<Layout />}>
           <Route index element={<HomePage />} />
           <Route path='/community/:location_id' element={<CommunityPage />} />
-          {/* <Route path='/post-detail/' element={<PostDetailPage />} /> */}
           <Route path='/post-detail/:post_id' element={<PostDetailPage />} />
         </Route>
         <Route path='/posting/:post_id?' element={<PostingPage />} />

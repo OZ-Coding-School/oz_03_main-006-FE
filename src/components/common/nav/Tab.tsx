@@ -21,7 +21,7 @@ const Tab: React.FC<TabProps> = ({ textColor, backgroundColor }) => {
   const isHomePage = pathname === '/';
   const clickedHover = isHomePage
     ? 'hover:bg-white hover:shadow-md'
-    : 'hover:bg-[#243A57] hover:shadow-xl';
+    : 'hover:bg-[#304E75] hover:shadow-xl';
   const clickedTabRankingHome =
     activeTab === 'ranking' ? 'border-[#28466A] text-lg' : '';
   const clickedTabSearchingHome =

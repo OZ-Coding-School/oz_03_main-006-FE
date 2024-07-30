@@ -8,6 +8,7 @@ interface SearchResultItemProps {
   id: number;
   title: string;
   body: string;
+  content?: string;
   thumbnail: string | null;
   textColor: string;
   clickedHover: string;
@@ -19,6 +20,7 @@ const SearchResultItem: React.FC<SearchResultItemProps> = ({
   id,
   title,
   body,
+  content,
   thumbnail,
   textColor,
   clickedHover,
@@ -41,7 +43,7 @@ const SearchResultItem: React.FC<SearchResultItemProps> = ({
     return str?.length > n ? str.substring(0, n) + '...' : str;
   };
 
-  const imgBG = pathname === '/' ? 'bg-[#F4F4F4]' : 'bg-[#162A46]';
+  const imgBG = pathname === '/' ? 'bg-[#F4F4F4]' : 'bg-[#223F5A]';
   const rankingBG =
     pathname === '/' ? 'bg-[#28466A] text-white' : 'bg-[#f9f9f9] text-black';
 
@@ -76,12 +78,22 @@ const SearchResultItem: React.FC<SearchResultItemProps> = ({
         <h2 className={`truncate font-semibold ${textColor} cursor-pointer`}>
           {title}
         </h2>
-        <p
-          className={`flex-grow text-justify text-sm ${textColor} cursor-pointer`}
-          dangerouslySetInnerHTML={{
-            __html: sanitizer(contentTruncate(body, 42)),
-          }}
-        ></p>
+        {body && (
+          <p
+            className={`flex-grow text-justify text-sm ${textColor} cursor-pointer`}
+            dangerouslySetInnerHTML={{
+              __html: sanitizer(contentTruncate(body, 42)),
+            }}
+          ></p>
+        )}
+        {content && (
+          <p
+            className={`flex-grow text-justify text-sm ${textColor} cursor-pointer`}
+            dangerouslySetInnerHTML={{
+              __html: sanitizer(contentTruncate(content, 42)),
+            }}
+          ></p>
+        )}
       </div>
     </div>
   );

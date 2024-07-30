@@ -39,6 +39,7 @@ export interface Locations {
 // }
 export interface Post {
   body: string;
+  content?: string;
   created_at: string;
   id: number;
   location: number;
@@ -57,6 +58,7 @@ export interface User {
   email?: string;
   nickname: string;
   profile_image: string | null;
+  username?: string;
 }
 
 export interface UserState {

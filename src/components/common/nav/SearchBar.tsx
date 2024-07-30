@@ -5,7 +5,6 @@ import { IoSearchSharp } from 'react-icons/io5';
 import { Post } from '../../../../config/types';
 import axios from '../../../api/axios';
 import SearchResultItem from '../../SearchResultItem';
-//import postData from '../../../data/posts.json';
 
 type Inputs = {
   searchValue: string;
@@ -32,14 +31,11 @@ const SearchBar: React.FC<SearchBarProps> = ({
       setSearchError(true);
     } else {
       clearSearch();
-      console.log(data);
-      //검색 로직
       const { searchValue } = data;
       try {
         const response = await axios.get(`/search/?q=${searchValue}`);
-        console.log(response.data);
+        console.log(response.data.results);
         const { posts } = response.data.results;
-        //const posts: Post[] = postData;
         if (posts.length > 0) {
           setPosts(posts);
         } else {
@@ -94,21 +90,24 @@ const SearchBar: React.FC<SearchBarProps> = ({
       {searchError && (
         <span className={`${textColor}`}>준비된 여행 이야기가 없습니다.</span>
       )}
-      <div className='flex w-full flex-col items-center justify-center gap-4 overflow-x-hidden'>
-        <div className='search-scroll flex max-h-[calc(100vh-360px)] w-full flex-col scroll-smooth'>
-          {posts.map((post) => (
-            <SearchResultItem
-              key={post.id}
-              id={post.id}
-              title={post.title}
-              body={post.body}
-              thumbnail={post.thumbnail}
-              textColor={textColor}
-              clickedHover={clickedHover}
-            />
-          ))}
+      {!searchError && (
+        <div className='flex w-full flex-col items-center justify-center gap-4 overflow-x-hidden'>
+          <div className='search-scroll flex max-h-[calc(100vh-360px)] w-full flex-col scroll-smooth'>
+            {posts.map((post) => (
+              <SearchResultItem
+                key={post.id}
+                id={post.id}
+                title={post.title}
+                body={post.body}
+                content={post.content}
+                thumbnail={post.thumbnail}
+                textColor={textColor}
+                clickedHover={clickedHover}
+              />
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
