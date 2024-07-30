@@ -20,10 +20,10 @@ const MyPage = () => {
   const [profileEdit, setProfileEdit] = useState(false);
   const [nickname, setNickname] = useState(user?.nickname || '');
   const [img, setImg] = useState(user?.profile_image || '');
-  const [tempImg, setTempImg] = useState<string | null>(null);
+  // const [tempImg, setTempImg] = useState<string | null>(null);
   // const { setAlert, showAlert } = useAlertStore((state) => state);
   const [userPost, setUserPost] = useState(false);
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  // const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -47,6 +47,8 @@ const MyPage = () => {
     if (!user) {
       navigate('/login');
     }
+    // 여기 수정
+    setUserPost(true);
   }, [user, navigate]);
 
   const handleEdit = () => {
