@@ -20,9 +20,8 @@ const Article: React.FC<ArticleProps> = ({ article }) => {
   const setAlert = useAlertStore((state) => state.setAlert);
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const [showButton, setShowButton] = useState<boolean>(false);
-  const [postLikesCount, setPostLikesCount] = useState<number>(
-    article.likes_count
-  );
+  const [postLikesCount, setPostLikesCount] = useState<number>(0);
+  setPostLikesCount(article.likes_count);
   const postUserId = article.user_id;
   const navigate = useNavigate();
 
