@@ -23,11 +23,10 @@ const SignUp = () => {
     },
   });
   const onSubmit: SubmitHandler<SignUpUser> = async (data) => {
-    console.log(data);
     clearValue();
     try {
       const { nickname, email, password } = data;
-      const response = await axios.post(
+      await axios.post(
         '/users/accounts/register',
         {
           nickname,
@@ -38,7 +37,6 @@ const SignUp = () => {
           withCredentials: true,
         }
       );
-      console.log('response: ', response);
       setAlert('회원가입이 완료되었습니다. 로그인 후 이용해 주세요.');
     } catch (error) {
       if (error instanceof AxiosError && error.response) {

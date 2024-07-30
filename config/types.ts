@@ -13,6 +13,7 @@ export interface Post {
   user_id: number;
   title: string;
   body: string;
+  content?: string;
   created_at: string;
   updated_at: string;
   view_count: number;
@@ -22,10 +23,11 @@ export interface Post {
   thumbnail: string | null;
 }
 export interface User {
-  user_id: number;
+  id: number;
   email?: string;
   nickname: string;
   profile_image: string | null;
+  username?: string;
 }
 
 export interface UserState {

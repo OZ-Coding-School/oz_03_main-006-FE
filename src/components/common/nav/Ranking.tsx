@@ -20,7 +20,6 @@ const Ranking: React.FC<RankingProps> = ({
   const getTopPosts = async () => {
     try {
       const response = await axios.get('/posts/');
-      console.log(response.data);
       const posts: Post[] = response.data;
       if (posts.length > 0) {
         const sortedPosts = posts.sort((a, b) => b.view_count - a.view_count);
@@ -36,25 +35,27 @@ const Ranking: React.FC<RankingProps> = ({
     getTopPosts();
   }, []);
 
-  if (posts.length <= 0) {
+  if (posts.length === 0) {
     return <LoadingRanking />;
   }
 
   return (
-    <div className='flex w-full flex-col items-center justify-center py-1'>
-      {posts.map((post, index) => (
-        <SearchResultItem
-          key={post.id}
-          id={post.id}
-          title={post.title}
-          body={post.body}
-          thumbnail={post.thumbnail}
-          textColor={textColor}
-          clickedHover={clickedHover}
-          activeTab={activeTab}
-          index={index}
-        />
-      ))}
+    <div className='flex w-full flex-col items-center justify-center overflow-x-hidden'>
+      <div className='search-scroll flex max-h-[calc(100vh-290px)] w-full flex-col'>
+        {posts.map((post, index) => (
+          <SearchResultItem
+            key={post.id}
+            id={post.id}
+            title={post.title}
+            body={post.body}
+            thumbnail={post.thumbnail}
+            textColor={textColor}
+            clickedHover={clickedHover}
+            activeTab={activeTab}
+            index={index}
+          />
+        ))}
+      </div>
     </div>
   );
 };

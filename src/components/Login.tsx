@@ -10,7 +10,7 @@ import Alert from './common/Alert';
 const Login = () => {
   const navigate = useNavigate();
   const setUser = useUserStore((state) => state.setUser);
-  const setAlert = useAlertStore((state) => state.setAlert);
+  const { showAlert, setAlert } = useAlertStore();
   const {
     register,
     handleSubmit,
@@ -24,39 +24,34 @@ const Login = () => {
   });
 
   const onSubmit: SubmitHandler<LoginUser> = async (data) => {
-    console.log(data);
     clearValue();
-    const { nickname } = data;
-    setUser({ user_id: 1, nickname, profile_image: null });
-    navigate('/');
-    // try {
-    //   const { nickname, password } = data;
-    //   const response = await axios.post(
-    //     '/users/accounts/login',
-    //     {
-    //       nickname,
-    //       password,
-    //     },
-    //     {
-    //       withCredentials: true,
-    //     }
-    //   );
-    //   console.log('response: ', response.data);
-    //   setUser(response.data);
-    //   navigate('/');
-    // } catch (error) {
-    //   if (error instanceof AxiosError && error.response) {
-    //     console.error('로그인 실패: ', error);
-    //     if (error.response.status === 403) {
-    //       setAlert('가입되지 않은 사용자입니다. 다시 시도해 주세요.');
-    //     } else {
-    //       setAlert('로그인에 실패했습니다. 다시 시도해 주세요.');
-    //     }
-    //   } else {
-    //     console.error('로그인 실패: ', error);
-    //     setAlert('로그인 중 문제가 발생했습니다. 다시 시도해 주세요.');
-    //   }
-    // }
+    try {
+      const { nickname, password } = data;
+      const response = await axios.post(
+        '/users/accounts/login',
+        {
+          nickname,
+          password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      setUser(response.data);
+      navigate('/');
+    } catch (error) {
+      if (error instanceof AxiosError && error.response) {
+        console.error('로그인 실패: ', error);
+        if (error.response.status === 403) {
+          setAlert('가입되지 않은 사용자입니다. 다시 시도해 주세요.');
+        } else {
+          setAlert('로그인에 실패했습니다. 다시 시도해 주세요.');
+        }
+      } else {
+        console.error('로그인 실패: ', error);
+        setAlert('로그인 중 문제가 발생했습니다. 다시 시도해 주세요.');
+      }
+    }
   };
 
   const clearValue = () => {
@@ -123,11 +118,11 @@ const Login = () => {
             <div className='h-[1px] bg-[#BFBFBF]'></div>
           </div>
           <div className='flex h-[100px] items-center justify-center gap-10'>
-            <Link to='http://43.202.53.249:8000/users/accounts/kakao/login/callback/'>
+            <Link to='http://13.125.183.76:8000/users/accounts/kakao/login/callback/'>
               <img src='/kakao-logo.svg' />
             </Link>
             <Link
-              to='http://43.202.53.249:8000/users/accounts/google/login/callback/'
+              to='http://13.125.183.76:8000/users/accounts/google/login/callback/'
               className='flex h-[49px] w-[49px] items-center justify-center rounded-full bg-white'
             >
               <img src='/google-logo.svg' className='h-8 w-8' />
@@ -135,7 +130,7 @@ const Login = () => {
           </div>
         </div>
       </div>
-      <Alert />
+      {showAlert && <Alert />}
     </div>
   );
 };
