@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@types/navermaps": "^3.7.5",
+    "@types/react-js-pagination": "^3.0.7",
     "@types/react-slick": "^0.23.13",
     "autoprefixer": "^10.4.19",
     "axios": "^1.7.2",
@@ -26,6 +27,7 @@
     "react-hook-form": "^7.52.1",
     "react-icons": "^5.2.1",
     "react-image-crop": "^11.0.6",
+    "react-js-pagination": "^3.0.3",
     "react-quill": "^2.0.0",
     "react-router-dom": "^6.24.1",
     "react-slick": "^0.30.2",
