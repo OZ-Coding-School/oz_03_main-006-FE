@@ -83,8 +83,10 @@ export interface LoginUser {
 export interface AlertState {
   showAlert: boolean;
   alertMessage: string;
+  confirmResult: ((result: boolean) => void) | null;
   setAlert: (message: string) => void;
   clearAlert: () => void;
+  showConfirmAlert: (message: string) => Promise<boolean>;
 }
 
 export interface TagState {

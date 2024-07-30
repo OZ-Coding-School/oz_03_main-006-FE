@@ -55,6 +55,7 @@ const Community = () => {
     }
     console.log(currentPosts.length);
   }, []);
+  console.log(currentPosts);
 
   const fetchPosts = async () => {
     try {
