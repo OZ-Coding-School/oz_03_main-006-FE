@@ -28,6 +28,7 @@ const PostingPage = () => {
       startDate: '',
       endDate: '',
       content: '',
+      thumbnail: undefined,
     },
   });
 
@@ -44,6 +45,7 @@ const PostingPage = () => {
   const [viewCount, setViewCount] = useState<number>(0);
   const [quillContent, setQuillContent] = useState('');
   const quillRef = useRef<ReactQuill>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   const { post_id } = useParams();
 
@@ -62,7 +64,7 @@ const PostingPage = () => {
       const fetchPostData = async () => {
         try {
           const response = await axios.get(
-            `http://13.125.183.76:8000/posts/${post_id}/`
+            `http://43.201.142.187:8000/posts/${post_id}/`
           );
           const postData = response.data.post;
           setViewCount(postData.view_count);
@@ -73,10 +75,17 @@ const PostingPage = () => {
           setValue('endDate', postData.travel_end_date);
           setQuillContent(postData.body);
           setValue('content', postData.body);
+          setValue('thumbnail', postData.thumbnail);
 
-          const tagArray = postData.tag.split(',');
+          console.log(watch('thumbnail'));
+
+          const tagArray = postData.tag
+            .split(',')
+            .map((tag: string) => tag.trim())
+            .filter((tag: string) => tag !== '');
+
           tagArray.forEach((tag: string) => {
-            addTag(tag.trim());
+            addTag(tag);
           });
 
           if (postData.thumbnail) {
@@ -107,7 +116,7 @@ const PostingPage = () => {
 
         try {
           const response = await axios.post(
-            'http://13.125.183.76:8000/posts/upload_image/',
+            'http://43.201.142.187:8000/posts/upload_image/',
             formData,
             {
               headers: {
@@ -244,7 +253,7 @@ const PostingPage = () => {
         formData.append('location', matchLocId.toString());
         formData.append('view_count', viewCount.toString());
         response = await axios.put(
-          `http://13.125.183.76:8000/posts/${post_id}/`,
+          `http://43.201.142.187:8000/posts/${post_id}/`,
           formData,
           {
             headers: {
@@ -265,7 +274,7 @@ const PostingPage = () => {
         formData.append('view_count', '0');
         formData.append('location', data.location);
         response = await axios.post(
-          'http://13.125.183.76:8000/posts/',
+          'http://43.201.142.187:8000/posts/',
           formData,
           {
             headers: {
@@ -302,6 +311,14 @@ const PostingPage = () => {
       setValue('thumbnail', fileList);
       setFileName(fileList[0].name);
     }
+  };
+
+  const handleRemoveFile = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+    setValue('thumbnail', undefined);
+    setFileName(null);
   };
 
   return (
@@ -408,6 +425,7 @@ const PostingPage = () => {
               type='file'
               id='thumbnail'
               {...register('thumnail')}
+              ref={fileInputRef}
               onChange={handleFileChange}
             />
             <label
@@ -418,7 +436,16 @@ const PostingPage = () => {
               대표이미지
             </label>
             {fileName && (
-              <p className='my-auto text-xs text-[#656565]'>{fileName}</p>
+              <>
+                <p className='my-auto text-xs text-[#656565]'>{fileName}</p>
+                <button
+                  type='button'
+                  className='my-auto ml-4 cursor-pointer text-xs text-gray-700 underline'
+                  onClick={handleRemoveFile}
+                >
+                  제거
+                </button>
+              </>
             )}
           </div>
           <ReactQuill

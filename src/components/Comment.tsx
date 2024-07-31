@@ -6,6 +6,7 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import axios from '../api/axios';
 import { FaRegUser } from 'react-icons/fa';
 import Pagination from 'react-js-pagination';
+import { RxDoubleArrowRight, RxDoubleArrowLeft } from 'react-icons/rx';
 
 interface Comment {
   id: number;
@@ -249,8 +250,8 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
             linkClass='pagination-link'
             activeClass='active'
             activeLinkClass=''
-            firstPageText='<<'
-            lastPageText='>>'
+            firstPageText={<RxDoubleArrowLeft />}
+            lastPageText={<RxDoubleArrowRight />}
             itemClassFirst='pagination-nav'
             itemClassLast='pagination-nav'
             itemClassPrev='pagination-nav'

@@ -20,6 +20,7 @@ const PostDetailPage = () => {
         setArticle(res.data.post);
         setComments(res.data.post.comments);
         setErrorStatus(null);
+        console.log('디테일페이지 좋아요: ' + res.data.post.likes_count);
       })
       .catch((error) => {
         if (error.response) {

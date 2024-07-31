@@ -18,12 +18,15 @@ interface ArticleProps {
 const Article: React.FC<ArticleProps> = ({ article }) => {
   const user = useUserStore((state) => state.user);
   const setAlert = useAlertStore((state) => state.setAlert);
-  const [isLiked, setIsLiked] = useState<boolean>(false);
+  const [isLiked, setIsLiked] = useState<boolean | null>(null);
   const [showButton, setShowButton] = useState<boolean>(false);
-  const [postLikesCount, setPostLikesCount] = useState<number>(0);
-  setPostLikesCount(article.likes_count);
+  const [postLikesCount, setPostLikesCount] = useState<number>(
+    article.likes_count
+  );
   const postUserId = article.user_id;
   const navigate = useNavigate();
+
+  console.log(article.tag);
 
   useEffect(() => {
     if (user && postUserId && user.id === postUserId) {
@@ -33,15 +36,43 @@ const Article: React.FC<ArticleProps> = ({ article }) => {
     }
   }, [user, postUserId]);
 
+  useEffect(() => {
+    setIsLiked(null);
+    setPostLikesCount(article.likes_count);
+
+    const checkIfLiked = async () => {
+      if (user) {
+        try {
+          const response = await axios.get(
+            `/posts/${article.id}/like/?user_id=${user.id}`
+          );
+          setIsLiked(response.data.result);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    };
+    checkIfLiked();
+  }, [article.id, user, article.likes_count]);
+
   const handleHeartToggle = async () => {
     if (!user) {
       setAlert('로그인 후 이용해주세요.');
       return;
     }
     try {
-      await axios.post(`/posts/${article.id}/like/`, {
-        withCredentials: true,
-      });
+      const response = await axios.post(
+        `/posts/${article.id}/like/`,
+        { user_id: user.id },
+        {
+          withCredentials: true,
+        }
+      );
+      if (response.status === 201) {
+        setPostLikesCount((prev) => prev + 1);
+      } else if (response.status === 204) {
+        setPostLikesCount((prev) => prev - 1);
+      }
       setIsLiked(!isLiked);
     } catch (error) {
       console.error(error);
@@ -49,9 +80,14 @@ const Article: React.FC<ArticleProps> = ({ article }) => {
   };
 
   const getTagsArray = (tags: string): Tag[] => {
-    return tags.split(',').map((content, index) => {
-      return { tag_id: index + 1, content: content.trim() };
-    });
+    return tags
+      .split(',')
+      .map((content) => content.trim())
+      .filter((content) => content !== '')
+      .map((content, index) => ({
+        tag_id: index + 1,
+        content,
+      }));
   };
 
   const handleDelete = async () => {
