@@ -21,7 +21,7 @@ const Article: React.FC<ArticleProps> = ({ article }) => {
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const [showButton, setShowButton] = useState<boolean>(false);
   const [postLikesCount, setPostLikesCount] = useState<number>(0);
-  setPostLikesCount(article.likes_count);
+  // setPostLikesCount(article.likes_count);
   const postUserId = article.user_id;
   const navigate = useNavigate();
 

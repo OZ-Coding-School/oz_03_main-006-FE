@@ -15,6 +15,7 @@ interface Comment {
   updated_at: string;
   post: number;
   user_id: number;
+  profile_image: string | null;
 }
 
 interface FormData {
@@ -45,10 +46,12 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
   const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const commentsPerPage = 10;
+  const [deleteAlert, setDeleteAlert] = useState<boolean>(false);
 
   useEffect(() => {
     postId.current = Number(param.post_id);
     setComments(initialComments);
+    setCurrentPage(1);
   }, [param.post_id, initialComments]);
 
   const updateComments = async () => {
@@ -91,6 +94,10 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
       setAlert('댓글 작성자만 삭제할 수 있습니다.');
       return;
     }
+    if (deleteAlert === false) {
+      setAlert('정말 댓글을 삭제하시겠습니까?');
+    }
+    setDeleteAlert(true);
     try {
       await axios.delete(`/posts/comments/${commentId}/`, {
         data: {
@@ -167,14 +174,14 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
           <div key={comment.id} className='border-b-[1px] p-2 last:border-none'>
             <div className='flex justify-between'>
               <div className='flex items-center'>
-                {comment.user_id !== user?.id ? (
+                {comment.profile_image === null ? (
                   <div className='flex h-[30px] w-[30px] items-center justify-center rounded-full bg-[#28466A]'>
                     <FaRegUser className='light-white'></FaRegUser>
                   </div>
                 ) : (
                   <img
                     className='h-[30px] w-[30px] rounded-full'
-                    src={`${user?.profile_image}`}
+                    src={`${comment.profile_image}`}
                   ></img>
                 )}
                 <div className='m-2 text-[16px] font-semibold'>
