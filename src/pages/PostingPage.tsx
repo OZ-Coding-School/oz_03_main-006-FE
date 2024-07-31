@@ -75,9 +75,6 @@ const PostingPage = () => {
           setValue('endDate', postData.travel_end_date);
           setQuillContent(postData.body);
           setValue('content', postData.body);
-          setValue('thumbnail', postData.thumbnail);
-
-          console.log(watch('thumbnail'));
 
           const tagArray = postData.tag
             .split(',')
@@ -90,6 +87,8 @@ const PostingPage = () => {
 
           if (postData.thumbnail) {
             setFileName(postData.thumbnail.split('/').pop());
+          } else {
+            setValue('thumbnail', postData.thumbnail);
           }
 
           setImageIds(postData.image_ids || []);
