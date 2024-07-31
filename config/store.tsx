@@ -63,3 +63,30 @@ export const useTagStore = create<TagState>((set) => ({
     })),
   clearTags: () => set({ tags: [] }),
 }));
+
+export const useConfirmAlertStore = create<AlertState>((set) => ({
+  showAlert: false,
+  alertMessage: '',
+  confirmResult: null,
+  setAlert: (message) =>
+    set(() => ({
+      showAlert: true,
+      alertMessage: message,
+    })),
+  clearAlert: () =>
+    set(() => ({
+      showAlert: false,
+      alertMessage: '',
+    })),
+  showConfirmAlert: (message) =>
+    new Promise<boolean>((resolve) => {
+      set(() => ({
+        showAlert: true,
+        alertMessage: message,
+        confirmResult: (result: boolean) => {
+          resolve(result),
+            set({ showAlert: false, alertMessage: '', confirmResult: null });
+        },
+      }));
+    }),
+}));

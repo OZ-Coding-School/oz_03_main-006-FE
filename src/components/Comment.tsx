@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import { useAlertStore, useUserStore } from '../../config/store';
-import Alert from './common/Alert';
+import Alert, { MyPageConfirmAlert } from './common/Alert';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import axios from '../api/axios';
 import { FaRegUser } from 'react-icons/fa';
@@ -30,7 +30,7 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
   const param = useParams();
   const [comments, setComments] = useState<Comment[]>([]);
   const { user } = useUserStore();
-  const { setAlert } = useAlertStore();
+  const { setAlert, showConfirmAlert } = useAlertStore();
   const {
     register: createRegister,
     handleSubmit: handleCreateSubmit,
@@ -46,7 +46,7 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
   const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const commentsPerPage = 10;
-  const [deleteAlert, setDeleteAlert] = useState<boolean>(false);
+  const [deleteState, setDeleteState] = useState<boolean>(false);
 
   useEffect(() => {
     postId.current = Number(param.post_id);
@@ -94,21 +94,23 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
       setAlert('댓글 작성자만 삭제할 수 있습니다.');
       return;
     }
-    if (deleteAlert === false) {
-      setAlert('정말 댓글을 삭제하시겠습니까?');
-    }
-    setDeleteAlert(true);
-    try {
-      await axios.delete(`/posts/comments/${commentId}/`, {
-        data: {
-          comment_pk: commentId,
-        },
-      });
-      updateComments();
-    } catch (error) {
-      console.error(error + '댓글 삭제를 실패했습니다.');
-      setAlert('댓글 삭제를 실패했습니다.');
-    }
+    setDeleteState(true);
+    showConfirmAlert('정말 댓글을 삭제 하시겠습니까?').then(async (res) => {
+      if (res) {
+        try {
+          await axios.delete(`/posts/comments/${commentId}/`, {
+            data: {
+              comment_pk: commentId,
+            },
+          });
+          updateComments();
+          setDeleteState(false);
+        } catch (error) {
+          console.error(error + '댓글 삭제를 실패했습니다.');
+          setAlert('댓글 삭제를 실패했습니다.');
+        }
+      }
+    });
   };
 
   const startEditComment = (commentId: number, comment: string) => {
@@ -154,6 +156,7 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
   return (
     <div className='mx-auto min-w-[1052px] max-w-[1052px]'>
       <Alert />
+      {deleteState ? <MyPageConfirmAlert></MyPageConfirmAlert> : <></>}
       <div className='ml-2 text-[18px]'>
         {comments ? `${comments?.length}개의 댓글` : '0개의 댓글'}
       </div>
