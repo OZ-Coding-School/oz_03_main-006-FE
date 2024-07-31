@@ -5,15 +5,16 @@ import PostCard from './PostCard';
 import Carousel from './Carousel';
 import icons from '../data/icons.json';
 import axiosInstance from '../api/axios';
-import { useAlertStore } from '../../config/store';
 import Pagination from 'react-js-pagination';
 import './pagination.scss';
+import Loading from './common/Loading';
 
 interface Weather {
   POP: number;
   SKY: number;
-  TMP: number;
-  location_id: number;
+  TMN: number;
+  TMX: number;
+  location: number;
   sky_status: string;
   base_date?: string;
   base_time?: string;
@@ -23,7 +24,7 @@ interface Weather {
 const Community = () => {
   const { location_id } = useParams<{ location_id: string }>();
 
-  const [sortType, setSortType] = useState<string>('default');
+  const [sortType, setSortType] = useState<string>('popular');
   const [sortRegionType, setSortRegionType] = useState<string>('default');
   const [community, setCommunity] = useState<Locations>();
   const [communitys, setCommunitys] = useState<Locations[]>([]);
@@ -33,19 +34,35 @@ const Community = () => {
 
   // const [communityPosts, setCommunityPosts] = useState<Post[]>([]);
   const [currentPosts, setCurrentPosts] = useState<Post[]>([]);
+  const [allPosts, setAllPosts] = useState<Post[]>([]);
   const [page, setPage] = useState<number>(1);
 
   const navigate = useNavigate();
-
-  const { setAlert } = useAlertStore();
 
   const postPerPage: number = 8;
   const indexOfLastPost: number = page * postPerPage;
   const indexOfFirstPost: number = indexOfLastPost - postPerPage;
 
-  const handlePageChange = (page: number) => {
-    setPage(page);
-  };
+  const handlePageChange = useCallback(
+    (page: number) => {
+      setPage(page);
+      const fetchChange = async () => {
+        if (sortType === 'date') {
+          const response = await axiosInstance(
+            `posts/${location_id}/latest/?page=${page}`
+          );
+          setCurrentPosts(response.data.results);
+        } else if (sortType === 'popular') {
+          const response = await axiosInstance(
+            `posts/${location_id}/popular/?page=${page}`
+          );
+          setCurrentPosts(response.data.results);
+        }
+      };
+      fetchChange();
+    },
+    [location_id, sortType]
+  );
 
   useEffect(() => {
     if (currentPosts) {
@@ -57,47 +74,98 @@ const Community = () => {
   }, []);
   console.log(currentPosts);
 
-  const fetchPosts = async () => {
-    try {
-      const response = await axiosInstance.get(`/posts/${location_id}/posts/`);
-      console.log(response.data);
-      setCurrentPosts(response.data);
-    } catch (error) {
-      console.error('게시물을 불러오는데 실패했습니다.', error);
-      setAlert(`게시물을 불러오는데 실패했습니다.`);
-    }
-  };
-  const fetchWeather = async () => {
-    setIsLoading(true);
+  const fetchAllPosts = useCallback(async () => {
     try {
       const response = await axiosInstance.get(
-        `/weather/weather/latest/${location_id}`
+        `/posts/${location_id}/all/popular`
       );
-      setWeather(response.data);
+      console.log(response);
+      console.log(response.data);
+      setAllPosts(response.data);
+    } catch (error) {
+      console.error('게시물을 불러오는데 실패했습니다.', error);
+    }
+  }, [location_id]);
+
+  const fetchPostsPopular = useCallback(async () => {
+    try {
+      const response = await axiosInstance.get(`/posts/${location_id}/popular`);
+      console.log(response);
+      console.log(response.data.results);
+      setCurrentPosts(response.data.results);
+    } catch (error) {
+      console.error('게시물을 불러오는데 실패했습니다.', error);
+    }
+  }, [location_id]);
+  const fetchPostsLatest = useCallback(async () => {
+    try {
+      const response = await axiosInstance.get(`/posts/${location_id}/latest`);
+      console.log(response);
+      console.log(response.data.results);
+      setCurrentPosts(response.data.results);
+    } catch (error) {
+      console.error('게시물을 불러오는데 실패했습니다.', error);
+    }
+  }, [location_id]);
+
+  // const fetchWeather = useCallback(async () => {
+  //   setIsLoading(true);
+  //   try {
+  //     const response = await axiosInstance.get(
+  //       `/weather/latest/${location_id}`
+  //     );
+  //     setWeather(response.data);
+  //     console.log(response);
+  //   } catch (error) {
+  //     console.error('날씨 데이터를 가져오는데 실패했습니다:', error);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // }, [location_id]);
+
+  // const fetchForecastWeather = useCallback(async () => {
+  //   setIsLoading(true);
+  //   try {
+  //     const response = await axiosInstance.get(
+  //       `/weather/forecast/${location_id}`
+  //     );
+  //     setForecast(response.data[0]);
+  //     console.log(response);
+  //   } catch (error) {
+  //     console.error('날씨 데이터를 가져오는데 실패했습니다: ', error);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // }, [location_id]);
+  const fetchWeather = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const response = await axiosInstance.get(`/weather/today/${location_id}`);
+      setWeather(response.data[0]);
       console.log(response);
     } catch (error) {
       console.error('날씨 데이터를 가져오는데 실패했습니다:', error);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [location_id]);
 
-  const fetchForecastWeather = async () => {
+  const fetchTomorrowWeather = useCallback(async () => {
     setIsLoading(true);
     try {
       const response = await axiosInstance.get(
-        `/weather/weather/forecast/${location_id}`
+        `/weather/tomorrow/${location_id}`
       );
-      setForecast(response.data);
+      setForecast(response.data[0]);
       console.log(response);
     } catch (error) {
       console.error('날씨 데이터를 가져오는데 실패했습니다: ', error);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [location_id]);
 
-  const fetchLocations = async () => {
+  const fetchLocations = useCallback(async () => {
     try {
       const response = await axiosInstance.get(`/locations/${location_id}`);
       setCommunity(response.data);
@@ -105,28 +173,33 @@ const Community = () => {
       console.log(response.data);
     } catch (error) {
       console.log('지역 정보를 불러오는데 실패했습니다: ', error);
-      setAlert('지역 정보를 불러오는데 실패했습니다.');
     }
-  };
+  }, [location_id]);
 
-  const fetchCommunitys = async () => {
+  const fetchCommunitys = useCallback(async () => {
     try {
       const response = await axiosInstance.get(`/locations/`);
       setCommunitys(response.data);
       console.log(response);
     } catch (error) {
       console.log('지역 목록을 불러오는데 실패했습니다: ', error);
-      setAlert('지역 목록을 불러오는데 실패했습니다.');
     }
-  };
+  }, []);
 
   useEffect(() => {
-    fetchPosts();
     fetchWeather();
     fetchLocations();
     fetchCommunitys();
-    fetchForecastWeather();
-  }, [location_id]);
+    // fetchForecastWeather();
+    fetchTomorrowWeather();
+    fetchAllPosts();
+    if (sortType === 'popular') {
+      fetchPostsPopular();
+    } else if (sortType === 'date') {
+      fetchPostsLatest();
+    }
+    setPage(1);
+  }, [location_id, sortType]);
 
   console.log(setCurrentPosts);
   console.log(community);
@@ -134,23 +207,28 @@ const Community = () => {
   console.log(weather);
   console.log(typeof setCurrentPosts);
 
-  const handleRegion = (e: React.ChangeEvent<HTMLSelectElement>) => (
-    setSortRegionType(e.target.value),
-    navigate(`/community/${e.target.value}`),
-    console.log(location_id),
-    console.log(e.target.value)
+  const handleRegion = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => (
+      setSortRegionType(e.target.value),
+      navigate(`/community/${e.target.value}`),
+      console.log(location_id),
+      console.log(e.target.value)
+    ),
+    [navigate]
   );
 
   const handleArray = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
     setSortType(e.target.value);
   }, []);
 
+  console.log(sortType);
+
   return (
     <>
       {/* <div className='container max-w-[1200px] mx-auto px-10 py-8 overflow-hidden h-[100vh]'> */}
       {/* 기본적으로 숨겼다가(hidden) 사이즈가 lg(1024px)가 되면 block */}
       {!community ? (
-        <div>지역 데이터를 찾을 수 없습니다.</div>
+        <Loading />
       ) : (
         <>
           <div className='h-screen w-full overflow-hidden'>
@@ -204,7 +282,7 @@ const Community = () => {
                       {community?.city}
                     </h2>
                     <p className='mb-4 mt-8'>
-                      <span className='mr-8 text-gray-600/70'>인기도시</span>
+                      <span className='mr-10 text-gray-600/70'>인기도시</span>
                       <span className='text-blue-700/60'>
                         {community?.popular_cities === 'None' ? (
                           <React.Fragment>
@@ -219,7 +297,7 @@ const Community = () => {
                       </span>
                     </p>
                     <div className='mb-4 mt-4 flex'>
-                      <span className='mr-12 text-gray-600/70'>날씨</span>
+                      <span className='mr-14 text-gray-600/70'>날씨</span>
                       <div className='my-auto flex justify-between text-blue-700/60'>
                         {isLoading ? (
                           <p>날씨 정보를 불러오는 중...</p>
@@ -227,7 +305,13 @@ const Community = () => {
                           <React.Fragment>
                             <span className='mx-3'>{weather?.sky_status}</span>
                             <span>|</span>
-                            <span className='mx-3'>온도 {weather?.TMP}°C</span>
+                            <span className='mx-3'>
+                              최고 온도 {weather?.TMX}°C
+                            </span>
+                            <span>|</span>
+                            <span className='mx-3'>
+                              최저 온도 {weather?.TMN}°C
+                            </span>
                             <span>|</span>
                             <span className='mx-3'>
                               강수확률 {weather?.POP}%
@@ -237,9 +321,7 @@ const Community = () => {
                       </div>
                     </div>
                     <div className='mb-8 flex'>
-                      <span className='mr-12 text-gray-600/70'>
-                        이번주 날씨
-                      </span>
+                      <span className='mr-3 text-gray-600/70'>내일의 날씨</span>
                       <div className='my-auto flex justify-between text-blue-700/60'>
                         {isLoading ? (
                           <p>날씨 정보를 불러오는 중...</p>
@@ -247,7 +329,13 @@ const Community = () => {
                           <React.Fragment>
                             <span className='mx-3'>{forecast?.sky_status}</span>
                             <span>|</span>
-                            <span className='mx-3'>온도 {forecast?.TMP}°C</span>
+                            <span className='mx-3'>
+                              최고 온도 {forecast?.TMX}°C
+                            </span>
+                            <span>|</span>
+                            <span className='mx-3'>
+                              최저 온도 {forecast?.TMN}°C
+                            </span>
                             <span>|</span>
                             <span className='mx-3'>
                               강수확률 {forecast?.POP}%
@@ -264,13 +352,13 @@ const Community = () => {
                 <select
                   onChange={handleArray}
                   className='mb-3 mt-7 cursor-pointer rounded-sm border px-2 py-1 text-sm text-[#6c6c6c] hover:bg-[#eeeeeec8] hover:text-[#5b5b5b] focus:outline-none'
-                  defaultValue={sortType}
+                  value={sortType}
                 >
-                  <option value='default' disabled>
+                  {/* <option value='default' disabled>
                     날짜순, 조회순 정렬
-                  </option>
+                  </option> */}
                   <option value='date'>날짜순</option>
-                  <option value='search'>조회순</option>
+                  <option value='popular'>조회순</option>
                 </select>
                 {/* grid-cols-1 : 기본적으로 (모바일 화면 등 작은 화면에서 한 열로 배치) / md:grid-cols-2 중간 크기(768px) 이상의 화면에서 두열로 배치 */}
                 <div className='mr-3 grid grid-cols-2 gap-6'>
@@ -278,26 +366,36 @@ const Community = () => {
                     <PostCard key={post.id} post={post} />
                   ))}
                 </div>
-                <Pagination
-                  activePage={page} // 현재 페이지
-                  itemsCountPerPage={postPerPage} // 한 페이지당 보여줄 아이템 갯수
-                  totalItemsCount={currentPosts.length} // 총 아이템 갯수
-                  pageRangeDisplayed={5} // paginator의 페이지 범위
-                  prevPageText={'<'}
-                  nextPageText={'>'}
-                  onChange={handlePageChange}
-                  itemClass='pagination-item'
-                  linkClass='pagination-link'
-                  activeClass='active'
-                  activeLinkClass=''
-                  firstPageText='<<'
-                  lastPageText='>>'
-                  itemClassFirst='pagination-nav'
-                  itemClassLast='pagination-nav'
-                  itemClassPrev='pagination-nav'
-                  itemClassNext='pagination-nav'
-                  disabledClass='disabled'
-                />
+                {currentPosts && currentPosts.length > 0 ? (
+                  <Pagination
+                    activePage={page}
+                    itemsCountPerPage={postPerPage}
+                    totalItemsCount={allPosts.length}
+                    pageRangeDisplayed={5}
+                    prevPageText={'<'}
+                    nextPageText={'>'}
+                    onChange={handlePageChange}
+                    itemClass='pagination-item'
+                    linkClass='pagination-link'
+                    activeClass='active'
+                    activeLinkClass=''
+                    firstPageText='<<'
+                    lastPageText='>>'
+                    itemClassFirst='pagination-nav'
+                    itemClassLast='pagination-nav'
+                    itemClassPrev='pagination-nav'
+                    itemClassNext='pagination-nav'
+                    disabledClass='disabled'
+                  />
+                ) : (
+                  <div className='py-8 text-center text-gray-600'>
+                    <div>첫 번째 게시글의 주인공이 되어보세요!</div>
+                    <div className='mt-2'>
+                      당신의 특별한 경험이 다른 여행자들에게 영감이 될 수
+                      있어요.
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { IoMdHeart } from 'react-icons/io';
-// import axios from 'axios';
 import { Post } from '../../config/types';
 import TagItem from './TagItem';
 import dompurify from 'dompurify';
@@ -13,29 +12,20 @@ interface PostCardProps {
 }
 
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
-  const [postImg, setPostImg] = useState(
-    post.thumbnail && post.thumbnail !== '' ? post.thumbnail : '/logo.svg'
-  );
+  const postImg =
+    post.thumbnail && post.thumbnail !== '' ? post.thumbnail : '/logo.svg';
 
-  // const fetchPostDetail = async () => {
-  //   try {
-  //     const response = await axios.get(
-  //       `http://43.202.53.249:8000/posts/${post.id}`
-  //     );
-  //     setPostImg('');
-  //     console.log(response);
-  //   } catch {}
-  // };
-
-  useEffect(() => {
-    setPostImg('');
-  }, []);
-
-  const errorLogoWidth = postImg === '/logo.svg' ? 'w-20' : '';
-  const errorLogoHeight = postImg === '/logo.svg' ? 'h-20' : '';
-  const errorLogoMargin = postImg === '/logo.svg' ? 'm-10' : '';
+  const errorLogoWidth = postImg === '/logo.svg' ? 'w-20' : 'w-full';
+  const errorLogoHeight = postImg === '/logo.svg' ? 'h-20' : 'h-full';
+  const errorLogoMargin = postImg === '/logo.svg' ? 'm-11' : '';
 
   const bodyLength = (str: string, n: number): string => {
+    const postBodyImg = str.toLowerCase().indexOf('<img');
+    if (postBodyImg !== -1 && postBodyImg < n) {
+      console.log(post.body);
+      console.log('hihi');
+      return str.substring(0, postBodyImg).trim();
+    }
     return str?.length > n ? str.substring(0, n) + '...' : str;
   };
 
@@ -53,7 +43,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
   return (
     <>
       <Link to={`/post-detail/${post.id}`} className='block'>
-        <div key={post.id} className='flex rounded-lg bg-white py-2'>
+        <div key={post.id} className='flex h-full rounded-lg bg-white py-2'>
           <div className='size-[170px] shrink-0 rounded-xl bg-[#F4F4F4]'>
             <img
               src={postImg}
@@ -61,31 +51,35 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
               className={`rounded-xl ${errorLogoWidth} ${errorLogoHeight} ${errorLogoMargin}`}
             />
           </div>
-          <div className='ml-4'>
-            <h2 className='mb-2 text-xl font-semibold'>{post.title}</h2>
-            <div className='mb-2 flex justify-between'>
-              {/* flex-wrap 로 높이 8로 넘어가면 숨기기 -> overflow-hidden  */}
-              {/* {어차피 flex-wrap으로 다음줄로 넘어가면 } */}
-              <div className='mr-2 flex h-auto flex-wrap gap-2 overflow-hidden'>
-                {tags.map((t) => (
-                  <TagItem
-                    tagContent={t}
-                    showDeleteButton={false}
-                    key={t.tag_id}
-                  />
-                ))}
+          <div className='ml-4 mt-1 grid w-full'>
+            <div className='h-[130px] overflow-hidden'>
+              <h2 className='mb-2 text-xl font-semibold'>{post.title}</h2>
+              <div className='mb-2 flex justify-between'>
+                {/* flex-wrap 로 높이 8로 넘어가면 숨기기 -> overflow-hidden  */}
+                {/* {어차피 flex-wrap으로 다음줄로 넘어가면 } */}
+                <div className='flex'>
+                  <div className='mr-2 flex h-[30px] origin-left scale-90 transform flex-wrap gap-2 overflow-hidden'>
+                    {tags.map((t) => (
+                      <TagItem
+                        tagContent={t}
+                        showDeleteButton={false}
+                        key={t.tag_id}
+                      />
+                    ))}
+                  </div>
+                </div>
+                <div className='mt-1 flex'>
+                  <span className='mr-1 text-sm'>{post.likes_count}</span>
+                  <IoMdHeart className='mt-0.5 text-red-500' />
+                </div>
               </div>
-              <div className='mt-1 flex'>
-                <span className='mr-1 text-sm'>{post.likes_count}</span>
-                <IoMdHeart className='mt-0.5 text-red-500' />
-              </div>
+              <p
+                className='mb-4 text-gray-600'
+                dangerouslySetInnerHTML={{
+                  __html: sanitizer(bodyLength(post.body, 50)),
+                }}
+              />
             </div>
-            <p
-              className='mb-4 text-gray-600'
-              dangerouslySetInnerHTML={{
-                __html: sanitizer(bodyLength(post.body, 50)),
-              }}
-            />
             <div className='flex justify-between text-sm text-gray-500'>
               <span>{post.created_at.split('T')[0]}</span>
               <span className='py-1 text-xs'>{post.view_count} 조회수</span>

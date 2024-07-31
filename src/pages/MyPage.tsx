@@ -8,6 +8,9 @@ import { FaRegUser } from 'react-icons/fa';
 import axiosInstance from '../api/axios';
 import { FaPersonWalkingLuggage } from 'react-icons/fa6';
 import { MyPageConfirmAlert } from '../components/common/Alert';
+import { Post } from '../../config/types';
+import PostCard from '../components/PostCard';
+import Pagination from 'react-js-pagination';
 
 const MyPage = () => {
   const navigate = useNavigate();
@@ -20,14 +23,15 @@ const MyPage = () => {
   const [profileEdit, setProfileEdit] = useState(false);
   const [nickname, setNickname] = useState(user?.nickname || '');
   const [img, setImg] = useState(user?.profile_image || '');
-  // const [tempImg, setTempImg] = useState<string | null>(null);
-  // const { setAlert, showAlert } = useAlertStore((state) => state);
-  const [userPost, setUserPost] = useState(false);
+  const { showConfirmAlert } = useAlertStore((state) => state);
+  const [userPostCheck, setUserPostCheck] = useState(false);
+  const [userPost, setUserPost] = useState<Post[]>([]);
+  const [postClick, setPostClick] = useState('myPosts');
   // const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const handleLogout = async () => {
     try {
-      const { showConfirmAlert } = useAlertStore.getState();
+      // const { showConfirmAlert } = useAlertStore.getState();
       const confirmed = await showConfirmAlert('로그아웃 하시겠습니까?');
       if (confirmed) {
         await axiosInstance.post(
@@ -36,7 +40,7 @@ const MyPage = () => {
           { withCredentials: true }
         );
         clearUser();
-        navigate('/');
+        console.log('logout');
       }
     } catch (error) {
       console.error('Logout failed', error);
@@ -46,9 +50,10 @@ const MyPage = () => {
   useEffect(() => {
     if (!user) {
       navigate('/login');
+    } else if (user) {
+      // user.id = 1;
+      handleMyPost();
     }
-    // 여기 수정
-    setUserPost(true);
   }, [user, navigate]);
 
   const handleEdit = () => {
@@ -72,9 +77,12 @@ const MyPage = () => {
         const response = await axiosInstance.post(
           `/users/accounts/profile/edit`,
           {
-            id: user.id,
+            // id: user.id,
             nickname: nickname,
-            // profile_image: img,
+            profile_image: img,
+            // password: user.
+            email: user.email,
+            password: 'asdfasdf1!',
           },
           {
             withCredentials: true,
@@ -104,12 +112,41 @@ const MyPage = () => {
     console.log('Image URL:', imageUrl);
   };
 
+  const handleMyPost = () => {
+    if (user) {
+      // user.id = 1;
+      const fetchUserPost = async () => {
+        try {
+          const response = await axiosInstance.get(`posts/user/${user.id}`);
+          console.log(response);
+          console.log(response.data);
+          setUserPost(response.data);
+          if (response.data.length === 0) {
+            setUserPostCheck(false);
+            console.log('check: false');
+          } else {
+            setUserPostCheck(true);
+            console.log('check: true');
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      fetchUserPost();
+      setPostClick('myposts');
+    }
+  };
+
+  const handleHeartPost = () => {
+    return setUserPost([]), setUserPostCheck(true), setPostClick('likedPosts');
+  };
+
   useEffect(() => {
     console.log('Current img state:', img);
   }, [img]);
 
   return (
-    <div className='flex min-h-screen flex-col'>
+    <div className='flex min-h-screen w-screen flex-col'>
       <div className='left-0 top-0 z-10 w-screen bg-white'>
         <Link to='/' className='flex items-center py-[20px] pl-[30px]'>
           <img src='/logo.svg' alt='한바퀴 로고' className='w-9' />
@@ -197,7 +234,23 @@ const MyPage = () => {
             <hr className='mt-8' />
 
             <div className='mt-8 flex justify-between'>
-              <p className='text-2xl'>나의 게시글</p>
+              <div className='flex w-[1000px] justify-center text-xl'>
+                <div className='flex'>
+                  <button
+                    className={`border-b-2 px-6 pb-3 ${postClick === 'myposts' ? 'border-b-[#28466A] text-2xl' : 'border-b-2'}`}
+                    px-4
+                    onClick={handleMyPost}
+                  >
+                    나의 게시글
+                  </button>
+                  <button
+                    className={`border-b-2 px-6 pb-3 ${postClick === 'likedPosts' ? 'border-b-[#28466A] text-2xl' : 'border-b-2'}`}
+                    onClick={handleHeartPost}
+                  >
+                    좋아요 게시글
+                  </button>
+                </div>
+              </div>
               <Link
                 to={'/posting'}
                 className='my-auto rounded-lg border border-[#28466A] bg-white px-4 py-1 text-sm font-semibold text-[#28466A] hover:bg-[#f9fbff]'
@@ -205,19 +258,24 @@ const MyPage = () => {
                 게시글 작성
               </Link>
             </div>
-            {userPost ? (
-              <div className='mt-12 grid grid-cols-2 gap-6'>
-                유저가 작성한 글이 있다고 치고!
-              </div>
-            ) : (
-              <div className='mx-auto mt-52 flex items-center justify-center text-2xl text-gray-700'>
-                <span className='font-semibold'>
-                  {`${user?.nickname}`}&nbsp;
-                </span>
-                님의 여행이야기를 들려주세요.
-                <FaPersonWalkingLuggage className='ml-3' />
-              </div>
-            )}
+            <div>
+              {userPostCheck && userPost ? (
+                <div className='mt-12 grid grid-cols-2 gap-6'>
+                  {userPost.map((post) => (
+                    <PostCard key={post.id} post={post} />
+                  ))}
+                </div>
+              ) : (
+                <div className='mx-auto mt-52 flex items-center justify-center text-2xl text-gray-700'>
+                  <span className='font-semibold'>
+                    {`${user?.nickname}`}&nbsp;
+                  </span>
+                  님의 여행이야기를 들려주세요.
+                  <FaPersonWalkingLuggage className='ml-3' />
+                </div>
+              )}
+            </div>
+            {/* <Pagination /> */}
           </div>
         </div>
       </main>

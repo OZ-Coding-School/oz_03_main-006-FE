@@ -39,6 +39,7 @@ export interface Post {
   user_id: number;
   view_count: number;
   likes_count: number;
+  nickname: string;
 }
 export interface User {
   id: number;
