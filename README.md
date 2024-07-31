@@ -85,7 +85,7 @@
 - 김세림 : posting page - react quill / detail post page - article
 - 이주희 : community page - react slick, pagination / mypage - image crop, edit
   profile
-- 이희주 : login page - signIn, signOut, js-cookie / sidebar - search, ranking
+- 이희주 : login page - signIn, signUp, js-cookie / sidebar - search, ranking
 
 ### 커밋 규칙
 
