@@ -11,7 +11,7 @@ import { FaPlus } from 'react-icons/fa6';
 import { locationList } from '../data/locationList';
 import axios, { AxiosResponse } from 'axios';
 import ImageResize from 'quill-image-resize';
-import Alert, { ConfirmAlert } from '../components/common/Alert';
+import Alert, { MyPageConfirmAlert } from '../components/common/Alert';
 Quill.register('modules/ImageResize', ImageResize);
 
 const PostingPage = () => {
@@ -38,6 +38,7 @@ const PostingPage = () => {
   }));
   const user = useUserStore((state) => state.user);
   const setAlert = useAlertStore((state) => state.setAlert);
+  const showConfirmAlert = useAlertStore((state) => state.showConfirmAlert);
   const [travelPeriodError, setTravelPeriodError] = useState<string>('');
   const [imageIds, setImageIds] = useState<string[]>([]);
   const [fileName, setFileName] = useState<string | null>(null);
@@ -304,11 +305,19 @@ const PostingPage = () => {
     }
   };
 
+  const handleClick = () => {
+    showConfirmAlert('정말 작성을 취소하고 돌아가시겠습니까?').then((res) => {
+      if (res === true) {
+        navigate(-1);
+      }
+    });
+  };
+
   return (
     <>
       <div className='fixed left-0 top-0 z-10 w-screen bg-white'>
         <Alert></Alert>
-        <ConfirmAlert></ConfirmAlert>
+        <MyPageConfirmAlert></MyPageConfirmAlert>
         <Link to='/' className='flex items-center py-[20px] pl-[30px]'>
           <img src='/logo.svg' alt='한바퀴 로고' className='w-9' />
           <h1 className={'font-okgung text-2xl text-black'}>한바퀴</h1>
@@ -434,9 +443,7 @@ const PostingPage = () => {
             <button
               className='rounded-lg border border-[#28466A] bg-white px-5 py-1 text-sm text-[#28466A] hover:bg-[#f9fbff]'
               type='button'
-              onClick={() => {
-                setAlert('정말 작성을 취소하고 돌아가시겠습니까?');
-              }}
+              onClick={handleClick}
             >
               취소
             </button>
