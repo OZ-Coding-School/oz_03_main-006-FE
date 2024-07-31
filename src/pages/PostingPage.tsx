@@ -9,9 +9,9 @@ import { useTagStore, useUserStore, useAlertStore } from '../../config/store';
 import { PostingFormData, PostResponse } from '../../config/types';
 import { FaPlus } from 'react-icons/fa6';
 import { locationList } from '../data/locationList';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import ImageResize from 'quill-image-resize';
-import Alert, { ConfirmAlert } from '../components/common/Alert';
+import Alert, { MyPageConfirmAlert } from '../components/common/Alert';
 Quill.register('modules/ImageResize', ImageResize);
 
 const PostingPage = () => {
@@ -28,6 +28,7 @@ const PostingPage = () => {
       startDate: '',
       endDate: '',
       content: '',
+      thumbnail: undefined,
     },
   });
 
@@ -38,12 +39,14 @@ const PostingPage = () => {
   }));
   const user = useUserStore((state) => state.user);
   const setAlert = useAlertStore((state) => state.setAlert);
+  const showConfirmAlert = useAlertStore((state) => state.showConfirmAlert);
   const [travelPeriodError, setTravelPeriodError] = useState<string>('');
   const [imageIds, setImageIds] = useState<string[]>([]);
   const [fileName, setFileName] = useState<string | null>(null);
   const [viewCount, setViewCount] = useState<number>(0);
   const [quillContent, setQuillContent] = useState('');
   const quillRef = useRef<ReactQuill>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   const { post_id } = useParams();
 
@@ -62,7 +65,7 @@ const PostingPage = () => {
       const fetchPostData = async () => {
         try {
           const response = await axios.get(
-            `http://13.125.183.76:8000/posts/${post_id}/`
+            `http://43.201.142.187:8000/posts/${post_id}/`
           );
           const postData = response.data.post;
           setViewCount(postData.view_count);
@@ -74,13 +77,19 @@ const PostingPage = () => {
           setQuillContent(postData.body);
           setValue('content', postData.body);
 
-          const tagArray = postData.tag.split(',');
+          const tagArray = postData.tag
+            .split(',')
+            .map((tag: string) => tag.trim())
+            .filter((tag: string) => tag !== '');
+
           tagArray.forEach((tag: string) => {
-            addTag(tag.trim());
+            addTag(tag);
           });
 
           if (postData.thumbnail) {
             setFileName(postData.thumbnail.split('/').pop());
+          } else {
+            setValue('thumbnail', postData.thumbnail);
           }
 
           setImageIds(postData.image_ids || []);
@@ -107,7 +116,7 @@ const PostingPage = () => {
 
         try {
           const response = await axios.post(
-            'http://13.125.183.76:8000/posts/upload_image/',
+            'http://43.201.142.187:8000/posts/upload_image/',
             formData,
             {
               headers: {
@@ -238,13 +247,13 @@ const PostingPage = () => {
     }
 
     try {
-      let response: PostResponse;
+      let response: AxiosResponse<PostResponse>;
       if (isEditMode) {
         const matchLocId = matchLocationId(data.location);
         formData.append('location', matchLocId.toString());
         formData.append('view_count', viewCount.toString());
         response = await axios.put(
-          `http://13.125.183.76:8000/posts/${post_id}/`,
+          `http://43.201.142.187:8000/posts/${post_id}/`,
           formData,
           {
             headers: {
@@ -265,7 +274,7 @@ const PostingPage = () => {
         formData.append('view_count', '0');
         formData.append('location', data.location);
         response = await axios.post(
-          'http://13.125.183.76:8000/posts/',
+          'http://43.201.142.187:8000/posts/',
           formData,
           {
             headers: {
@@ -304,11 +313,28 @@ const PostingPage = () => {
     }
   };
 
+
+  const handleRemoveFile = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+    setValue('thumbnail', undefined);
+    setFileName(null);
+  }
+  
+  const handleClick = () => {
+    showConfirmAlert('정말 작성을 취소하고 돌아가시겠습니까?').then((res) => {
+      if (res === true) {
+        navigate(-1);
+      }
+    });
+  };
+
   return (
     <>
       <div className='fixed left-0 top-0 z-10 w-screen bg-white'>
         <Alert></Alert>
-        <ConfirmAlert></ConfirmAlert>
+        <MyPageConfirmAlert></MyPageConfirmAlert>
         <Link to='/' className='flex items-center py-[20px] pl-[30px]'>
           <img src='/logo.svg' alt='한바퀴 로고' className='w-9' />
           <h1 className={'font-okgung text-2xl text-black'}>한바퀴</h1>
@@ -408,6 +434,7 @@ const PostingPage = () => {
               type='file'
               id='thumbnail'
               {...register('thumnail')}
+              ref={fileInputRef}
               onChange={handleFileChange}
             />
             <label
@@ -418,7 +445,16 @@ const PostingPage = () => {
               대표이미지
             </label>
             {fileName && (
-              <p className='my-auto text-xs text-[#656565]'>{fileName}</p>
+              <>
+                <p className='my-auto text-xs text-[#656565]'>{fileName}</p>
+                <button
+                  type='button'
+                  className='my-auto ml-4 cursor-pointer text-xs text-gray-700 underline'
+                  onClick={handleRemoveFile}
+                >
+                  제거
+                </button>
+              </>
             )}
           </div>
           <ReactQuill
@@ -434,9 +470,7 @@ const PostingPage = () => {
             <button
               className='rounded-lg border border-[#28466A] bg-white px-5 py-1 text-sm text-[#28466A] hover:bg-[#f9fbff]'
               type='button'
-              onClick={() => {
-                setAlert('정말 작성을 취소하고 돌아가시겠습니까?');
-              }}
+              onClick={handleClick}
             >
               취소
             </button>

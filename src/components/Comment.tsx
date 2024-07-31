@@ -1,11 +1,12 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import { useAlertStore, useUserStore } from '../../config/store';
-import Alert from './common/Alert';
+import Alert, { MyPageConfirmAlert } from './common/Alert';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import axios from '../api/axios';
 import { FaRegUser } from 'react-icons/fa';
 import Pagination from 'react-js-pagination';
+import { RxDoubleArrowRight, RxDoubleArrowLeft } from 'react-icons/rx';
 
 interface Comment {
   id: number;
@@ -15,6 +16,7 @@ interface Comment {
   updated_at: string;
   post: number;
   user_id: number;
+  profile_image: string | null;
 }
 
 interface FormData {
@@ -29,7 +31,7 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
   const param = useParams();
   const [comments, setComments] = useState<Comment[]>([]);
   const { user } = useUserStore();
-  const { setAlert } = useAlertStore();
+  const { setAlert, showConfirmAlert } = useAlertStore();
   const {
     register: createRegister,
     handleSubmit: handleCreateSubmit,
@@ -45,10 +47,12 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
   const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const commentsPerPage = 10;
+  const [deleteState, setDeleteState] = useState<boolean>(false);
 
   useEffect(() => {
     postId.current = Number(param.post_id);
     setComments(initialComments);
+    setCurrentPage(1);
   }, [param.post_id, initialComments]);
 
   const updateComments = async () => {
@@ -91,17 +95,23 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
       setAlert('댓글 작성자만 삭제할 수 있습니다.');
       return;
     }
-    try {
-      await axios.delete(`/posts/comments/${commentId}/`, {
-        data: {
-          comment_pk: commentId,
-        },
-      });
-      updateComments();
-    } catch (error) {
-      console.error(error + '댓글 삭제를 실패했습니다.');
-      setAlert('댓글 삭제를 실패했습니다.');
-    }
+    setDeleteState(true);
+    showConfirmAlert('정말 댓글을 삭제 하시겠습니까?').then(async (res) => {
+      if (res) {
+        try {
+          await axios.delete(`/posts/comments/${commentId}/`, {
+            data: {
+              comment_pk: commentId,
+            },
+          });
+          updateComments();
+          setDeleteState(false);
+        } catch (error) {
+          console.error(error + '댓글 삭제를 실패했습니다.');
+          setAlert('댓글 삭제를 실패했습니다.');
+        }
+      }
+    });
   };
 
   const startEditComment = (commentId: number, comment: string) => {
@@ -147,6 +157,7 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
   return (
     <div className='mx-auto min-w-[1052px] max-w-[1052px]'>
       <Alert />
+      {deleteState ? <MyPageConfirmAlert></MyPageConfirmAlert> : <></>}
       <div className='ml-2 text-[18px]'>
         {comments ? `${comments?.length}개의 댓글` : '0개의 댓글'}
       </div>
@@ -167,14 +178,14 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
           <div key={comment.id} className='border-b-[1px] p-2 last:border-none'>
             <div className='flex justify-between'>
               <div className='flex items-center'>
-                {comment.user_id !== user?.id ? (
+                {comment.profile_image === null ? (
                   <div className='flex h-[30px] w-[30px] items-center justify-center rounded-full bg-[#28466A]'>
                     <FaRegUser className='light-white'></FaRegUser>
                   </div>
                 ) : (
                   <img
                     className='h-[30px] w-[30px] rounded-full'
-                    src={`${user?.profile_image}`}
+                    src={`${comment.profile_image}`}
                   ></img>
                 )}
                 <div className='m-2 text-[16px] font-semibold'>
@@ -249,8 +260,8 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
             linkClass='pagination-link'
             activeClass='active'
             activeLinkClass=''
-            firstPageText='<<'
-            lastPageText='>>'
+            firstPageText={<RxDoubleArrowLeft />}
+            lastPageText={<RxDoubleArrowRight />}
             itemClassFirst='pagination-nav'
             itemClassLast='pagination-nav'
             itemClassPrev='pagination-nav'
