@@ -46,7 +46,7 @@
 ![CloudFront](https://img.shields.io/badge/CloudFront-FF9900?style=for-the-badge&logo=amazon-cloudfront&logoColor=white)
 ![Gabia](https://img.shields.io/badge/Gabia-005BAC?style=for-the-badge&logo=gabia&logoColor=white)
 
-## 프론트 개발자
+## 프론트엔드 개발자
 
 <table>
   <tr>
@@ -86,6 +86,10 @@
 - 이주희 : community page - react slick, pagination / mypage - image crop, edit
   profile
 - 이희주 : login page - signIn, signUp, js-cookie / sidebar - search, ranking
+
+### 백엔드 개발자 깃허브
+
+- https://github.com/OZ-Coding-School/oz_03_main-006-BE
 
 ### 커밋 규칙
 
