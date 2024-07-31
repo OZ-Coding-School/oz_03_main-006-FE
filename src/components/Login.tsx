@@ -104,30 +104,12 @@ const Login = () => {
               <p className='px-2 text-xs text-red-500'>* 8글자 이상입니다</p>
             )}
             <button
-              className='h-12 w-full rounded-md bg-[#28466A] font-chosun text-white'
+              className='mt-1 h-12 w-full rounded-md bg-[#28466A] font-chosun text-white'
               type='submit'
             >
               로그인
             </button>
           </form>
-          <div className='grid grid-cols-3 items-center justify-center'>
-            <div className='h-[1px] bg-[#BFBFBF]'></div>
-            <p className='self-stretch text-center font-chosun text-sm'>
-              소셜 로그인
-            </p>
-            <div className='h-[1px] bg-[#BFBFBF]'></div>
-          </div>
-          <div className='flex h-[100px] items-center justify-center gap-10'>
-            <Link to='http://13.125.183.76:8000/users/accounts/kakao/login/callback/'>
-              <img src='/kakao-logo.svg' />
-            </Link>
-            <Link
-              to='http://13.125.183.76:8000/users/accounts/google/login/callback/'
-              className='flex h-[49px] w-[49px] items-center justify-center rounded-full bg-white'
-            >
-              <img src='/google-logo.svg' className='h-8 w-8' />
-            </Link>
-          </div>
         </div>
       </div>
       {showAlert && <Alert />}
