@@ -23,6 +23,7 @@ const Article: React.FC<ArticleProps> = ({ article }) => {
   const [postLikesCount, setPostLikesCount] = useState<number>(
     article.likes_count
   );
+
   const postUserId = article.user_id;
   const navigate = useNavigate();
 

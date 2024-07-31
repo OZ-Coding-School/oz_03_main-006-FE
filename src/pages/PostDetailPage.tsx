@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import Article from '../components/Article';
 import Comment from '../components/Comment';
-import { useParams } from 'react-router-dom';
 import { DetailPostArticle } from '../../config/types';
 import Loading from '../components/common/Loading';
 import axios from '../api/axios';
@@ -10,8 +10,9 @@ import Error from '../components/common/Error';
 const PostDetailPage = () => {
   const { post_id } = useParams();
   const [article, setArticle] = useState<DetailPostArticle | null>(null);
-  const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState();
   const [errorStatus, setErrorStatus] = useState<number | null>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     axios
@@ -20,7 +21,7 @@ const PostDetailPage = () => {
         setArticle(res.data.post);
         setComments(res.data.post.comments);
         setErrorStatus(null);
-        console.log('디테일페이지 좋아요: ' + res.data.post.likes_count);
+        scrollRef.current?.scrollTo(0, 0);
       })
       .catch((error) => {
         if (error.response) {
@@ -38,13 +39,13 @@ const PostDetailPage = () => {
     return <Error status={errorStatus} />;
   }
 
-  if (!article || comments === null) {
-    return <Loading></Loading>;
+  if (!article || !comments) {
+    return <Loading />;
   }
 
   return (
     <div className='search-scroll-pd h-screen overflow-hidden'>
-      <div className='h-full overflow-y-scroll'>
+      <div className='h-full overflow-y-scroll' ref={scrollRef}>
         <Article article={article} />
         <Comment comments={comments} />
       </div>
