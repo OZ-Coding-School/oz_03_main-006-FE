@@ -295,7 +295,7 @@ const PostingPage = () => {
         }
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       <Error status={500} />;
     }
   };
