@@ -1,10 +1,14 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useUserStore } from '../../config/store';
 import Login from '../components/Login';
 import SignUp from '../components/SignUp';
 
 const LoginPage = () => {
   const [activeTab, setActiveTab] = useState<string>('login');
   const [activeAnimation, setActiveAnimation] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const user = useUserStore((state) => state.user);
 
   const handleTabClick = (tab: string) => {
     if (tab !== activeTab) {
@@ -19,6 +23,12 @@ const LoginPage = () => {
     }, 100);
     return () => clearTimeout(timer);
   }, [activeAnimation]);
+
+  useEffect(() => {
+    if (user) {
+      navigate('/');
+    }
+  }, []);
 
   const handleAnimation = activeAnimation ? 'fade-in' : '';
   const handleLoginShadow = activeTab === 'login' ? 'login-button-shadow' : '';

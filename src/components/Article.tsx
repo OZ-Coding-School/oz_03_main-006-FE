@@ -27,8 +27,6 @@ const Article: React.FC<ArticleProps> = ({ article }) => {
   const postUserId = article.user_id;
   const navigate = useNavigate();
 
-  console.log(article.tag);
-
   useEffect(() => {
     if (user && postUserId && user.id === postUserId) {
       setShowButton(true);
@@ -80,7 +78,11 @@ const Article: React.FC<ArticleProps> = ({ article }) => {
     }
   };
 
-  const getTagsArray = (tags: string): Tag[] => {
+  const getTagsArray = (tags: string | null): Tag[] => {
+    if (typeof tags !== 'string') {
+      return [];
+    }
+
     return tags
       .split(',')
       .map((content) => content.trim())
@@ -93,8 +95,7 @@ const Article: React.FC<ArticleProps> = ({ article }) => {
 
   const handleDelete = async () => {
     try {
-      const response = await axios.delete(`/posts/${article.id}`);
-      console.log(response.data);
+      await axios.delete(`/posts/${article.id}`);
       setAlert('게시글이 삭제되었습니다.');
       setTimeout(() => {
         navigate(-1);
@@ -105,7 +106,6 @@ const Article: React.FC<ArticleProps> = ({ article }) => {
   };
 
   const handleEdit = () => {
-    console.log(article.id);
     navigate(`/posting/${article.id}`);
   };
 
@@ -125,9 +125,10 @@ const Article: React.FC<ArticleProps> = ({ article }) => {
           </span>
         </div>
         <div className='mb-6 flex h-7 w-full'>
-          {getTagsArray(article.tag).map((tag, index) => (
-            <TagItem tagContent={tag} showDeleteButton={false} key={index} />
-          ))}
+          {getTagsArray &&
+            getTagsArray(article.tag).map((tag, index) => (
+              <TagItem tagContent={tag} showDeleteButton={false} key={index} />
+            ))}
           <span className='ml-auto flex gap-1'>
             <p className='m-auto text-sm text-[#777777]'>
               {article.view_count}회

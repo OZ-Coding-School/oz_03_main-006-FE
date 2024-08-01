@@ -239,11 +239,11 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
               <form onSubmit={handleEditSubmit(saveEditComment)}>
                 <textarea
                   {...editRegister('comment')}
-                  className='h-[108px] w-full flex-grow resize-none border p-2'
+                  className='h-[108px] w-full flex-grow resize-none border p-2 outline-none'
                 />
               </form>
             ) : (
-              <div className='py-3'>{comment.content}</div>
+              <p className='whitespace-pre-wrap py-3'>{comment.content}</p>
             )}
           </div>
         ))}
