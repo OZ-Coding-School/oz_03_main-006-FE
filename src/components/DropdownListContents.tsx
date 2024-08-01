@@ -21,7 +21,7 @@ const DropdownListContents: React.FC<DropdownListContentsProps> = ({
     <>
       {locationList.slice(startIndex, lastIndex).map((item) => (
         <Link
-          to={`/community/${item.location_id}`}
+          to={`/community/${String(item.location_id)}`}
           key={item.location_id}
           onClick={() => confettiRef.reset()}
         >
