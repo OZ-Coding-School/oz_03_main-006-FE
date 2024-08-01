@@ -50,12 +50,12 @@ const Community = () => {
       const fetchChange = async () => {
         if (sortType === 'date') {
           const response = await axiosInstance(
-            `posts/${location_id}/latest/?page=${page}`
+            `/posts/${location_id}/latest/?page=${page}/`
           );
           setCurrentPosts(response.data.results);
         } else if (sortType === 'popular') {
           const response = await axiosInstance(
-            `posts/${location_id}/popular/?page=${page}`
+            `/posts/${location_id}/popular/?page=${page}/`
           );
           setCurrentPosts(response.data.results);
         }
@@ -65,20 +65,20 @@ const Community = () => {
     [location_id, sortType]
   );
 
-  useEffect(() => {
-    if (currentPosts) {
-      setCurrentPosts(currentPosts.slice(indexOfFirstPost, indexOfLastPost));
-    } else {
-      setCurrentPosts([]);
-    }
-    console.log(currentPosts.length);
-  }, []);
-  console.log(currentPosts);
+  // useEffect(() => {
+  //   if (currentPosts) {
+  //     setCurrentPosts(currentPosts.slice(indexOfFirstPost, indexOfLastPost));
+  //   } else {
+  //     setCurrentPosts([]);
+  //   }
+  //   console.log(currentPosts.length);
+  // }, []);
+  // console.log(currentPosts);
 
   const fetchAllPosts = useCallback(async () => {
     try {
       const response = await axiosInstance.get(
-        `/posts/${location_id}/all/popular`
+        `/posts/${location_id}/all/popular/`
       );
       console.log(response);
       console.log(response.data);
@@ -90,7 +90,9 @@ const Community = () => {
 
   const fetchPostsPopular = useCallback(async () => {
     try {
-      const response = await axiosInstance.get(`/posts/${location_id}/popular`);
+      const response = await axiosInstance.get(
+        `/posts/${location_id}/popular/`
+      );
       console.log(response);
       console.log(response.data.results);
       setCurrentPosts(response.data.results);
@@ -100,7 +102,7 @@ const Community = () => {
   }, [location_id]);
   const fetchPostsLatest = useCallback(async () => {
     try {
-      const response = await axiosInstance.get(`/posts/${location_id}/latest`);
+      const response = await axiosInstance.get(`/posts/${location_id}/latest/`);
       console.log(response);
       console.log(response.data.results);
       setCurrentPosts(response.data.results);
@@ -141,7 +143,9 @@ const Community = () => {
   const fetchWeather = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await axiosInstance.get(`/weather/today/${location_id}`);
+      const response = await axiosInstance.get(
+        `/weather/today/${location_id}/`
+      );
       setWeather(response.data[0]);
       console.log(response);
     } catch (error) {
@@ -155,7 +159,7 @@ const Community = () => {
     setIsLoading(true);
     try {
       const response = await axiosInstance.get(
-        `/weather/tomorrow/${location_id}`
+        `/weather/tomorrow/${location_id}/`
       );
       setForecast(response.data[0]);
       console.log(response);
@@ -168,7 +172,7 @@ const Community = () => {
 
   const fetchLocations = useCallback(async () => {
     try {
-      const response = await axiosInstance.get(`/locations/${location_id}`);
+      const response = await axiosInstance.get(`/locations/${location_id}/`);
       setCommunity(response.data);
       console.log(response);
       console.log(response.data);

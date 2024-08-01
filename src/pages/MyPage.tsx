@@ -29,6 +29,7 @@ const MyPage = () => {
   const [userPost, setUserPost] = useState<Post[]>([]);
   const [postClick, setPostClick] = useState('myPosts');
   const [isPagination, setIsPagination] = useState(false);
+  const [isOtherPage, setIsOtherPage] = useState(false);
 
   useEffect(() => {
     const fetchUserGet = async () => {
@@ -145,58 +146,74 @@ const MyPage = () => {
     // console.log('Image URL:', imageUrl);
   };
 
-  const handleMyPost = useCallback(() => {
-    if (user) {
-      // user.id = 1;
-      setPage(1);
-      const fetchUserPost = async () => {
-        try {
-          const response = await axiosInstance.get(`posts/user/${user.id}`);
-          console.log(response);
-          console.log(response.data);
-          setUserPost(response.data);
-          if (response.data.length === 0) {
-            setUserPostCheck(false);
-            setIsPagination(false);
-            console.log('check: false');
-          } else {
-            setUserPostCheck(true);
-            setIsPagination(true);
-            console.log('check: true');
+  const handleMyPost = useCallback(
+    (e?: React.MouseEvent<HTMLElement>) => {
+      if (user) {
+        // user.id = 1;
+        setPage(1);
+        // if (e && e.currentTarget.getAttribute('mypost')) {
+        //   setUserPostCheck((check) => !check);
+        // }
+
+        const fetchUserPost = async () => {
+          try {
+            const response = await axiosInstance.get(`posts/user/${user.id}`);
+            console.log(response);
+            console.log(response.data);
+            setUserPost(response.data);
+            if (response.data.length === 0) {
+              setIsPagination(false);
+              setIsOtherPage(true);
+              console.log('check: false');
+            } else {
+              setIsPagination(true);
+              console.log('check: true');
+            }
+            console.log('나의 게시글', userPostCheck);
+          } catch (error) {
+            console.log(error);
           }
-        } catch (error) {
-          console.log(error);
-        }
-      };
-      fetchUserPost();
-      setPostClick('myposts');
-    }
-  }, [user, isPagination]);
-
-  const handleHeartPost = useCallback(async () => {
-    setPage(1);
-    try {
-      const response = await axiosInstance.get(
-        `posts/user/${user?.id}/liked_posts/`
-      );
-      setUserPost(response.data);
-      if (response.data.length === 0) {
-        setUserPostCheck(false);
-        setIsPagination(false);
-        console.log('check: false');
-      } else {
-        setUserPostCheck(true);
-        setIsPagination(true);
-        console.log('check: true');
+        };
+        fetchUserPost();
+        setPostClick('myposts');
       }
-    } catch (error) {
-      console.log(error);
-    }
-    setUserPostCheck(true);
-    setPostClick('likedPosts');
-  }, [user, isPagination]);
+    },
+    [user, isPagination]
+  );
 
-  const handleDelete = async () => {
+  const handleHeartPost = useCallback(
+    async (e?: React.MouseEvent<HTMLElement>) => {
+      setPage(1);
+      // if (e && e.currentTarget.getAttribute('likepost')) {
+      //   setUserPostCheck((check) => !check);
+      // }
+      try {
+        const response = await axiosInstance.get(
+          `posts/user/${user?.id}/liked_posts/`
+        );
+        setUserPost(response.data);
+        if (response.data.length === 0) {
+          setIsPagination(false);
+          setIsOtherPage(false);
+          console.log('check: false');
+        } else {
+          setIsPagination(true);
+          setIsOtherPage(true);
+          console.log('check: true');
+        }
+        console.log('좋아요 게시글', userPostCheck);
+      } catch (error) {
+        console.log(error);
+      }
+      setPostClick('likedPosts');
+    },
+    [user, isPagination]
+  );
+
+  console.log('좋아요 게시글', userPostCheck);
+  console.log('나의 게시글', userPostCheck);
+
+  const handleDelete = useCallback(async () => {
     const confirmed = await showConfirmAlert('정말 탈퇴를 하시겠습니까?');
     if (confirmed) {
       try {
@@ -209,7 +226,7 @@ const MyPage = () => {
         console.log('회원탈퇴 Error: ', error);
       }
     }
-  };
+  }, []);
   const currentPosts = useMemo(() => {
     return userPost.slice(indexOfFirstPost, indexOfLastPost);
   }, [indexOfFirstPost, indexOfLastPost, userPost]);
@@ -317,12 +334,14 @@ const MyPage = () => {
                   <button
                     className={`border-b-2 px-6 pb-3 ${postClick === 'myposts' ? 'border-b-[#28466A]' : 'border-b-2 text-gray-500'}`}
                     onClick={handleMyPost}
+                    value={'mypost'}
                   >
                     나의 게시글
                   </button>
                   <button
                     className={`border-b-2 px-6 pb-3 ${postClick === 'likedPosts' ? 'border-b-[#28466A]' : 'border-b-2 text-gray-500'}`}
                     onClick={handleHeartPost}
+                    value={'likepost'}
                   >
                     좋아요 게시글
                   </button>
@@ -338,51 +357,50 @@ const MyPage = () => {
             <div>
               {userPost.length > 0 ? (
                 <>
-                  {userPostCheck ? (
-                    <div className='mt-12 grid grid-cols-2 gap-6'>
-                      {/* {userPost.map((post) => (
+                  <div className='mt-12 grid grid-cols-2 gap-6'>
+                    {/* {userPost.map((post) => (
                     <PostCard key={post.id} post={post} />
                   ))} */}
-                      {memoPostCard}
-                    </div>
-                  ) : (
-                    <div className='mx-auto mt-52 flex items-center justify-center text-2xl text-gray-700'>
-                      <span className='font-semibold'>
-                        {`${user?.nickname}`}&nbsp;
-                      </span>
-                      님의 여행이야기를 들려주세요.
-                      <FaPersonWalkingLuggage className='ml-3' />
-                    </div>
-                  )}
-                  {isPagination ? (
-                    <Pagination
-                      activePage={page}
-                      itemsCountPerPage={postPerPage}
-                      totalItemsCount={userPost.length}
-                      pageRangeDisplayed={5}
-                      prevPageText={'<'}
-                      nextPageText={'>'}
-                      onChange={handlePageChange}
-                      itemClass='pagination-item'
-                      linkClass='pagination-link'
-                      activeClass='active'
-                      activeLinkClass=''
-                      firstPageText={<RxDoubleArrowLeft />}
-                      lastPageText={<RxDoubleArrowRight />}
-                      itemClassFirst='pagination-nav'
-                      itemClassLast='pagination-nav'
-                      itemClassPrev='pagination-nav'
-                      itemClassNext='pagination-nav'
-                      disabledClass='disabled'
-                    />
-                  ) : (
-                    <>
-                      <div className='mx-auto mt-52 flex items-center justify-center text-2xl text-gray-700'>
+                    {memoPostCard}
+                  </div>
+                  <Pagination
+                    activePage={page}
+                    itemsCountPerPage={postPerPage}
+                    totalItemsCount={userPost.length}
+                    pageRangeDisplayed={5}
+                    prevPageText={'<'}
+                    nextPageText={'>'}
+                    onChange={handlePageChange}
+                    itemClass='pagination-item'
+                    linkClass='pagination-link'
+                    activeClass='active'
+                    activeLinkClass=''
+                    firstPageText={<RxDoubleArrowLeft />}
+                    lastPageText={<RxDoubleArrowRight />}
+                    itemClassFirst='pagination-nav'
+                    itemClassLast='pagination-nav'
+                    itemClassPrev='pagination-nav'
+                    itemClassNext='pagination-nav'
+                    disabledClass='disabled'
+                  />
+                </>
+              ) : !isOtherPage && !isPagination ? (
+                <>
+                  <div className='mx-auto mt-52 flex items-center justify-center text-2xl text-gray-700'>
+                    <div className='text-center'>
+                      <div className='mb-4 flex'>
                         관심있는 여행 게시물을 찾아보세요!
                         <FaPersonWalkingLuggage className='ml-3' />
                       </div>
-                    </>
-                  )}
+
+                      <Link
+                        to={'/community/1'}
+                        className='cursor-pointer text-blue-700/50 hover:border-b-2'
+                      >
+                        게시물 보러 가기!
+                      </Link>
+                    </div>
+                  </div>
                 </>
               ) : (
                 <>
