@@ -12,6 +12,7 @@ import { locationList } from '../data/locationList';
 import axios, { AxiosResponse } from 'axios';
 import ImageResize from 'quill-image-resize';
 import Alert, { MyPageConfirmAlert } from '../components/common/Alert';
+import Error from '../components/common/Error';
 Quill.register('modules/ImageResize', ImageResize);
 
 const PostingPage = () => {
@@ -45,12 +46,14 @@ const PostingPage = () => {
   const [fileName, setFileName] = useState<string | null>(null);
   const [viewCount, setViewCount] = useState<number>(0);
   const [quillContent, setQuillContent] = useState('');
+  const [deleteState, setDeleteState] = useState<boolean>(false);
   const quillRef = useRef<ReactQuill>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   const { post_id } = useParams();
 
   const isEditMode = post_id ? true : false;
+  const today = new Date().toISOString().split('T')[0];
 
   useEffect(() => {
     if (!user) {
@@ -88,8 +91,6 @@ const PostingPage = () => {
 
           if (postData.thumbnail) {
             setFileName(postData.thumbnail.split('/').pop());
-          } else {
-            setValue('thumbnail', postData.thumbnail);
           }
 
           setImageIds(postData.image_ids || []);
@@ -240,18 +241,18 @@ const PostingPage = () => {
     formData.append('travel_end_date', data.endDate);
     formData.append('temp_image_ids', temp_image_ids);
 
-    if (data.thumbnail && data.thumbnail.length > 0) {
-      formData.append('thumbnail', data.thumbnail[0]);
-    } else {
-      formData.append('thumbnail', '');
-    }
-
     try {
       let response: AxiosResponse<PostResponse>;
       if (isEditMode) {
         const matchLocId = matchLocationId(data.location);
         formData.append('location', matchLocId.toString());
         formData.append('view_count', viewCount.toString());
+        if (data.thumbnail && data.thumbnail.length > 0) {
+          formData.append('thumbnail', data.thumbnail[0]);
+        }
+        if (watch('thumbnail') === null) {
+          formData.append('thumbnail', '');
+        }
         response = await axios.put(
           `http://43.201.142.187:8000/posts/${post_id}/`,
           formData,
@@ -262,17 +263,20 @@ const PostingPage = () => {
             withCredentials: true,
           }
         );
-        if (response.status === 200 || response.status === 201) {
-          setAlert('글 수정이 완료되었습니다!');
-        } else {
+        if (response.status === 400) {
           setAlert('글 수정에 실패했습니다.');
+        } else if (response.status === 404) {
+          <Error status={404} />;
         }
-        setTimeout(() => {
-          navigate(`/post-detail/${post_id}`);
-        }, 2000);
+        navigate(`/post-detail/${post_id}`);
       } else {
         formData.append('view_count', '0');
         formData.append('location', data.location);
+        if (data.thumbnail && data.thumbnail.length > 0) {
+          formData.append('thumbnail', data.thumbnail[0]);
+        } else {
+          formData.append('thumbnail', '');
+        }
         response = await axios.post(
           'http://43.201.142.187:8000/posts/',
           formData,
@@ -284,19 +288,15 @@ const PostingPage = () => {
           }
         );
         if (response.status === 200 || response.status === 201) {
-          setAlert('글 등록이 완료되었습니다!');
-          setTimeout(() => {
-            navigate(`/post-detail/${response.data.id}`);
-          }, 2000);
+          navigate(`/post-detail/${response.data.id}`);
         } else {
           setAlert('글 등록에 실패하였습니다. 다시 시도해 주세요.');
-          setTimeout(() => {
-            navigate('/');
-          }, 2000);
+          navigate('/');
         }
       }
     } catch (error) {
       console.log(error);
+      <Error status={500} />;
     }
   };
 
@@ -313,16 +313,16 @@ const PostingPage = () => {
     }
   };
 
-
   const handleRemoveFile = () => {
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
-    setValue('thumbnail', undefined);
+    setValue('thumbnail', null);
     setFileName(null);
-  }
-  
+  };
+
   const handleClick = () => {
+    setDeleteState(true);
     showConfirmAlert('정말 작성을 취소하고 돌아가시겠습니까?').then((res) => {
       if (res === true) {
         navigate(-1);
@@ -334,7 +334,7 @@ const PostingPage = () => {
     <>
       <div className='fixed left-0 top-0 z-10 w-screen bg-white'>
         <Alert></Alert>
-        <MyPageConfirmAlert></MyPageConfirmAlert>
+        {deleteState ? <MyPageConfirmAlert></MyPageConfirmAlert> : <></>}
         <Link to='/' className='flex items-center py-[20px] pl-[30px]'>
           <img src='/logo.svg' alt='한바퀴 로고' className='w-9' />
           <h1 className={'font-okgung text-2xl text-black'}>한바퀴</h1>
@@ -405,6 +405,7 @@ const PostingPage = () => {
               {...register('startDate', {
                 required: '여행 시작일을 선택해주세요.',
               })}
+              max={today}
             />
           </div>
           <div className='mb-5 mt-1 flex'>
@@ -418,6 +419,7 @@ const PostingPage = () => {
               {...register('endDate', {
                 required: '여행 종료일을 선택해주세요.',
               })}
+              max={today}
             />
             {(errors.startDate || errors.endDate) && (
               <p className='my-auto ml-5 text-xs text-red-500'>

@@ -128,9 +128,9 @@ const Article: React.FC<ArticleProps> = ({ article }) => {
           {getTagsArray(article.tag).map((tag, index) => (
             <TagItem tagContent={tag} showDeleteButton={false} key={index} />
           ))}
-          <span className='ml-auto flex gap-2'>
+          <span className='ml-auto flex gap-1'>
             <p className='m-auto text-sm text-[#777777]'>
-              {article.view_count} 회
+              {article.view_count}회
             </p>
             <PiEyesFill className='m-auto text-base text-[#777777]' />
           </span>
