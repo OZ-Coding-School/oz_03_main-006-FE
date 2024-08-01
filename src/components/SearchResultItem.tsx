@@ -1,9 +1,5 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import dompurify from 'dompurify';
-
-const sanitizer = dompurify.sanitize;
-
 interface SearchResultItemProps {
   id: number;
   title: string;
@@ -32,6 +28,8 @@ const SearchResultItem: React.FC<SearchResultItemProps> = ({
   );
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const bodyRef = useRef<HTMLParagraphElement>(null);
+  const contentRef = useRef<HTMLParagraphElement>(null);
 
   const errorLogoMargin = imgSrc === '/logo.svg' ? 'ml-1.5' : '';
 
@@ -39,8 +37,19 @@ const SearchResultItem: React.FC<SearchResultItemProps> = ({
     setImgSrc('/logo.svg');
   };
 
-  const contentTruncate = (str: string, n: number) => {
-    return str?.length > n ? str.substring(0, n) + '...' : str;
+  const domParse = (html: string) => {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    return doc.body.textContent || '';
+  };
+
+  const bodyLength = (str: string, n: number): string => {
+    const cleanStr = domParse(str);
+    return cleanStr?.length > n ? cleanStr.substring(0, n) + '...' : cleanStr;
+  };
+
+  const contentLength = (str: string, n: number): string => {
+    const cleanStr = domParse(str);
+    return cleanStr?.length > n ? cleanStr.substring(0, n) + '...' : cleanStr;
   };
 
   const imgBG = pathname === '/' ? 'bg-[#F4F4F4]' : 'bg-[#223F5A]';
@@ -81,18 +90,20 @@ const SearchResultItem: React.FC<SearchResultItemProps> = ({
         {body && (
           <p
             className={`flex-grow text-justify text-sm ${textColor} cursor-pointer`}
-            dangerouslySetInnerHTML={{
-              __html: sanitizer(contentTruncate(body, 42)),
-            }}
-          ></p>
+            ref={bodyRef}
+            title={domParse(body)}
+          >
+            {bodyLength(body, 42)}
+          </p>
         )}
         {content && (
           <p
             className={`flex-grow text-justify text-sm ${textColor} cursor-pointer`}
-            dangerouslySetInnerHTML={{
-              __html: sanitizer(contentTruncate(content, 42)),
-            }}
-          ></p>
+            ref={contentRef}
+            title={domParse(content)}
+          >
+            {contentLength(content, 42)}
+          </p>
         )}
       </div>
     </div>

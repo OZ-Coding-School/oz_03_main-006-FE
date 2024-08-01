@@ -61,6 +61,30 @@ const Login = () => {
     });
   };
 
+  const handleChangePassword = async () => {
+    const userEmail = prompt(
+      '비밀번호 변경 링크를 전달 받을 이메일 주소를 입력해주세요.'
+    );
+    console.log('userEmail: ', userEmail);
+    if (userEmail) {
+      try {
+        const response = await axios.post(
+          '/users/accounts/password-reset/',
+          {
+            email: userEmail,
+          },
+          {
+            withCredentials: true,
+          }
+        );
+        console.log('response: ', response);
+      } catch (error) {
+        console.error('error: ', error);
+      }
+    }
+    return;
+  };
+
   return (
     <div className='login-active h-full w-full bg-[#f9f9f9]'>
       <div className='h-full w-full px-6 py-4'>
@@ -109,6 +133,15 @@ const Login = () => {
             >
               로그인
             </button>
+            <div className='mt-2 flex items-center justify-center gap-3 text-sm'>
+              <span className='text-[#9aa0a6]'>비밀번호를 잊으셨나요?</span>
+              <span
+                className='cursor-pointer font-semibold text-[#868e96] underline'
+                onClick={handleChangePassword}
+              >
+                비밀번호 변경하기
+              </span>
+            </div>
           </form>
         </div>
       </div>
