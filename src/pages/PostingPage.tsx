@@ -68,7 +68,7 @@ const PostingPage = () => {
       const fetchPostData = async () => {
         try {
           const response = await axios.get(
-            `http://43.201.142.187:8000/posts/${post_id}/`
+            `https://api.hancycle.site/posts/${post_id}/`
           );
           const postData = response.data.post;
           setViewCount(postData.view_count);
@@ -117,7 +117,7 @@ const PostingPage = () => {
 
         try {
           const response = await axios.post(
-            'http://43.201.142.187:8000/posts/upload_image/',
+            'https://api.hancycle.site/posts/upload_image/',
             formData,
             {
               headers: {
@@ -254,7 +254,7 @@ const PostingPage = () => {
           formData.append('thumbnail', '');
         }
         response = await axios.put(
-          `http://43.201.142.187:8000/posts/${post_id}/`,
+          `https://api.hancycle.site/posts/${post_id}/`,
           formData,
           {
             headers: {
@@ -278,7 +278,7 @@ const PostingPage = () => {
           formData.append('thumbnail', '');
         }
         response = await axios.post(
-          'http://43.201.142.187:8000/posts/',
+          'https://api.hancycle.site/posts/',
           formData,
           {
             headers: {
