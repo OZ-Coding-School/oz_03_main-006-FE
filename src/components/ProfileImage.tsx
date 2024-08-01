@@ -40,6 +40,7 @@ const ProfileImage: React.FC<FileUploadProps> = ({
     const reader = new FileReader();
     reader.onloadend = () => {
       setCroppedImage(reader.result as string);
+      // setImg(reader.result as string);
       setImg(reader.result as string);
       console.log('profileImage!!!!!!! - handlecroppedImage');
     };

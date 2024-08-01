@@ -39,6 +39,7 @@ export interface Post {
   user_id: number;
   view_count: number;
   likes_count: number;
+  nickname: string;
 }
 export interface User {
   id: number;
@@ -46,6 +47,7 @@ export interface User {
   nickname: string;
   profile_image: string | null;
   username?: string;
+  password: string;
 }
 
 export interface UserState {
