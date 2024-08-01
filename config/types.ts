@@ -106,8 +106,8 @@ export interface PostingFormData {
   endDate: string;
   content: string;
   tagValue: string;
-  thumbnail?: FileList;
-  [key: string]: string | FileList | undefined;
+  thumbnail: FileList | null;
+  [key: string]: string | FileList | null;
 }
 
 export interface PostResponse {
