@@ -35,9 +35,11 @@ const SearchBar: React.FC<SearchBarProps> = ({
       try {
         const response = await axios.get(`/search/?q=${searchValue}`);
         console.log(response.data.results);
-        const { posts } = response.data.results;
+        const { posts, user_posts } = response.data.results;
         if (posts.length > 0) {
           setPosts(posts);
+        } else if (user_posts.length > 0) {
+          setPosts(user_posts);
         } else {
           setSearchError(true);
         }
