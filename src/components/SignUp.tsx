@@ -26,17 +26,11 @@ const SignUp = () => {
     clearValue();
     try {
       const { nickname, email, password } = data;
-      await axios.post(
-        '/users/accounts/register',
-        {
-          nickname,
-          email,
-          password,
-        },
-        {
-          withCredentials: true,
-        }
-      );
+      await axios.post('/users/accounts/register', {
+        nickname,
+        email,
+        password,
+      });
       setAlert('회원가입이 완료되었습니다. 로그인 후 이용해 주세요.');
     } catch (error) {
       if (error instanceof AxiosError && error.response) {
