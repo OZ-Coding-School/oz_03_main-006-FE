@@ -47,6 +47,7 @@ export interface User {
   nickname: string;
   profile_image: string | null;
   username?: string;
+  password: string;
 }
 
 export interface UserState {

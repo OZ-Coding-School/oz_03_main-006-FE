@@ -1,11 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { IoMdHeart } from 'react-icons/io';
 import { Post } from '../../config/types';
 import TagItem from './TagItem';
-import dompurify from 'dompurify';
-
-const sanitizer = dompurify.sanitize;
+import './PostCard.css';
 
 interface PostCardProps {
   post: Post;
@@ -19,17 +17,26 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
   const errorLogoHeight = postImg === '/logo.svg' ? 'h-20' : 'h-full';
   const errorLogoMargin = postImg === '/logo.svg' ? 'm-11' : '';
 
-  const bodyLength = (str: string, n: number): string => {
-    const postBodyImg = str.toLowerCase().indexOf('<img');
-    if (postBodyImg !== -1 && postBodyImg < n) {
-      console.log(post.body);
-      console.log('hihi');
-      return str.substring(0, postBodyImg).trim();
+  const [isOverflow, setIsOverflow] = useState(false);
+  const textRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    if (textRef.current) {
+      const { scrollWidth, clientWidth } = textRef.current;
+      console.log(scrollWidth, clientWidth);
+      setIsOverflow(scrollWidth > clientWidth);
     }
-    return str?.length > n ? str.substring(0, n) + '...' : str;
+  }, [post.body]);
+
+  const domParse = (html: string) => {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    return doc.body.textContent || '';
   };
 
-  console.log(post);
+  const bodyLength = (str: string, n: number): string => {
+    const cleanStr = domParse(str);
+    return cleanStr?.length > n ? cleanStr.substring(0, n) + '...' : cleanStr;
+  };
 
   const splitTags = (tagString: string) => {
     return tagString.split(',').map((tag, index) => ({
@@ -55,10 +62,8 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
             <div className='h-[130px] overflow-hidden'>
               <h2 className='mb-2 text-xl font-semibold'>{post.title}</h2>
               <div className='mb-2 flex justify-between'>
-                {/* flex-wrap 로 높이 8로 넘어가면 숨기기 -> overflow-hidden  */}
-                {/* {어차피 flex-wrap으로 다음줄로 넘어가면 } */}
                 <div className='flex'>
-                  <div className='mr-2 flex h-[30px] origin-left scale-90 transform flex-wrap gap-2 overflow-hidden'>
+                  <div className='mr-2 flex h-[30px] origin-left scale-90 flex-wrap gap-2 overflow-hidden'>
                     {tags.map((t) => (
                       <TagItem
                         tagContent={t}
@@ -74,11 +79,12 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                 </div>
               </div>
               <p
-                className='mb-4 text-gray-600'
-                dangerouslySetInnerHTML={{
-                  __html: sanitizer(bodyLength(post.body, 50)),
-                }}
-              />
+                ref={textRef}
+                className={`mb-4 text-gray-600 ${isOverflow ? 'text-truncate' : ''}`}
+                title={domParse(post.body)} // 텍스트 전체를 툴팁으로 표시
+              >
+                {bodyLength(post.body, 50)}
+              </p>
             </div>
             <div className='flex justify-between text-sm text-gray-500'>
               <span>{post.created_at.split('T')[0]}</span>

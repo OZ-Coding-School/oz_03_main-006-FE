@@ -8,6 +8,7 @@ import axiosInstance from '../api/axios';
 import Pagination from 'react-js-pagination';
 import './pagination.scss';
 import Loading from './common/Loading';
+import { RxDoubleArrowLeft, RxDoubleArrowRight } from 'react-icons/rx';
 
 interface Weather {
   POP: number;
@@ -277,7 +278,7 @@ const Community = () => {
                   <div className='w-[500px] rounded-xl'>
                     <Carousel images={community.images} community={community} />
                   </div>
-                  <div className='px-8 pb-12 pt-8'>
+                  <div className='px-8 pb-12 pt-3'>
                     <h2 className='mx-auto mb-4 text-4xl font-medium'>
                       {community?.city}
                     </h2>
@@ -285,10 +286,10 @@ const Community = () => {
                       <span className='mr-10 text-gray-600/70'>인기도시</span>
                       <span className='text-blue-700/60'>
                         {community?.popular_cities === 'None' ? (
-                          <React.Fragment>
+                          <span className='text-gray-950/60'>
                             인기 도시 선정 진행 중입니다. 여러분의 의견을
                             기다립니다!
-                          </React.Fragment>
+                          </span>
                         ) : (
                           <React.Fragment>
                             {community?.popular_cities}
@@ -300,7 +301,7 @@ const Community = () => {
                       <span className='mr-14 text-gray-600/70'>날씨</span>
                       <div className='my-auto flex justify-between text-blue-700/60'>
                         {isLoading ? (
-                          <p>날씨 정보를 불러오는 중...</p>
+                          <p className='mx-3'>날씨 정보를 불러오는 중...</p>
                         ) : (
                           <React.Fragment>
                             <span className='mx-3'>{weather?.sky_status}</span>
@@ -324,19 +325,32 @@ const Community = () => {
                       <span className='mr-3 text-gray-600/70'>내일의 날씨</span>
                       <div className='my-auto flex justify-between text-blue-700/60'>
                         {isLoading ? (
-                          <p>날씨 정보를 불러오는 중...</p>
+                          <p className='mx-3'>날씨 정보를 불러오는 중...</p>
                         ) : (
                           <React.Fragment>
                             <span className='mx-3'>{forecast?.sky_status}</span>
                             <span>|</span>
-                            <span className='mx-3'>
-                              최고 온도 {forecast?.TMX}°C
-                            </span>
-                            <span>|</span>
-                            <span className='mx-3'>
-                              최저 온도 {forecast?.TMN}°C
-                            </span>
-                            <span>|</span>
+                            {forecast?.TMX === null ? (
+                              <></>
+                            ) : (
+                              <>
+                                <span className='mx-3'>
+                                  최고 온도 {forecast?.TMX}°C
+                                </span>
+                                <span>|</span>
+                              </>
+                            )}
+                            {forecast?.TMN === null ? (
+                              <></>
+                            ) : (
+                              <>
+                                <span className='mx-3'>
+                                  최저 온도 {forecast?.TMN}°C
+                                </span>
+                                <span>|</span>
+                              </>
+                            )}
+
                             <span className='mx-3'>
                               강수확률 {forecast?.POP}%
                             </span>
@@ -379,8 +393,8 @@ const Community = () => {
                     linkClass='pagination-link'
                     activeClass='active'
                     activeLinkClass=''
-                    firstPageText='<<'
-                    lastPageText='>>'
+                    firstPageText={<RxDoubleArrowLeft />}
+                    lastPageText={<RxDoubleArrowRight />}
                     itemClassFirst='pagination-nav'
                     itemClassLast='pagination-nav'
                     itemClassPrev='pagination-nav'

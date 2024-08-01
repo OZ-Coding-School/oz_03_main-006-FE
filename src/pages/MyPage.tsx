@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { MdLogout } from 'react-icons/md';
 import { FaUserEdit } from 'react-icons/fa';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useAlertStore, useUserStore } from '../../config/store';
 import ProfileImage from '../components/ProfileImage';
 import { FaRegUser } from 'react-icons/fa';
@@ -11,6 +11,7 @@ import { MyPageConfirmAlert } from '../components/common/Alert';
 import { Post } from '../../config/types';
 import PostCard from '../components/PostCard';
 import Pagination from 'react-js-pagination';
+import { RxDoubleArrowLeft, RxDoubleArrowRight } from 'react-icons/rx';
 
 const MyPage = () => {
   const navigate = useNavigate();
@@ -27,11 +28,34 @@ const MyPage = () => {
   const [userPostCheck, setUserPostCheck] = useState(false);
   const [userPost, setUserPost] = useState<Post[]>([]);
   const [postClick, setPostClick] = useState('myPosts');
-  // const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isPagination, setIsPagination] = useState(false);
 
-  const handleLogout = async () => {
+  useEffect(() => {
+    const fetchUserGet = async () => {
+      try {
+        const response = await axiosInstance.get(`/users/accounts/user`, {
+          withCredentials: true,
+        });
+        console.log(response);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+    fetchUserGet();
+  }, []);
+
+  const [page, setPage] = useState<number>(1);
+
+  const postPerPage: number = 8;
+  const indexOfLastPost: number = page * postPerPage;
+  const indexOfFirstPost: number = indexOfLastPost - postPerPage;
+
+  const handlePageChange = (page: number) => {
+    setPage(page);
+  };
+
+  const handleLogout = useCallback(async () => {
     try {
-      // const { showConfirmAlert } = useAlertStore.getState();
       const confirmed = await showConfirmAlert('로그아웃 하시겠습니까?');
       if (confirmed) {
         await axiosInstance.post(
@@ -45,7 +69,7 @@ const MyPage = () => {
     } catch (error) {
       console.error('Logout failed', error);
     }
-  };
+  }, [showConfirmAlert, clearUser]);
 
   useEffect(() => {
     if (!user) {
@@ -56,45 +80,54 @@ const MyPage = () => {
     }
   }, [user, navigate]);
 
-  const handleEdit = () => {
+  const handleEdit = useCallback(() => {
     setEdit((edit) => !edit);
     setProfileEdit((edit) => !edit);
-  };
+  }, []);
 
-  const handleNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    setNickname(e.target.value);
-  };
+  const handleNickname = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      e.preventDefault();
+      setNickname(e.target.value);
+    },
+    []
+  );
 
-  const handleNewNick = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    setEdit((edit) => !edit);
-    setProfileEdit((edit) => !edit);
-    if (user) {
-      setUser({ ...user, nickname: nickname });
-      updateProfileImage(img);
-      try {
-        const response = await axiosInstance.post(
-          `/users/accounts/profile/edit`,
-          {
-            // id: user.id,
-            nickname: nickname,
-            profile_image: img,
-            // password: user.
-            email: user.email,
-            password: 'asdfasdf1!',
-          },
-          {
-            withCredentials: true,
-          }
-        );
-        console.log(response.data);
-      } catch (error) {
-        console.error('Profile update failed', error);
+  const handleNewNick = useCallback(
+    async (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      setEdit((edit) => !edit);
+      setProfileEdit((edit) => !edit);
+      if (user) {
+        setUser({ ...user, nickname: nickname });
+        updateProfileImage(img);
+        try {
+          const formData = new FormData();
+          formData.append('nickname', nickname);
+
+          // 이미지가 File 객체인 경우에만 추가
+
+          formData.append('profile_image', img);
+
+          const response = await axiosInstance.put(
+            `users/accounts/edit`,
+            formData,
+            {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+              },
+              withCredentials: true,
+            }
+          );
+          console.log(response.data);
+          console.log('수정 성공~~~~~~~~~~?~~~~~~');
+        } catch (error) {
+          console.error('Profile update failed', error);
+        }
       }
-    }
-  };
-
+    },
+    [user, nickname, img, updateProfileImage, setUser]
+  );
   const handleCancle = () => {
     if (user && user.nickname) {
       setNickname(user.nickname);
@@ -107,14 +140,15 @@ const MyPage = () => {
   };
 
   const handleFileSelect = (file: File) => {
-    const imageUrl = URL.createObjectURL(file);
+    // const imageUrl = URL.createObjectURL(file);
     console.log('Selected file:', file);
-    console.log('Image URL:', imageUrl);
+    // console.log('Image URL:', imageUrl);
   };
 
-  const handleMyPost = () => {
+  const handleMyPost = useCallback(() => {
     if (user) {
       // user.id = 1;
+      setPage(1);
       const fetchUserPost = async () => {
         try {
           const response = await axiosInstance.get(`posts/user/${user.id}`);
@@ -123,9 +157,11 @@ const MyPage = () => {
           setUserPost(response.data);
           if (response.data.length === 0) {
             setUserPostCheck(false);
+            setIsPagination(false);
             console.log('check: false');
           } else {
             setUserPostCheck(true);
+            setIsPagination(true);
             console.log('check: true');
           }
         } catch (error) {
@@ -135,11 +171,53 @@ const MyPage = () => {
       fetchUserPost();
       setPostClick('myposts');
     }
-  };
+  }, [user, isPagination]);
 
-  const handleHeartPost = () => {
-    return setUserPost([]), setUserPostCheck(true), setPostClick('likedPosts');
+  const handleHeartPost = useCallback(async () => {
+    setPage(1);
+    try {
+      const response = await axiosInstance.get(
+        `posts/user/${user?.id}/liked_posts/`
+      );
+      setUserPost(response.data);
+      if (response.data.length === 0) {
+        setUserPostCheck(false);
+        setIsPagination(false);
+        console.log('check: false');
+      } else {
+        setUserPostCheck(true);
+        setIsPagination(true);
+        console.log('check: true');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    setUserPostCheck(true);
+    setPostClick('likedPosts');
+  }, [user, isPagination]);
+
+  const handleDelete = async () => {
+    const confirmed = await showConfirmAlert('정말 탈퇴를 하시겠습니까?');
+    if (confirmed) {
+      try {
+        await axiosInstance.delete(`/users/accounts/delete`, {
+          withCredentials: true,
+        });
+        clearUser();
+        console.log('탈퇴');
+      } catch (error) {
+        console.log('회원탈퇴 Error: ', error);
+      }
+    }
   };
+  const currentPosts = useMemo(() => {
+    return userPost.slice(indexOfFirstPost, indexOfLastPost);
+  }, [indexOfFirstPost, indexOfLastPost, userPost]);
+
+  const memoPostCard = useMemo(
+    () => currentPosts.map((post) => <PostCard key={post.id} post={post} />),
+    [currentPosts]
+  );
 
   useEffect(() => {
     console.log('Current img state:', img);
@@ -234,17 +312,16 @@ const MyPage = () => {
             <hr className='mt-8' />
 
             <div className='mt-8 flex justify-between'>
-              <div className='flex w-[1000px] justify-center text-xl'>
+              <div className='flex w-[1000px] text-xl'>
                 <div className='flex'>
                   <button
-                    className={`border-b-2 px-6 pb-3 ${postClick === 'myposts' ? 'border-b-[#28466A] text-2xl' : 'border-b-2'}`}
-                    px-4
+                    className={`border-b-2 px-6 pb-3 ${postClick === 'myposts' ? 'border-b-[#28466A]' : 'border-b-2 text-gray-500'}`}
                     onClick={handleMyPost}
                   >
                     나의 게시글
                   </button>
                   <button
-                    className={`border-b-2 px-6 pb-3 ${postClick === 'likedPosts' ? 'border-b-[#28466A] text-2xl' : 'border-b-2'}`}
+                    className={`border-b-2 px-6 pb-3 ${postClick === 'likedPosts' ? 'border-b-[#28466A]' : 'border-b-2 text-gray-500'}`}
                     onClick={handleHeartPost}
                   >
                     좋아요 게시글
@@ -259,29 +336,72 @@ const MyPage = () => {
               </Link>
             </div>
             <div>
-              {userPostCheck && userPost ? (
-                <div className='mt-12 grid grid-cols-2 gap-6'>
-                  {userPost.map((post) => (
+              {userPost.length > 0 ? (
+                <>
+                  {userPostCheck ? (
+                    <div className='mt-12 grid grid-cols-2 gap-6'>
+                      {/* {userPost.map((post) => (
                     <PostCard key={post.id} post={post} />
-                  ))}
-                </div>
+                  ))} */}
+                      {memoPostCard}
+                    </div>
+                  ) : (
+                    <div className='mx-auto mt-52 flex items-center justify-center text-2xl text-gray-700'>
+                      <span className='font-semibold'>
+                        {`${user?.nickname}`}&nbsp;
+                      </span>
+                      님의 여행이야기를 들려주세요.
+                      <FaPersonWalkingLuggage className='ml-3' />
+                    </div>
+                  )}
+                  {isPagination ? (
+                    <Pagination
+                      activePage={page}
+                      itemsCountPerPage={postPerPage}
+                      totalItemsCount={userPost.length}
+                      pageRangeDisplayed={5}
+                      prevPageText={'<'}
+                      nextPageText={'>'}
+                      onChange={handlePageChange}
+                      itemClass='pagination-item'
+                      linkClass='pagination-link'
+                      activeClass='active'
+                      activeLinkClass=''
+                      firstPageText={<RxDoubleArrowLeft />}
+                      lastPageText={<RxDoubleArrowRight />}
+                      itemClassFirst='pagination-nav'
+                      itemClassLast='pagination-nav'
+                      itemClassPrev='pagination-nav'
+                      itemClassNext='pagination-nav'
+                      disabledClass='disabled'
+                    />
+                  ) : (
+                    <>
+                      <div className='mx-auto mt-52 flex items-center justify-center text-2xl text-gray-700'>
+                        관심있는 여행 게시물을 찾아보세요!
+                        <FaPersonWalkingLuggage className='ml-3' />
+                      </div>
+                    </>
+                  )}
+                </>
               ) : (
-                <div className='mx-auto mt-52 flex items-center justify-center text-2xl text-gray-700'>
-                  <span className='font-semibold'>
-                    {`${user?.nickname}`}&nbsp;
-                  </span>
-                  님의 여행이야기를 들려주세요.
-                  <FaPersonWalkingLuggage className='ml-3' />
-                </div>
+                <>
+                  <div className='mx-auto mt-52 flex items-center justify-center text-2xl text-gray-700'>
+                    <span className='font-semibold'>
+                      {`${user?.nickname}`}&nbsp;
+                    </span>
+                    님의 여행이야기를 들려주세요.
+                    <FaPersonWalkingLuggage className='ml-3' />
+                  </div>
+                </>
               )}
             </div>
-            {/* <Pagination /> */}
           </div>
         </div>
       </main>
 
       <footer className='w-full p-4 text-right'>
-        <p className='text-sm text-red-500' onClick={handleLogout}>
+        <p className='text-sm text-red-500' onClick={handleDelete}>
           회원탈퇴
         </p>
       </footer>
