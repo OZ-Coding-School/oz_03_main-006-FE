@@ -347,16 +347,13 @@ const PostingPage = () => {
               className={`cursor-pointer rounded-sm border px-2 py-1 text-sm text-[#9f9f9f] hover:bg-[#eeeeeec8] hover:text-[#5b5b5b] focus:outline-none ${errors.location && 'border-red-500'}`}
               id='location'
               {...register('location', { required: '지역을 선택해주세요.' })}
+              value={watch('location')}
             >
               <option value='' disabled>
                 지역을 선택해주세요
               </option>
               {locationList.map((location) => (
-                <option
-                  key={location.location_id}
-                  value={location.location_id}
-                  selected={location.city === watch('location')}
-                >
+                <option key={location.location_id} value={location.city}>
                   {location.name}
                 </option>
               ))}
@@ -467,8 +464,16 @@ const PostingPage = () => {
             onChange={handleQuillChange}
             value={quillContent}
           />
-          <input type='hidden' {...register('content')} />
+          <input
+            type='hidden'
+            {...register('content', { required: '본문 내용을 작성해주세요.' })}
+          />
           <div className='sticky bottom-0 flex w-full justify-end gap-2 border-t border-[#cdcdcd] bg-white py-2'>
+            {errors.content && watch('content') === '' && (
+              <p className='my-auto ml-5 text-xs text-red-500'>
+                본문 내용을 작성해주세요.
+              </p>
+            )}
             <button
               className='rounded-lg border border-[#28466A] bg-white px-5 py-1 text-sm text-[#28466A] hover:bg-[#f9fbff]'
               type='button'

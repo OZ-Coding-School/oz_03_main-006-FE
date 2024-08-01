@@ -43,7 +43,10 @@ const Article: React.FC<ArticleProps> = ({ article }) => {
       if (user) {
         try {
           const response = await axios.get(
-            `/posts/${article.id}/like/?user_id=${user.id}`
+            `/posts/${article.id}/like/?user_id=${user.id}`,
+            {
+              withCredentials: true,
+            }
           );
           setIsLiked(response.data.result);
         } catch (error) {
