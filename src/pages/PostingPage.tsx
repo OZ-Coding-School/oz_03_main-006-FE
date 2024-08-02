@@ -69,7 +69,8 @@ const PostingPage = () => {
       const fetchPostData = async () => {
         try {
           const response = await axios.get(
-            `https://api.hancycle.site/posts/${post_id}/`
+            `https://api.hancycle.site/posts/${post_id}/`,
+            { withCredentials: true }
           );
           const postData = response.data.post;
           setViewCount(postData.view_count);
@@ -146,7 +147,7 @@ const PostingPage = () => {
   const modules = {
     toolbar: {
       container: [
-        [{ header: [1, 2, 3, 4, 5, false] }],
+        [{ header: [1, 2, 3, false] }],
         ['bold', 'italic', 'underline', 'strike'],
         [{ align: [] }],
         [
@@ -220,6 +221,7 @@ const PostingPage = () => {
       event.preventDefault();
       if (
         tagValue.trim() !== '' &&
+        tagValue.length <= 15 &&
         tags.length < 5 &&
         event.nativeEvent.isComposing === false
       ) {
@@ -241,35 +243,52 @@ const PostingPage = () => {
     formData.append('travel_start_date', data.startDate);
     formData.append('travel_end_date', data.endDate);
     formData.append('temp_image_ids', temp_image_ids);
+    const matchLocId = matchLocationId(data.location);
+    formData.append('location', matchLocId.toString());
 
-    if (!isLoading) {
-      try {
-        setIsLoading(true);
-        let response: AxiosResponse<PostResponse>;
-        if (isEditMode) {
-          const matchLocId = matchLocationId(data.location);
-          formData.append('location', matchLocId.toString());
-          formData.append('view_count', viewCount.toString());
-          if (data.thumbnail && data.thumbnail.length > 0) {
-            formData.append('thumbnail', data.thumbnail[0]);
+ if (!isLoading) {
+    try {
+         setIsLoading(true);
+      let response: AxiosResponse<PostResponse>;
+      if (isEditMode) {
+        formData.append('view_count', viewCount.toString());
+        if (data.thumbnail && data.thumbnail.length > 0) {
+          formData.append('thumbnail', data.thumbnail[0]);
+        }
+        if (watch('thumbnail') === null) {
+          formData.append('thumbnail', '');
+        }
+        response = await axios.put(
+          `https://api.hancycle.site/posts/${post_id}/`,
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+            withCredentials: true,
           }
-          if (watch('thumbnail') === null) {
-            formData.append('thumbnail', '');
-          }
-          response = await axios.put(
-            `https://api.hancycle.site/posts/${post_id}/`,
-            formData,
-            {
-              headers: {
-                'Content-Type': 'multipart/form-data',
-              },
-              withCredentials: true,
-            }
-          );
-          if (response.status === 400) {
-            setAlert('글 수정에 실패했습니다.');
-          } else if (response.status === 404) {
-            <Error status={404} />;
+        );
+        if (response.status === 400) {
+          setAlert('글 수정에 실패했습니다.');
+        } else if (response.status === 404) {
+          <Error status={404} />;
+        }
+        navigate(`/post-detail/${post_id}`);
+      } else {
+        formData.append('view_count', '0');
+        if (data.thumbnail && data.thumbnail.length > 0) {
+          formData.append('thumbnail', data.thumbnail[0]);
+        } else {
+          formData.append('thumbnail', '');
+        }
+        response = await axios.post(
+          'https://api.hancycle.site/posts/',
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+            withCredentials: true,
           }
           navigate(`/post-detail/${post_id}`);
         } else {
@@ -335,6 +354,12 @@ const PostingPage = () => {
     });
   };
 
+  useEffect(() => {
+    if (typeof tagValue === 'string' && tagValue.length > 15) {
+      setValue('tagValue', tagValue.slice(0, 15));
+    }
+  }, [tagValue, setValue]);
+
   return (
     <>
       <div className='fixed left-0 top-0 z-10 w-screen bg-white'>
@@ -352,16 +377,13 @@ const PostingPage = () => {
               className={`cursor-pointer rounded-sm border px-2 py-1 text-sm text-[#9f9f9f] hover:bg-[#eeeeeec8] hover:text-[#5b5b5b] focus:outline-none ${errors.location && 'border-red-500'}`}
               id='location'
               {...register('location', { required: '지역을 선택해주세요.' })}
+              value={watch('location')}
             >
               <option value='' disabled>
                 지역을 선택해주세요
               </option>
               {locationList.map((location) => (
-                <option
-                  key={location.location_id}
-                  value={location.location_id}
-                  selected={location.city === watch('location')}
-                >
+                <option key={location.location_id} value={location.city}>
                   {location.name}
                 </option>
               ))}
@@ -376,7 +398,7 @@ const PostingPage = () => {
               {...register('title', { required: '제목을 입력히주세요.' })}
             ></textarea>
           </div>
-          <div className='mb-4 flex h-auto min-h-7 flex-wrap'>
+          <div className='mb-4 flex h-auto min-h-7 flex-wrap gap-1'>
             {tags.map((tag, index) => (
               <React.Fragment key={index}>
                 <TagItem tagContent={tag} showDeleteButton={true} />
@@ -472,8 +494,16 @@ const PostingPage = () => {
             onChange={handleQuillChange}
             value={quillContent}
           />
-          <input type='hidden' {...register('content')} />
+          <input
+            type='hidden'
+            {...register('content', { required: '본문 내용을 작성해주세요.' })}
+          />
           <div className='sticky bottom-0 flex w-full justify-end gap-2 border-t border-[#cdcdcd] bg-white py-2'>
+            {errors.content && watch('content') === '' && (
+              <p className='my-auto ml-5 text-xs text-red-500'>
+                본문 내용을 작성해주세요.
+              </p>
+            )}
             <button
               className='rounded-lg border border-[#28466A] bg-white px-5 py-1 text-sm text-[#28466A] hover:bg-[#f9fbff]'
               type='button'

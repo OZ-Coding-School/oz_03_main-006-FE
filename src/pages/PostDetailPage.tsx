@@ -19,7 +19,7 @@ const PostDetailPage = () => {
 
   useEffect(() => {
     axios
-      .get(`/posts/${post_id}/`)
+      .get(`/posts/${post_id}/`, { withCredentials: true })
       .then((res) => {
         setArticle(res.data.post);
         setComments(res.data.post.comments);
