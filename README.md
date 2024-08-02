@@ -50,8 +50,11 @@
 ![DOMPurify](https://img.shields.io/badge/dompurify-4B0082?style=for-the-badge&logo=purify&logoColor=white)
 ![Canvas Confetti](https://img.shields.io/badge/canvas--confetti-FF69B4?style=for-the-badge&logo=confetti&logoColor=white)
 ![Amazon S3](https://img.shields.io/badge/Amazon%20S3-569A31?style=for-the-badge&logo=amazon-s3&logoColor=white)
+![AWS Certificate Manager](https://img.shields.io/badge/ACM-232F3E?style=for-the-badge&logo=Amazon%20AWS&logoColor=white)
+
 ![CloudFront](https://img.shields.io/badge/CloudFront-FF9900?style=for-the-badge&logo=amazon-cloudfront&logoColor=white)
 ![Gabia](https://img.shields.io/badge/Gabia-005BAC?style=for-the-badge&logo=gabia&logoColor=white)
+![Route 53](https://img.shields.io/badge/Route%2053-232F3E?style=for-the-badge&logo=Amazon%20AWS&logoColor=white)
 
 ## 프론트엔드 개발자
 
