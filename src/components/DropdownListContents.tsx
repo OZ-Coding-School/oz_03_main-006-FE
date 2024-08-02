@@ -7,7 +7,6 @@ interface DropdownListContentsProps {
   lastIndex: number;
   moveCenter: (name: string, locationId: number) => void;
   clearMoveCenterTimeout: () => void;
-  confettiRef: any;
 }
 
 const DropdownListContents: React.FC<DropdownListContentsProps> = ({
@@ -15,7 +14,6 @@ const DropdownListContents: React.FC<DropdownListContentsProps> = ({
   lastIndex,
   moveCenter,
   clearMoveCenterTimeout,
-  confettiRef,
 }) => {
   return (
     <>
@@ -23,12 +21,12 @@ const DropdownListContents: React.FC<DropdownListContentsProps> = ({
         <Link
           to={`/community/${String(item.location_id)}`}
           key={item.location_id}
-          onClick={() => confettiRef.reset()}
         >
           <li
             className='group flex items-center py-2 pl-4 font-chosun hover:bg-[#233e7815]'
             onMouseEnter={() => moveCenter(item.name, item.location_id)}
             onMouseLeave={clearMoveCenterTimeout}
+            onClick={clearMoveCenterTimeout}
           >
             <img
               className='mr-5 h-[21px] w-[21px]'
