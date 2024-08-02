@@ -23,7 +23,6 @@ const Carousel: React.FC<CarouselProps> = ({ images, community }) => {
     pauseOnFocus: true, // focus시 정지
     pauseOnHover: true, // hover시 정지
   };
-  console.log(images);
   return (
     <>
       <div className='carousel'>

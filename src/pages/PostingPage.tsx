@@ -246,54 +246,37 @@ const PostingPage = () => {
     const matchLocId = matchLocationId(data.location);
     formData.append('location', matchLocId.toString());
 
- if (!isLoading) {
-    try {
-         setIsLoading(true);
-      let response: AxiosResponse<PostResponse>;
-      if (isEditMode) {
-        formData.append('view_count', viewCount.toString());
-        if (data.thumbnail && data.thumbnail.length > 0) {
-          formData.append('thumbnail', data.thumbnail[0]);
-        }
-        if (watch('thumbnail') === null) {
-          formData.append('thumbnail', '');
-        }
-        response = await axios.put(
-          `https://api.hancycle.site/posts/${post_id}/`,
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-            withCredentials: true,
+    if (!isLoading) {
+      try {
+        setIsLoading(true);
+        let response: AxiosResponse<PostResponse>;
+        if (isEditMode) {
+          formData.append('view_count', viewCount.toString());
+          if (data.thumbnail && data.thumbnail.length > 0) {
+            formData.append('thumbnail', data.thumbnail[0]);
           }
-        );
-        if (response.status === 400) {
-          setAlert('글 수정에 실패했습니다.');
-        } else if (response.status === 404) {
-          <Error status={404} />;
-        }
-        navigate(`/post-detail/${post_id}`);
-      } else {
-        formData.append('view_count', '0');
-        if (data.thumbnail && data.thumbnail.length > 0) {
-          formData.append('thumbnail', data.thumbnail[0]);
-        } else {
-          formData.append('thumbnail', '');
-        }
-        response = await axios.post(
-          'https://api.hancycle.site/posts/',
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-            withCredentials: true,
+          if (watch('thumbnail') === null) {
+            formData.append('thumbnail', '');
           }
-          navigate(`/post-detail/${post_id}`);
+          response = await axios.put(
+            `https://api.hancycle.site/posts/${post_id}/`,
+            formData,
+            {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+              },
+              withCredentials: true,
+            }
+          );
+          if (response.status === 400) {
+            setAlert('글 수정에 실패했습니다.');
+          } else if (response.status === 404) {
+            <Error status={404} />;
+          } else {
+            navigate(`/post-detail/${post_id}`);
+          }
         } else {
           formData.append('view_count', '0');
-          formData.append('location', data.location);
           if (data.thumbnail && data.thumbnail.length > 0) {
             formData.append('thumbnail', data.thumbnail[0]);
           } else {

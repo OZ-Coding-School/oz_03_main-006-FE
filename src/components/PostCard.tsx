@@ -23,7 +23,6 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
   useEffect(() => {
     if (textRef.current) {
       const { scrollWidth, clientWidth } = textRef.current;
-      console.log(scrollWidth, clientWidth);
       setIsOverflow(scrollWidth > clientWidth);
     }
   }, [post.body]);
@@ -52,8 +51,6 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
 
   // tags는
   const tags = splitTags(post.tag);
-  console.log(post.tag);
-  console.log(tags);
 
   return (
     <>

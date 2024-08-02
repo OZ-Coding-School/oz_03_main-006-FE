@@ -67,8 +67,6 @@ const Community = () => {
       const response = await axiosInstance.get(
         `/posts/${location_id}/all/popular/`
       );
-      console.log(response);
-      console.log(response.data);
       setAllPosts(response.data);
     } catch (error) {
       console.error('게시물을 불러오는데 실패했습니다.', error);
@@ -80,8 +78,6 @@ const Community = () => {
       const response = await axiosInstance.get(
         `/posts/${location_id}/popular/`
       );
-      console.log(response);
-      console.log(response.data.results);
       setCurrentPosts(response.data.results);
     } catch (error) {
       console.error('게시물을 불러오는데 실패했습니다.', error);
@@ -90,8 +86,6 @@ const Community = () => {
   const fetchPostsLatest = useCallback(async () => {
     try {
       const response = await axiosInstance.get(`/posts/${location_id}/latest/`);
-      console.log(response);
-      console.log(response.data.results);
       setCurrentPosts(response.data.results);
     } catch (error) {
       console.error('게시물을 불러오는데 실패했습니다.', error);
@@ -105,7 +99,6 @@ const Community = () => {
         `/weather/today/${location_id}/`
       );
       setWeather(response.data[0]);
-      console.log(response);
     } catch (error) {
       console.error('날씨 데이터를 가져오는데 실패했습니다:', error);
     } finally {
@@ -120,7 +113,6 @@ const Community = () => {
         `/weather/tomorrow/${location_id}/`
       );
       setForecast(response.data[0]);
-      console.log(response);
     } catch (error) {
       console.error('날씨 데이터를 가져오는데 실패했습니다: ', error);
     } finally {
@@ -132,8 +124,6 @@ const Community = () => {
     try {
       const response = await axiosInstance.get(`/locations/${location_id}/`);
       setCommunity(response.data);
-      console.log(response);
-      console.log(response.data);
     } catch (error) {
       console.log('지역 정보를 불러오는데 실패했습니다: ', error);
     }
@@ -143,7 +133,6 @@ const Community = () => {
     try {
       const response = await axiosInstance.get(`/locations/`);
       setCommunitys(response.data);
-      console.log(response);
     } catch (error) {
       console.log('지역 목록을 불러오는데 실패했습니다: ', error);
     }
@@ -163,18 +152,10 @@ const Community = () => {
     setPage(1);
   }, [location_id, sortType]);
 
-  console.log(setCurrentPosts);
-  console.log(community);
-  console.log(community);
-  console.log(weather);
-  console.log(typeof setCurrentPosts);
-
   const handleRegion = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => (
       setSortRegionType(e.target.value),
-      navigate(`/community/${e.target.value}`),
-      console.log(location_id),
-      console.log(e.target.value)
+      navigate(`/community/${e.target.value}`)
     ),
     [navigate]
   );
@@ -182,8 +163,6 @@ const Community = () => {
   const handleArray = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
     setSortType(e.target.value);
   }, []);
-
-  console.log(sortType);
 
   return (
     <>

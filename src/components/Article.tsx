@@ -101,7 +101,7 @@ const Article: React.FC<ArticleProps> = ({ article }) => {
       await axios.delete(`/posts/${article.id}`);
       setAlert('게시글이 삭제되었습니다.');
       setTimeout(() => {
-        navigate(-1);
+        navigate('/');
       }, 2000);
     } catch (error) {
       console.error(error);
