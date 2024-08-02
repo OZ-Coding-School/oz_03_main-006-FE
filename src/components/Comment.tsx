@@ -48,6 +48,7 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const commentsPerPage = 10;
   const [deleteState, setDeleteState] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     postId.current = Number(param.post_id);
@@ -72,21 +73,26 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
       setAlert('로그인을 먼저 해주세요.');
       return;
     }
-    try {
-      await axios.post(
-        `/posts/${postId.current}/comments/`,
-        {
-          user_id: user.id,
-          content: data.comment,
-        },
-        {
-          withCredentials: true,
-        }
-      );
-      updateComments();
-    } catch (error) {
-      console.error(error + '댓글 작성에 실패했습니다.');
-      setAlert('댓글 작성에 실패했습니다.');
+
+    if (!isLoading) {
+      try {
+        setIsLoading(true);
+        await axios.post(
+          `/posts/${postId.current}/comments/`,
+          {
+            user_id: user.id,
+            content: data.comment,
+          },
+          {
+            withCredentials: true,
+          }
+        );
+        await updateComments();
+        setIsLoading(false);
+      } catch (error) {
+        console.error(error + '댓글 작성에 실패했습니다.');
+        setAlert('댓글 작성에 실패했습니다.');
+      }
     }
   };
 
@@ -104,7 +110,7 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
               comment_pk: commentId,
             },
           });
-          updateComments();
+          await updateComments();
           setDeleteState(false);
         } catch (error) {
           console.error(error + '댓글 삭제를 실패했습니다.');
@@ -132,7 +138,7 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
         }
       );
       setEditingCommentId(null);
-      updateComments();
+      await updateComments();
     } catch (error) {
       console.error(error + '댓글 수정을 실패했습니다.');
       setAlert('댓글 수정을 실패했습니다.');
