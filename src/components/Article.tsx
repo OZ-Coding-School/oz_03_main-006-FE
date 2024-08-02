@@ -127,7 +127,7 @@ const Article: React.FC<ArticleProps> = ({ article }) => {
             {article.travel_start_date} ~ {article.travel_end_date}
           </span>
         </div>
-        <div className='mb-6 flex h-7 w-full'>
+        <div className='mb-6 flex h-7 w-full flex-wrap'>
           {getTagsArray &&
             getTagsArray(article.tag).map((tag, index) => (
               <TagItem tagContent={tag} showDeleteButton={false} key={index} />

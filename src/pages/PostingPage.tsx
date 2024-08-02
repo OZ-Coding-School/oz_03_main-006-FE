@@ -68,7 +68,8 @@ const PostingPage = () => {
       const fetchPostData = async () => {
         try {
           const response = await axios.get(
-            `https://api.hancycle.site/posts/${post_id}/`
+            `https://api.hancycle.site/posts/${post_id}/`,
+            { withCredentials: true }
           );
           const postData = response.data.post;
           setViewCount(postData.view_count);
@@ -219,6 +220,7 @@ const PostingPage = () => {
       event.preventDefault();
       if (
         tagValue.trim() !== '' &&
+        tagValue.length <= 15 &&
         tags.length < 5 &&
         event.nativeEvent.isComposing === false
       ) {
@@ -329,6 +331,12 @@ const PostingPage = () => {
     });
   };
 
+  useEffect(() => {
+    if (typeof tagValue === 'string' && tagValue.length > 15) {
+      setValue('tagValue', tagValue.slice(0, 15));
+    }
+  }, [tagValue, setValue]);
+
   return (
     <>
       <div className='fixed left-0 top-0 z-10 w-screen bg-white'>
@@ -367,7 +375,7 @@ const PostingPage = () => {
               {...register('title', { required: '제목을 입력히주세요.' })}
             ></textarea>
           </div>
-          <div className='mb-4 flex h-auto min-h-7 flex-wrap'>
+          <div className='mb-4 flex h-auto min-h-7 flex-wrap gap-1'>
             {tags.map((tag, index) => (
               <React.Fragment key={index}>
                 <TagItem tagContent={tag} showDeleteButton={true} />
