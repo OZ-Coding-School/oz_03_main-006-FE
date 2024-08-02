@@ -1,6 +1,14 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { AlertState, NavToggleState, User, UserState, TagState } from './types';
+import {
+  AlertState,
+  NavToggleState,
+  User,
+  UserState,
+  TagState,
+  PromptState,
+  LoadingAlertState,
+} from './types';
 
 export const useNavToggleStore = create<NavToggleState>((set) => ({
   isOpen: true,
@@ -89,4 +97,36 @@ export const useConfirmAlertStore = create<AlertState>((set) => ({
         },
       }));
     }),
+}));
+
+export const usePromptStore = create<PromptState>((set) => ({
+  showPrompt: false,
+  promptMessage: '',
+  confirmResult: null,
+  clearPrompt: () =>
+    set(() => ({
+      showPrompt: false,
+      promptMessage: '',
+    })),
+  showConfirmPrompt: (message) =>
+    new Promise<string>((resolve) => {
+      set(() => ({
+        showPrompt: true,
+        promptMessage: message,
+        confirmResult: (result: string) => {
+          resolve(result),
+            set({ showPrompt: false, promptMessage: '', confirmResult: null });
+        },
+      }));
+    }),
+}));
+
+export const useLoadingAlertStore = create<LoadingAlertState>((set) => ({
+  showAlert: false,
+  alertMessage: '',
+  setLoadingAlert: (message) =>
+    set(() => ({
+      showAlert: true,
+      alertMessage: message,
+    })),
 }));

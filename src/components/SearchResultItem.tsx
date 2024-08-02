@@ -84,9 +84,9 @@ const SearchResultItem: React.FC<SearchResultItemProps> = ({
         </div>
       </div>
       <div className='flex w-[230px] flex-col gap-1'>
-        <h2 className={`truncate font-semibold ${textColor} cursor-pointer`}>
+        <p className={`truncate font-semibold ${textColor} cursor-pointer`}>
           {title}
-        </h2>
+        </p>
         {body && (
           <p
             className={`flex-grow text-justify text-sm ${textColor} cursor-pointer`}

@@ -127,3 +127,17 @@ export interface PostResponse {
   user_id: number;
   location: number;
 }
+
+export interface PromptState {
+  showPrompt: boolean;
+  promptMessage: string;
+  confirmResult: ((result: string) => void) | null;
+  clearPrompt: () => void;
+  showConfirmPrompt: (message: string) => Promise<string>;
+}
+
+export interface LoadingAlertState {
+  showAlert: boolean;
+  alertMessage: string;
+  setLoadingAlert: (message: string) => void;
+}
