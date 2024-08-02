@@ -169,67 +169,61 @@ const MyPage = () => {
     [userPost]
   );
 
-  const handleMyPost = useCallback(
-    (e?: React.MouseEvent<HTMLElement>) => {
-      if (user) {
-        setPage(1);
-
-        const fetchUserPost = async () => {
-          try {
-            const response = await axiosInstance.get(`posts/user/${user.id}`, {
-              withCredentials: true,
-            });
-            console.log(response);
-            console.log(response.data);
-            const sort: Post[] = sortedPosts(response.data);
-            setUserPost(sort);
-            if (sort.length === 0) {
-              setIsPagination(false);
-              setIsOtherPage(true);
-              console.log('check: false');
-            } else {
-              setIsPagination(true);
-              console.log('check: true');
-            }
-          } catch (error) {
-            console.log(error);
-          }
-        };
-        fetchUserPost();
-        setPostClick('myposts');
-      }
-    },
-    [user, isPagination]
-  );
-
-  const handleHeartPost = useCallback(
-    async (e?: React.MouseEvent<HTMLElement>) => {
+  const handleMyPost = useCallback(() => {
+    if (user) {
       setPage(1);
-      try {
-        const response = await axiosInstance.get(
-          `posts/user/${user?.id}/liked_posts/`,
-          {
+
+      const fetchUserPost = async () => {
+        try {
+          const response = await axiosInstance.get(`posts/user/${user.id}`, {
             withCredentials: true,
+          });
+          console.log(response);
+          console.log(response.data);
+          const sort: Post[] = sortedPosts(response.data);
+          setUserPost(sort);
+          if (sort.length === 0) {
+            setIsPagination(false);
+            setIsOtherPage(true);
+            console.log('check: false');
+          } else {
+            setIsPagination(true);
+            console.log('check: true');
           }
-        );
-        const sort: Post[] = sortedPosts(response.data);
-        setUserPost(sort);
-        if (sort.length === 0) {
-          setIsPagination(false);
-          setIsOtherPage(false);
-          console.log('check: false');
-        } else {
-          setIsPagination(true);
-          setIsOtherPage(true);
-          console.log('check: true');
+        } catch (error) {
+          console.log(error);
         }
-      } catch (error) {
-        console.log(error);
+      };
+      fetchUserPost();
+      setPostClick('myposts');
+    }
+  }, [user, isPagination]);
+
+  const handleHeartPost = useCallback(async () => {
+    setPage(1);
+    try {
+      const response = await axiosInstance.get(
+        `posts/user/${user?.id}/liked_posts/`,
+        {
+          withCredentials: true,
+        }
+      );
+      const sort: Post[] = sortedPosts(response.data);
+      setUserPost(sort);
+      if (sort.length === 0) {
+        setIsPagination(false);
+        setIsOtherPage(false);
+        console.log('check: false');
+      } else {
+        setIsPagination(true);
+        setIsOtherPage(true);
+        console.log('check: true');
       }
-      setPostClick('likedPosts');
-    },
-    [user, isPagination]
-  );
+    } catch (error) {
+      console.log(error);
+    }
+    setPostClick('likedPosts');
+  }, [user, isPagination]);
 
   const handleDelete = useCallback(async () => {
     const confirmed = await showConfirmAlert('정말 탈퇴를 하시겠습니까?');
