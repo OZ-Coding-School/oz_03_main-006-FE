@@ -16,7 +16,6 @@ const Carousel: React.FC<CarouselProps> = ({ images, community }) => {
     infinite: true, // 무한 캐러셀
     speed: 500, // 다음 컨텐츠 까지의 속도
     slidesToScroll: 1, // 스크롤 시 넘어가는 컨텐츠 수
-    // centerMode: true, // 현재 컨텐츠 가운데 정렬
     autoplay: true, // 자동 캐러셀
     autoplaySpeed: 2000, // 자동 캐러셀 속도
     draggable: true,

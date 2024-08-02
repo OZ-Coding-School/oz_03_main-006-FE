@@ -25,17 +25,21 @@ const MyPage = () => {
   const [nickname, setNickname] = useState(user?.nickname || '');
   const [img, setImg] = useState(user?.profile_image || '');
   const { showConfirmAlert } = useAlertStore((state) => state);
-  const [userPostCheck, setUserPostCheck] = useState(false);
   const [userPost, setUserPost] = useState<Post[]>([]);
   const [postClick, setPostClick] = useState('myPosts');
   const [isPagination, setIsPagination] = useState(false);
+  const [isOtherPage, setIsOtherPage] = useState(false);
+  const [imgFile, setImgFile] = useState<File>();
 
   useEffect(() => {
     const fetchUserGet = async () => {
       try {
-        const response = await axiosInstance.get(`/users/accounts/user`, {
-          withCredentials: true,
-        });
+        const response = await axiosInstance.get(
+          `/users/accounts/${user?.id}`,
+          {
+            withCredentials: true,
+          }
+        );
         console.log(response);
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -75,7 +79,6 @@ const MyPage = () => {
     if (!user) {
       navigate('/login');
     } else if (user) {
-      // user.id = 1;
       handleMyPost();
     }
   }, [user, navigate]);
@@ -100,14 +103,13 @@ const MyPage = () => {
       setProfileEdit((edit) => !edit);
       if (user) {
         setUser({ ...user, nickname: nickname });
-        updateProfileImage(img);
         try {
           const formData = new FormData();
           formData.append('nickname', nickname);
 
-          // 이미지가 File 객체인 경우에만 추가
-
-          formData.append('profile_image', img);
+          if (imgFile) {
+            formData.append('profile_image', imgFile);
+          }
 
           const response = await axiosInstance.put(
             `users/accounts/edit`,
@@ -119,14 +121,24 @@ const MyPage = () => {
               withCredentials: true,
             }
           );
+
           console.log(response.data);
+
+          const updatedProfileImage = response.data.profile_image;
+          setImg(updatedProfileImage);
+          setUser({
+            ...user,
+            nickname: nickname,
+            profile_image: updatedProfileImage,
+          });
+
           console.log('수정 성공~~~~~~~~~~?~~~~~~');
         } catch (error) {
           console.error('Profile update failed', error);
         }
       }
     },
-    [user, nickname, img, updateProfileImage, setUser]
+    [user, nickname, img, updateProfileImage, setUser, setImg]
   );
   const handleCancle = () => {
     if (user && user.nickname) {
@@ -140,63 +152,86 @@ const MyPage = () => {
   };
 
   const handleFileSelect = (file: File) => {
-    // const imageUrl = URL.createObjectURL(file);
+    const imageUrl = URL.createObjectURL(file);
     console.log('Selected file:', file);
-    // console.log('Image URL:', imageUrl);
+    console.log('Image URL:', imageUrl);
+    console.log(typeof imageUrl);
+    return imageUrl;
   };
 
-  const handleMyPost = useCallback(() => {
-    if (user) {
-      // user.id = 1;
-      setPage(1);
-      const fetchUserPost = async () => {
-        try {
-          const response = await axiosInstance.get(`posts/user/${user.id}`);
-          console.log(response);
-          console.log(response.data);
-          setUserPost(response.data);
-          if (response.data.length === 0) {
-            setUserPostCheck(false);
-            setIsPagination(false);
-            console.log('check: false');
-          } else {
-            setUserPostCheck(true);
-            setIsPagination(true);
-            console.log('check: true');
-          }
-        } catch (error) {
-          console.log(error);
-        }
-      };
-      fetchUserPost();
-      setPostClick('myposts');
-    }
-  }, [user, isPagination]);
-
-  const handleHeartPost = useCallback(async () => {
-    setPage(1);
-    try {
-      const response = await axiosInstance.get(
-        `posts/user/${user?.id}/liked_posts/`
+  const sortedPosts = useCallback(
+    (posts: Post[]) => {
+      return [...posts].sort(
+        (a, b) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
       );
-      setUserPost(response.data);
-      if (response.data.length === 0) {
-        setUserPostCheck(false);
-        setIsPagination(false);
-        console.log('check: false');
-      } else {
-        setUserPostCheck(true);
-        setIsPagination(true);
-        console.log('check: true');
-      }
-    } catch (error) {
-      console.log(error);
-    }
-    setUserPostCheck(true);
-    setPostClick('likedPosts');
-  }, [user, isPagination]);
+    },
+    [userPost]
+  );
 
-  const handleDelete = async () => {
+  const handleMyPost = useCallback(
+    (e?: React.MouseEvent<HTMLElement>) => {
+      if (user) {
+        setPage(1);
+
+        const fetchUserPost = async () => {
+          try {
+            const response = await axiosInstance.get(`posts/user/${user.id}`, {
+              withCredentials: true,
+            });
+            console.log(response);
+            console.log(response.data);
+            const sort: Post[] = sortedPosts(response.data);
+            setUserPost(sort);
+            if (sort.length === 0) {
+              setIsPagination(false);
+              setIsOtherPage(true);
+              console.log('check: false');
+            } else {
+              setIsPagination(true);
+              console.log('check: true');
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        };
+        fetchUserPost();
+        setPostClick('myposts');
+      }
+    },
+    [user, isPagination]
+  );
+
+  const handleHeartPost = useCallback(
+    async (e?: React.MouseEvent<HTMLElement>) => {
+      setPage(1);
+      try {
+        const response = await axiosInstance.get(
+          `posts/user/${user?.id}/liked_posts/`,
+          {
+            withCredentials: true,
+          }
+        );
+        const sort: Post[] = sortedPosts(response.data);
+        setUserPost(sort);
+        if (sort.length === 0) {
+          setIsPagination(false);
+          setIsOtherPage(false);
+          console.log('check: false');
+        } else {
+          setIsPagination(true);
+          setIsOtherPage(true);
+          console.log('check: true');
+        }
+      } catch (error) {
+        console.log(error);
+      }
+      setPostClick('likedPosts');
+    },
+    [user, isPagination]
+  );
+
+  const handleDelete = useCallback(async () => {
     const confirmed = await showConfirmAlert('정말 탈퇴를 하시겠습니까?');
     if (confirmed) {
       try {
@@ -209,7 +244,7 @@ const MyPage = () => {
         console.log('회원탈퇴 Error: ', error);
       }
     }
-  };
+  }, []);
   const currentPosts = useMemo(() => {
     return userPost.slice(indexOfFirstPost, indexOfLastPost);
   }, [indexOfFirstPost, indexOfLastPost, userPost]);
@@ -218,6 +253,8 @@ const MyPage = () => {
     () => currentPosts.map((post) => <PostCard key={post.id} post={post} />),
     [currentPosts]
   );
+
+  // const handleInitial = () => {};
 
   useEffect(() => {
     console.log('Current img state:', img);
@@ -243,6 +280,7 @@ const MyPage = () => {
                     setImg={setImg}
                     onFileSelect={handleFileSelect}
                     img={img}
+                    setImgFile={setImgFile}
                     // profile_img={user?.profile_image}
                     // updateProfileImage={updateProfileImage}
                   />
@@ -317,12 +355,14 @@ const MyPage = () => {
                   <button
                     className={`border-b-2 px-6 pb-3 ${postClick === 'myposts' ? 'border-b-[#28466A]' : 'border-b-2 text-gray-500'}`}
                     onClick={handleMyPost}
+                    value={'mypost'}
                   >
                     나의 게시글
                   </button>
                   <button
                     className={`border-b-2 px-6 pb-3 ${postClick === 'likedPosts' ? 'border-b-[#28466A]' : 'border-b-2 text-gray-500'}`}
                     onClick={handleHeartPost}
+                    value={'likepost'}
                   >
                     좋아요 게시글
                   </button>
@@ -338,51 +378,47 @@ const MyPage = () => {
             <div>
               {userPost.length > 0 ? (
                 <>
-                  {userPostCheck ? (
-                    <div className='mt-12 grid grid-cols-2 gap-6'>
-                      {/* {userPost.map((post) => (
-                    <PostCard key={post.id} post={post} />
-                  ))} */}
-                      {memoPostCard}
-                    </div>
-                  ) : (
-                    <div className='mx-auto mt-52 flex items-center justify-center text-2xl text-gray-700'>
-                      <span className='font-semibold'>
-                        {`${user?.nickname}`}&nbsp;
-                      </span>
-                      님의 여행이야기를 들려주세요.
-                      <FaPersonWalkingLuggage className='ml-3' />
-                    </div>
-                  )}
-                  {isPagination ? (
-                    <Pagination
-                      activePage={page}
-                      itemsCountPerPage={postPerPage}
-                      totalItemsCount={userPost.length}
-                      pageRangeDisplayed={5}
-                      prevPageText={'<'}
-                      nextPageText={'>'}
-                      onChange={handlePageChange}
-                      itemClass='pagination-item'
-                      linkClass='pagination-link'
-                      activeClass='active'
-                      activeLinkClass=''
-                      firstPageText={<RxDoubleArrowLeft />}
-                      lastPageText={<RxDoubleArrowRight />}
-                      itemClassFirst='pagination-nav'
-                      itemClassLast='pagination-nav'
-                      itemClassPrev='pagination-nav'
-                      itemClassNext='pagination-nav'
-                      disabledClass='disabled'
-                    />
-                  ) : (
-                    <>
-                      <div className='mx-auto mt-52 flex items-center justify-center text-2xl text-gray-700'>
+                  <div className='mt-12 grid grid-cols-2 gap-6'>
+                    {memoPostCard}
+                  </div>
+                  <Pagination
+                    activePage={page}
+                    itemsCountPerPage={postPerPage}
+                    totalItemsCount={userPost.length}
+                    pageRangeDisplayed={5}
+                    prevPageText={'<'}
+                    nextPageText={'>'}
+                    onChange={handlePageChange}
+                    itemClass='pagination-item'
+                    linkClass='pagination-link'
+                    activeClass='active'
+                    activeLinkClass=''
+                    firstPageText={<RxDoubleArrowLeft />}
+                    lastPageText={<RxDoubleArrowRight />}
+                    itemClassFirst='pagination-nav'
+                    itemClassLast='pagination-nav'
+                    itemClassPrev='pagination-nav'
+                    itemClassNext='pagination-nav'
+                    disabledClass='disabled'
+                  />
+                </>
+              ) : !isOtherPage && !isPagination ? (
+                <>
+                  <div className='mx-auto mt-52 flex items-center justify-center text-2xl text-gray-700'>
+                    <div className='text-center'>
+                      <div className='mb-4 flex'>
                         관심있는 여행 게시물을 찾아보세요!
-                        <FaPersonWalkingLuggage className='ml-3' />
+                        <FaPersonWalkingLuggage className='ml-3 mt-1' />
                       </div>
-                    </>
-                  )}
+
+                      <Link
+                        to={'/community/1'}
+                        className='cursor-pointer text-blue-700/50 hover:border-b-2'
+                      >
+                        게시물 보러 가기!
+                      </Link>
+                    </div>
+                  </div>
                 </>
               ) : (
                 <>
@@ -401,7 +437,10 @@ const MyPage = () => {
       </main>
 
       <footer className='w-full p-4 text-right'>
-        <p className='text-sm text-red-500' onClick={handleDelete}>
+        <p
+          className='text-sm text-red-500 hover:cursor-pointer'
+          onClick={handleDelete}
+        >
           회원탈퇴
         </p>
       </footer>

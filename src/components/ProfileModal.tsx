@@ -83,8 +83,6 @@ const ProfileModal: React.FC<ModalProps> = ({ preview, onClose, onCrop }) => {
       );
 
       onCrop(croppedImageFile);
-      console.log(croppedImageFile);
-      console.log(croppedImageBlob);
       onClose();
     }
   };
