@@ -23,7 +23,6 @@ const DropdownList: React.FC<DropdownListProps> = ({ map, marker }) => {
   const [locationHighlights, setLocationHighlights] = useState<
     Highlights[] | null
   >(null);
-  const confettiRef = useRef<Promise<void> | null>(null);
 
   const toggleFold = () => {
     setIsFold((prev) => !prev);
@@ -50,10 +49,13 @@ const DropdownList: React.FC<DropdownListProps> = ({ map, marker }) => {
       };
 
       timeoutRef.current = window.setTimeout(() => {
-        morphMap().then(() => {
-          updateMarkerAnimation(location);
-          showInfoWindow(location, locationId);
-        });
+        morphMap()
+          .then(() => {
+            updateMarkerAnimation(location);
+          })
+          .then(() => {
+            showInfoWindow(location, locationId);
+          });
       }, 300);
     }
   };
@@ -142,7 +144,7 @@ const DropdownList: React.FC<DropdownListProps> = ({ map, marker }) => {
               y: rect.top / window.innerHeight,
             }
           : { x: 0.5, y: 0.4 };
-        confettiRef.current = confetti({
+        confetti({
           spread: 70,
           angle: 90,
           ticks: 50,
@@ -173,7 +175,6 @@ const DropdownList: React.FC<DropdownListProps> = ({ map, marker }) => {
         </li>
         <div className='my-2 h-[1px] w-full bg-[#575757] bg-opacity-10'></div>
         <DropdownListContents
-          confettiRef={confettiRef}
           startIndex={0}
           lastIndex={4}
           moveCenter={moveCenter}
@@ -183,7 +184,6 @@ const DropdownList: React.FC<DropdownListProps> = ({ map, marker }) => {
           className={`linear transition-[max-height] duration-700 ${isFold ? 'max-h-0' : 'max-h-[100vh]'}`}
         >
           <DropdownListContents
-            confettiRef={confettiRef}
             startIndex={4}
             lastIndex={18}
             moveCenter={moveCenter}

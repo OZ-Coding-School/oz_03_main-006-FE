@@ -51,6 +51,7 @@ const PostingPage = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   const { post_id } = useParams();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const isEditMode = post_id ? true : false;
   const today = new Date().toISOString().split('T')[0];
@@ -241,62 +242,66 @@ const PostingPage = () => {
     formData.append('travel_end_date', data.endDate);
     formData.append('temp_image_ids', temp_image_ids);
 
-    try {
-      let response: AxiosResponse<PostResponse>;
-      if (isEditMode) {
-        const matchLocId = matchLocationId(data.location);
-        formData.append('location', matchLocId.toString());
-        formData.append('view_count', viewCount.toString());
-        if (data.thumbnail && data.thumbnail.length > 0) {
-          formData.append('thumbnail', data.thumbnail[0]);
-        }
-        if (watch('thumbnail') === null) {
-          formData.append('thumbnail', '');
-        }
-        response = await axios.put(
-          `https://api.hancycle.site/posts/${post_id}/`,
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-            withCredentials: true,
+    if (!isLoading) {
+      try {
+        setIsLoading(true);
+        let response: AxiosResponse<PostResponse>;
+        if (isEditMode) {
+          const matchLocId = matchLocationId(data.location);
+          formData.append('location', matchLocId.toString());
+          formData.append('view_count', viewCount.toString());
+          if (data.thumbnail && data.thumbnail.length > 0) {
+            formData.append('thumbnail', data.thumbnail[0]);
           }
-        );
-        if (response.status === 400) {
-          setAlert('글 수정에 실패했습니다.');
-        } else if (response.status === 404) {
-          <Error status={404} />;
-        }
-        navigate(`/post-detail/${post_id}`);
-      } else {
-        formData.append('view_count', '0');
-        formData.append('location', data.location);
-        if (data.thumbnail && data.thumbnail.length > 0) {
-          formData.append('thumbnail', data.thumbnail[0]);
-        } else {
-          formData.append('thumbnail', '');
-        }
-        response = await axios.post(
-          'https://api.hancycle.site/posts/',
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-            withCredentials: true,
+          if (watch('thumbnail') === null) {
+            formData.append('thumbnail', '');
           }
-        );
-        if (response.status === 200 || response.status === 201) {
-          navigate(`/post-detail/${response.data.id}`);
+          response = await axios.put(
+            `https://api.hancycle.site/posts/${post_id}/`,
+            formData,
+            {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+              },
+              withCredentials: true,
+            }
+          );
+          if (response.status === 400) {
+            setAlert('글 수정에 실패했습니다.');
+          } else if (response.status === 404) {
+            <Error status={404} />;
+          }
+          navigate(`/post-detail/${post_id}`);
         } else {
-          setAlert('글 등록에 실패하였습니다. 다시 시도해 주세요.');
-          navigate('/');
+          formData.append('view_count', '0');
+          formData.append('location', data.location);
+          if (data.thumbnail && data.thumbnail.length > 0) {
+            formData.append('thumbnail', data.thumbnail[0]);
+          } else {
+            formData.append('thumbnail', '');
+          }
+          response = await axios.post(
+            'https://api.hancycle.site/posts/',
+            formData,
+            {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+              },
+              withCredentials: true,
+            }
+          );
+          if (response.status === 200 || response.status === 201) {
+            navigate(`/post-detail/${response.data.id}`);
+          } else {
+            setAlert('글 등록에 실패하였습니다. 다시 시도해 주세요.');
+            navigate('/');
+          }
         }
+        setIsLoading(false);
+      } catch (error) {
+        console.error(error);
+        <Error status={500} />;
       }
-    } catch (error) {
-      console.error(error);
-      <Error status={500} />;
     }
   };
 

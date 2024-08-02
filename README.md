@@ -13,16 +13,19 @@
   있습니다.
 - **지역 기반 정보** : 여행 지역에 대한 상세 정보 (날씨, 인기 명소, 추천 여행
   코스 등)를 제공합니다.
-- **소셜 로그인** : 간편하게 구글, 카카오 계정으로 로그인할 수 있습니다.
+- **아이디, 비밀번호 로그인** : 아이디와 비밀번호로 로그인 할 수 있습니다.
 - **댓글 및 좋아요** : 게시글에 댓글을 달고 좋아요를 표시하여 다른 사용자와
   소통할 수 있습니다.
-- **검색 기능** : 원하는 지역이나 키워드로 게시글을 검색할 수 있습니다.
+- **검색 기능** : 원하는 지역이나 키워드, 작성자로 검색하여 게시글을 찾을 수
+  있습니다.
 
 ## 배포 주소
 
 - https://hancycle.site
 
-## 기술
+## 아키텍쳐와 기술
+
+<p align='center'><img src="https://github.com/user-attachments/assets/07398c0d-b132-426e-94af-fc4cd234d1a1"/></p>
 
 ![TypeScript](https://img.shields.io/badge/typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
 ![React](https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black)
@@ -42,9 +45,16 @@
 ![JS Cookie](https://img.shields.io/badge/js--cookie-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
 ![Slick Carousel](https://img.shields.io/badge/slick--carousel-339AF0?style=for-the-badge&logo=carousel&logoColor=white)
 ![Zustand](https://img.shields.io/badge/zustand-333333?style=for-the-badge&logo=state-machine&logoColor=white)
+![React JS Pagination](https://img.shields.io/badge/react--js--pagination-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![Dotenv](https://img.shields.io/badge/dotenv-ECD53F?style=for-the-badge&logo=dotenv&logoColor=black)
+![DOMPurify](https://img.shields.io/badge/dompurify-4B0082?style=for-the-badge&logo=purify&logoColor=white)
+![Canvas Confetti](https://img.shields.io/badge/canvas--confetti-FF69B4?style=for-the-badge&logo=confetti&logoColor=white)
 ![Amazon S3](https://img.shields.io/badge/Amazon%20S3-569A31?style=for-the-badge&logo=amazon-s3&logoColor=white)
+![AWS Certificate Manager](https://img.shields.io/badge/ACM-232F3E?style=for-the-badge&logo=Amazon%20AWS&logoColor=white)
+
 ![CloudFront](https://img.shields.io/badge/CloudFront-FF9900?style=for-the-badge&logo=amazon-cloudfront&logoColor=white)
 ![Gabia](https://img.shields.io/badge/Gabia-005BAC?style=for-the-badge&logo=gabia&logoColor=white)
+![Route 53](https://img.shields.io/badge/Route%2053-232F3E?style=for-the-badge&logo=Amazon%20AWS&logoColor=white)
 
 ## 프론트엔드 개발자
 
@@ -81,15 +91,18 @@
   </tr>
 </table>
 
-- 김보람 : main page - navermaps, community list / detail post page - comment
-- 김세림 : posting page - react quill / detail post page - article
-- 이주희 : community page - react slick, pagination / mypage - image crop, edit
-  profile
-- 이희주 : login page - signIn, signUp, js-cookie / sidebar - search, ranking
+- 김보람 : main page(MP) - navermaps, community list / post detail page(PD) -
+  comment
+- 김세림 : posting page(PO) - react quill / detail post page(PD) - article
+- 이주희 : community page(CP) - react slick, pagination / mypage(MY) - image
+  crop, edit profile
+- 이희주 : login page(LP) - signIn, signUp, js-cookie / sidebar(SB) - search,
+  ranking
 
 ### 백엔드 개발자 깃허브
 
 - https://github.com/OZ-Coding-School/oz_03_main-006-BE
+- swagger api : https://api.hancycle.site/redoc/
 
 ### 커밋 규칙
 
