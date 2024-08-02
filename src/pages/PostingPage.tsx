@@ -145,7 +145,7 @@ const PostingPage = () => {
   const modules = {
     toolbar: {
       container: [
-        [{ header: [1, 2, 3, 4, 5, false] }],
+        [{ header: [1, 2, 3, false] }],
         ['bold', 'italic', 'underline', 'strike'],
         [{ align: [] }],
         [
