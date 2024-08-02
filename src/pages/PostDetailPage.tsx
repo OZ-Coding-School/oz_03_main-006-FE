@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Article from '../components/Article';
 import Comment from '../components/Comment';
 import { DetailPostArticle } from '../../config/types';
 import Loading from '../components/common/Loading';
 import axios from '../api/axios';
 import Error from '../components/common/Error';
+import { locationList } from '../data/locationList';
+import { FaArrowLeft } from 'react-icons/fa';
 
 const PostDetailPage = () => {
   const { post_id } = useParams();
@@ -13,6 +15,7 @@ const PostDetailPage = () => {
   const [comments, setComments] = useState();
   const [errorStatus, setErrorStatus] = useState<number | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -43,9 +46,24 @@ const PostDetailPage = () => {
     return <Loading />;
   }
 
+  const navigateCommunity = () => {
+    const location = article.location;
+    const selectedLocation = locationList.find((item) => {
+      return item.city === location;
+    });
+    navigate(`/community/${selectedLocation?.location_id}`);
+  };
+
   return (
     <div className='search-scroll-pd h-screen overflow-hidden'>
       <div className='h-full overflow-y-scroll' ref={scrollRef}>
+        <div
+          className='mx-auto mt-5 flex min-w-[1052px] max-w-[1092px] cursor-pointer items-center text-gray-400'
+          onClick={navigateCommunity}
+        >
+          <FaArrowLeft className='mr-2 text-sm' />
+          지역 게시판으로 돌아가기
+        </div>
         <Article article={article} />
         <Comment comments={comments} />
       </div>
