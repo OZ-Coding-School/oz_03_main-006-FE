@@ -4,17 +4,12 @@ import ProfileModal from './ProfileModal';
 
 interface FileUploadProps {
   setImg: React.Dispatch<React.SetStateAction<string>>;
-  onFileSelect: (file: File) => void;
+  onFileSelect: (file: File) => string;
   img?: string | null;
-  // profile_img?: string | null;
-  // updateProfileImage: (imageUrl: string) => void;
+  setImgFile: React.Dispatch<React.SetStateAction<File | undefined>>;
 }
 
-const ProfileImage: React.FC<FileUploadProps> = ({
-  setImg,
-  onFileSelect,
-  img,
-}) => {
+const ProfileImage: React.FC<FileUploadProps> = ({ img, setImgFile }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -26,8 +21,6 @@ const ProfileImage: React.FC<FileUploadProps> = ({
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreview(reader.result as string);
-        console.log('프로필이미지 - handleFileInput : reader.result as string');
-        console.log('프로필이미지 - handleFileInput : reader.result as string');
         console.log(croppedImage);
         setIsModalOpen(true);
       };
@@ -36,15 +29,12 @@ const ProfileImage: React.FC<FileUploadProps> = ({
   };
 
   const handleCroppedImage = (imageFile: File) => {
-    onFileSelect(imageFile);
+    setImgFile(imageFile);
     const reader = new FileReader();
     reader.onloadend = () => {
       setCroppedImage(reader.result as string);
       // setImg(reader.result as string);
-      setImg(reader.result as string);
-      console.log('profileImage!!!!!!! - handlecroppedImage');
     };
-    console.log(reader);
     // 이미지 데이터를 Base64로 인코딩한 문자열
     reader.readAsDataURL(imageFile);
     setIsModalOpen(false);
@@ -58,7 +48,6 @@ const ProfileImage: React.FC<FileUploadProps> = ({
     <>
       <div className='relative size-28 rounded-full bg-gray-200'>
         <div className='flex h-full w-full items-center justify-center'>
-          {/* <FaCamera className='text-gray-400 text-3xl'/> */}
           {img ? (
             <img
               src={img}

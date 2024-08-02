@@ -39,13 +39,21 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
   };
 
   const splitTags = (tagString: string) => {
+    if (tagString === '') {
+      // return [{ tag_id: Math.random(), content: '#' }];
+      return [];
+    }
+    // 문자열을 split로 나눠고 다시 배열로 반환.
     return tagString.split(',').map((tag, index) => ({
       tag_id: index,
       content: tag.trim(),
     }));
   };
 
+  // tags는
   const tags = splitTags(post.tag);
+  console.log(post.tag);
+  console.log(tags);
 
   return (
     <>
