@@ -240,12 +240,12 @@ const PostingPage = () => {
     formData.append('travel_start_date', data.startDate);
     formData.append('travel_end_date', data.endDate);
     formData.append('temp_image_ids', temp_image_ids);
+    const matchLocId = matchLocationId(data.location);
+    formData.append('location', matchLocId.toString());
 
     try {
       let response: AxiosResponse<PostResponse>;
       if (isEditMode) {
-        const matchLocId = matchLocationId(data.location);
-        formData.append('location', matchLocId.toString());
         formData.append('view_count', viewCount.toString());
         if (data.thumbnail && data.thumbnail.length > 0) {
           formData.append('thumbnail', data.thumbnail[0]);
@@ -271,7 +271,6 @@ const PostingPage = () => {
         navigate(`/post-detail/${post_id}`);
       } else {
         formData.append('view_count', '0');
-        formData.append('location', data.location);
         if (data.thumbnail && data.thumbnail.length > 0) {
           formData.append('thumbnail', data.thumbnail[0]);
         } else {
