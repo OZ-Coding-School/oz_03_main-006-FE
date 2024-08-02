@@ -4,7 +4,22 @@ module.exports = {
     './public/index.html', // 필요한 경우 추가 경로 지정
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        okgung: ['OKGUNG', 'sans-serif'],
+        chosun: ['ChosunCentennial', 'sans-serif'],
+      },
+    },
   },
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }) {
+      const newUtilities = {
+        '.text-stroke-blue': {
+          '-webkit-text-stroke': '2px #244C7C',
+        },
+      };
+
+      addUtilities(newUtilities, ['responsive', 'hover']);
+    },
+  ],
 };
