@@ -7,8 +7,21 @@ import PostDetailPage from './pages/PostDetailPage';
 import PostingPage from './pages/PostingPage';
 import MyPage from './pages/MyPage';
 import LoginPage from './pages/LoginPage';
+import Cookies from 'js-cookie';
+import { useEffect } from 'react';
+import { useUserStore } from '../config/store';
 
 function App() {
+  const clearUser = useUserStore((state) => state.clearUser);
+
+  useEffect(() => {
+    const jwt = Cookies.get('jwt');
+    const refresh = Cookies.get('refresh_token');
+    if (!jwt || !refresh) {
+      clearUser();
+    }
+  }, [clearUser]);
+
   return (
     <>
       <Routes>

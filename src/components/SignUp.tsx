@@ -36,7 +36,14 @@ const SignUp = () => {
       if (error instanceof AxiosError && error.response) {
         console.error('회원가입 실패: ', error);
         if (error.response.status === 400) {
-          setAlert('이미 사용중인 이름입니다.');
+          const { nickname, email } = error.response.data;
+          if (nickname) {
+            setAlert('이미 사용중인 이름입니다.');
+          } else if (email) {
+            setAlert('이미 사용중인 이메일입니다.');
+          } else {
+            setAlert('이미 사용중인 사용자 입니다.');
+          }
         } else {
           setAlert('회원가입에 실패했습니다. 다시 시도해 주세요.');
         }
