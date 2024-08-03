@@ -8,6 +8,8 @@ import axios from '../api/axios';
 import Error from '../components/common/Error';
 import { locationList } from '../data/locationList';
 import { FaArrowLeft } from 'react-icons/fa';
+import { useAlertStore } from '../../config/store';
+import Alert from '../components/common/Alert';
 
 const PostDetailPage = () => {
   const { post_id } = useParams();
@@ -16,6 +18,7 @@ const PostDetailPage = () => {
   const [errorStatus, setErrorStatus] = useState<number | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const showAlert = useAlertStore((state) => state.showAlert);
 
   useEffect(() => {
     axios
@@ -66,6 +69,7 @@ const PostDetailPage = () => {
         </div>
         <Article article={article} />
         <Comment comments={comments} />
+        {showAlert && <Alert />}
       </div>
     </div>
   );
