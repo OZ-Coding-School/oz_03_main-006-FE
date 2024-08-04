@@ -1,3 +1,4 @@
+// 최종 수정 - my page
 import { Link, useNavigate } from 'react-router-dom';
 import { MdLogout } from 'react-icons/md';
 import { FaUserEdit } from 'react-icons/fa';
@@ -30,16 +31,19 @@ const MyPage = () => {
   const [isPagination, setIsPagination] = useState(false);
   const [isOtherPage, setIsOtherPage] = useState(false);
   const [imgFile, setImgFile] = useState<File>();
+  // 일단 쥬스탠드에도 저장하고, 요청할 이미지 상태도 만들고,,,
+  // const [imgPreString, setImgPreString] = useState<string>();
 
   useEffect(() => {
     const fetchUserGet = async () => {
       try {
-        const response = await axiosInstance.get(
-          `/users/accounts/${user?.id}`,
-          {
-            withCredentials: true,
-          }
-        );
+        const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NjYsImV4cCI6MTcyMzM2MjI0NywiaWF0IjoxNzIyNzU3NDQ3fQ.dRTZdw8dhikDevuvarLi_ER9lYb3w1EvQS659DwdaVM`;
+        const response = await axiosInstance.get(`/users/accounts/user`, {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${token}`, // 토큰 형식에 따라 조정
+          },
+        });
         console.log(response);
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -103,14 +107,15 @@ const MyPage = () => {
       setProfileEdit((edit) => !edit);
       if (user) {
         setUser({ ...user, nickname: nickname });
+        updateProfileImage(img);
         try {
           const formData = new FormData();
           formData.append('nickname', nickname);
-
+          console.log(nickname);
           if (imgFile) {
             formData.append('profile_image', imgFile);
           }
-
+          console.log(imgFile);
           const response = await axiosInstance.put(
             `users/accounts/edit`,
             formData,
@@ -125,7 +130,10 @@ const MyPage = () => {
           console.log(response.data);
 
           const updatedProfileImage = response.data.profile_image;
+          // setImgPreString(updatedProfileImage);
           setImg(updatedProfileImage);
+          updateProfileImage(updatedProfileImage);
+
           setUser({
             ...user,
             nickname: nickname,
@@ -250,9 +258,9 @@ const MyPage = () => {
 
   // const handleInitial = () => {};
 
-  useEffect(() => {
-    console.log('Current img state:', img);
-  }, [img]);
+  // useEffect(() => {
+  //   console.log('Current img state:', img);
+  // }, [img]);
 
   return (
     <div className='flex min-h-screen w-screen flex-col'>
@@ -275,8 +283,8 @@ const MyPage = () => {
                     onFileSelect={handleFileSelect}
                     img={img}
                     setImgFile={setImgFile}
-                    // profile_img={user?.profile_image}
-                    // updateProfileImage={updateProfileImage}
+                    // setImgPreString={setImgPreString}
+                    // userId={user?.id ?? 0} // user.id가 undefined일 경우 0을 사용
                   />
                 ) : (
                   <div>
