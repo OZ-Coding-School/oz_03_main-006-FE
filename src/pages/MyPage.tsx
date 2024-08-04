@@ -37,12 +37,8 @@ const MyPage = () => {
   useEffect(() => {
     const fetchUserGet = async () => {
       try {
-        const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NjYsImV4cCI6MTcyMzM2MjI0NywiaWF0IjoxNzIyNzU3NDQ3fQ.dRTZdw8dhikDevuvarLi_ER9lYb3w1EvQS659DwdaVM`;
         const response = await axiosInstance.get(`/users/accounts/user`, {
           withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${token}`, // 토큰 형식에 따라 조정
-          },
         });
         console.log(response);
       } catch (error) {
