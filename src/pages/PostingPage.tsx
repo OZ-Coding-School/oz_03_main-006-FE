@@ -69,8 +69,7 @@ const PostingPage = () => {
       const fetchPostData = async () => {
         try {
           const response = await axios.get(
-            `https://api.hancycle.site/posts/${post_id}/`,
-            { withCredentials: true }
+            `https://api.hancycle.site/posts/${post_id}/`
           );
           const postData = response.data.post;
           setViewCount(postData.view_count);
