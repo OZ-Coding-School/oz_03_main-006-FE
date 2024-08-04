@@ -57,7 +57,12 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
 
   useEffect(() => {
     postId.current = Number(param.post_id);
-    setComments(initialComments);
+    setComments(
+      initialComments.sort(
+        (a, b) =>
+          new Date(a.updated_at).getTime() - new Date(b.updated_at).getTime()
+      )
+    );
     setCurrentPage(1);
   }, [param.post_id, initialComments]);
 
