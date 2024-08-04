@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { MdLogout } from 'react-icons/md';
 import { FaUserEdit } from 'react-icons/fa';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useAlertStore, useUserStore } from '../../config/store';
+import { useConfirmAlertStore, useUserStore } from '../../config/store';
 import ProfileImage from '../components/ProfileImage';
 import { FaRegUser } from 'react-icons/fa';
 import axiosInstance from '../api/axios';
@@ -24,7 +24,7 @@ const MyPage = () => {
   const [profileEdit, setProfileEdit] = useState(false);
   const [nickname, setNickname] = useState(user?.nickname || '');
   const [img, setImg] = useState(user?.profile_image || '');
-  const { showConfirmAlert } = useAlertStore((state) => state);
+  const { showConfirmAlert, setConfirmAlert } = useConfirmAlertStore();
   const [userPost, setUserPost] = useState<Post[]>([]);
   const [postClick, setPostClick] = useState('myPosts');
   const [isPagination, setIsPagination] = useState(false);
@@ -60,7 +60,7 @@ const MyPage = () => {
 
   const handleLogout = useCallback(async () => {
     try {
-      const confirmed = await showConfirmAlert('로그아웃 하시겠습니까?');
+      const confirmed = await setConfirmAlert('로그아웃 하시겠습니까?');
       if (confirmed) {
         await axiosInstance.post(
           `/users/accounts/logout`,
@@ -226,7 +226,7 @@ const MyPage = () => {
   }, [user, isPagination]);
 
   const handleDelete = useCallback(async () => {
-    const confirmed = await showConfirmAlert('정말 탈퇴를 하시겠습니까?');
+    const confirmed = await setConfirmAlert('정말 탈퇴를 하시겠습니까?');
     if (confirmed) {
       try {
         await axiosInstance.delete(`/users/accounts/delete`, {
@@ -264,7 +264,7 @@ const MyPage = () => {
       </div>
 
       <main className='flex-grow'>
-        <MyPageConfirmAlert></MyPageConfirmAlert>
+        {showConfirmAlert && <MyPageConfirmAlert />}
         <div className='mx-auto w-[1200px]'>
           <div className='mt-12 h-full px-8'>
             <div className='flex justify-between'>

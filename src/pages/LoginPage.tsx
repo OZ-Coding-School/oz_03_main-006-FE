@@ -37,7 +37,7 @@ const LoginPage = () => {
 
   return (
     <div className='fixed flex h-screen w-screen items-center justify-center'>
-      <div className='flex h-[580px] w-[460px] flex-col px-8 py-4'>
+      <div className='flex h-[600px] w-[460px] flex-col px-8 py-4'>
         <div className='grid h-[50px] w-full grid-cols-2 items-center gap-0.5 text-center'>
           <div
             className={`login-button-radius ${handleLoginShadow} ${handleAnimation} flex h-full cursor-pointer items-center justify-center bg-[#f9f9f9]`}
