@@ -51,7 +51,6 @@
 ![Canvas Confetti](https://img.shields.io/badge/canvas--confetti-FF69B4?style=for-the-badge&logo=confetti&logoColor=white)
 ![Amazon S3](https://img.shields.io/badge/Amazon%20S3-569A31?style=for-the-badge&logo=amazon-s3&logoColor=white)
 ![AWS Certificate Manager](https://img.shields.io/badge/ACM-232F3E?style=for-the-badge&logo=Amazon%20AWS&logoColor=white)
-
 ![CloudFront](https://img.shields.io/badge/CloudFront-FF9900?style=for-the-badge&logo=amazon-cloudfront&logoColor=white)
 ![Gabia](https://img.shields.io/badge/Gabia-005BAC?style=for-the-badge&logo=gabia&logoColor=white)
 ![Route 53](https://img.shields.io/badge/Route%2053-232F3E?style=for-the-badge&logo=Amazon%20AWS&logoColor=white)
@@ -64,7 +63,7 @@
       <a href="https://github.com/KingBoRam">
         <img src="https://avatars.githubusercontent.com/u/107662593?v=4" width="100" height="100" alt="김보람"/>
         <br />
-        <sub><b>김보람</b></sub>
+        <sub><b>김보람(부팀장)</b></sub>
       </a>
     </td>
      <td align="center">
