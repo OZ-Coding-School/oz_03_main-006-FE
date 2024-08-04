@@ -8,6 +8,7 @@ import {
   TagState,
   PromptState,
   LoadingAlertState,
+  ConfirmAlertState,
 } from './types';
 
 export const useNavToggleStore = create<NavToggleState>((set) => ({
@@ -35,7 +36,6 @@ export const useUserStore = create(
 export const useAlertStore = create<AlertState>((set) => ({
   showAlert: false,
   alertMessage: '',
-  confirmResult: null,
   setAlert: (message) =>
     set(() => ({
       showAlert: true,
@@ -46,17 +46,6 @@ export const useAlertStore = create<AlertState>((set) => ({
       showAlert: false,
       alertMessage: '',
     })),
-  showConfirmAlert: (message) =>
-    new Promise<boolean>((resolve) => {
-      set(() => ({
-        showAlert: true,
-        alertMessage: message,
-        confirmResult: (result: boolean) => {
-          resolve(result),
-            set({ showAlert: false, alertMessage: '', confirmResult: null });
-        },
-      }));
-    }),
 }));
 
 export const useTagStore = create<TagState>((set) => ({
@@ -72,43 +61,37 @@ export const useTagStore = create<TagState>((set) => ({
   clearTags: () => set({ tags: [] }),
 }));
 
-export const useConfirmAlertStore = create<AlertState>((set) => ({
-  showAlert: false,
+export const useConfirmAlertStore = create<ConfirmAlertState>((set) => ({
+  showConfirmAlert: false,
   alertMessage: '',
   confirmResult: null,
-  setAlert: (message) =>
-    set(() => ({
-      showAlert: true,
-      alertMessage: message,
-    })),
-  clearAlert: () =>
-    set(() => ({
-      showAlert: false,
-      alertMessage: '',
-    })),
-  showConfirmAlert: (message) =>
+  setConfirmAlert: (message) =>
     new Promise<boolean>((resolve) => {
       set(() => ({
-        showAlert: true,
+        showConfirmAlert: true,
         alertMessage: message,
         confirmResult: (result: boolean) => {
           resolve(result),
-            set({ showAlert: false, alertMessage: '', confirmResult: null });
+            set({
+              showConfirmAlert: false,
+              alertMessage: '',
+              confirmResult: null,
+            });
         },
       }));
     }),
+  clearConfirmAlert: () =>
+    set(() => ({
+      showConfirmAlert: false,
+      alertMessage: '',
+    })),
 }));
 
 export const usePromptStore = create<PromptState>((set) => ({
   showPrompt: false,
   promptMessage: '',
   confirmResult: null,
-  clearPrompt: () =>
-    set(() => ({
-      showPrompt: false,
-      promptMessage: '',
-    })),
-  showConfirmPrompt: (message) =>
+  setConfirmPrompt: (message) =>
     new Promise<string>((resolve) => {
       set(() => ({
         showPrompt: true,
@@ -119,14 +102,24 @@ export const usePromptStore = create<PromptState>((set) => ({
         },
       }));
     }),
+  clearPrompt: () =>
+    set(() => ({
+      showPrompt: false,
+      promptMessage: '',
+    })),
 }));
 
 export const useLoadingAlertStore = create<LoadingAlertState>((set) => ({
-  showAlert: false,
+  showLoadingAlert: false,
   alertMessage: '',
   setLoadingAlert: (message) =>
     set(() => ({
-      showAlert: true,
+      showLoadingAlert: true,
       alertMessage: message,
+    })),
+  clearLoadingAlert: () =>
+    set(() => ({
+      showLoadingAlert: false,
+      alertMessage: '',
     })),
 }));

@@ -1,7 +1,11 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
-import { useAlertStore, useUserStore } from '../../config/store';
-import Alert, { MyPageConfirmAlert } from './common/Alert';
+import {
+  useAlertStore,
+  useConfirmAlertStore,
+  useUserStore,
+} from '../../config/store';
+import { MyPageConfirmAlert } from './common/Alert';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import axios from '../api/axios';
 import { FaRegUser } from 'react-icons/fa';
@@ -31,7 +35,8 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
   const param = useParams();
   const [comments, setComments] = useState<Comment[]>([]);
   const { user } = useUserStore();
-  const { setAlert, showConfirmAlert } = useAlertStore();
+  const setAlert = useAlertStore((state) => state.setAlert);
+  const { showConfirmAlert, setConfirmAlert } = useConfirmAlertStore();
   const {
     register: createRegister,
     handleSubmit: handleCreateSubmit,
@@ -102,7 +107,7 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
       return;
     }
     setDeleteState(true);
-    showConfirmAlert('정말 댓글을 삭제 하시겠습니까?').then(async (res) => {
+    setConfirmAlert('정말 댓글을 삭제 하시겠습니까?').then(async (res) => {
       if (res) {
         try {
           await axios.delete(`/posts/comments/${commentId}/`, {
@@ -162,8 +167,7 @@ const Comment: React.FC<CommentProps> = ({ comments: initialComments }) => {
 
   return (
     <div className='mx-auto min-w-[1052px] max-w-[1052px]'>
-      <Alert />
-      {deleteState ? <MyPageConfirmAlert></MyPageConfirmAlert> : <></>}
+      {deleteState ? showConfirmAlert && <MyPageConfirmAlert /> : <></>}
       <div className='ml-2 text-[18px]'>
         {comments ? `${comments?.length}개의 댓글` : '0개의 댓글'}
       </div>

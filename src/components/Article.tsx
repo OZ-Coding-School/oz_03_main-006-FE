@@ -4,7 +4,6 @@ import { PiEyesFill } from 'react-icons/pi';
 import { IoMdHeart, IoMdHeartEmpty } from 'react-icons/io';
 import { useEffect, useState } from 'react';
 import { useUserStore, useAlertStore } from '../../config/store';
-import Alert from './common/Alert';
 import dompurify from 'dompurify';
 import { Tag, DetailPostArticle } from '../../config/types';
 import { useNavigate } from 'react-router-dom';
@@ -115,7 +114,6 @@ const Article: React.FC<ArticleProps> = ({ article }) => {
   return (
     <>
       <div className='mx-auto mt-8 flex max-w-[1052px] flex-wrap'>
-        <Alert></Alert>
         <div className='mb-10 w-full text-4xl font-bold'>{article.title}</div>
         <div className='mb-2 flex w-full'>
           <span className='w-36 text-xl font-semibold'>지역</span>

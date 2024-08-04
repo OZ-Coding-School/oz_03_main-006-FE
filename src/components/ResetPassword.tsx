@@ -10,20 +10,17 @@ import { useState } from 'react';
 
 const ResetPassword = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const showConfirmPrompt = usePromptStore((state) => state.showConfirmPrompt);
-  const clearPrompt = usePromptStore((state) => state.clearPrompt);
+  const { showPrompt, clearPrompt, setConfirmPrompt } = usePromptStore();
+  const { showLoadingAlert, setLoadingAlert, clearLoadingAlert } =
+    useLoadingAlertStore();
   const setAlert = useAlertStore((state) => state.setAlert);
-  const showLoadingAlert = useLoadingAlertStore((state) => state.showAlert);
-  const setLoadingAlert = useLoadingAlertStore(
-    (state) => state.setLoadingAlert
-  );
 
   const passwordRegex =
     /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
   const handleResetPassword = async () => {
-    const userEmail = await showConfirmPrompt(
-      '가입시 입력한 이메일 주소를 입력해 주세요.'
+    const userEmail = await setConfirmPrompt(
+      '회원가입시 등록한 이메일 주소를 입력해 주세요.'
     );
     if (userEmail.trim() !== '') {
       try {
@@ -35,8 +32,9 @@ const ResetPassword = () => {
         const url = new URL(response.data.reset_url);
         const token = url.searchParams.get('token');
         setIsLoading(false);
+        clearLoadingAlert();
         if (token) {
-          const newPassword = await showConfirmPrompt(
+          const newPassword = await setConfirmPrompt(
             '새롭게 설정할 비밀번호를 입력해 주세요. (8글자 이상이며 영문, 숫자, 특수문자를 모두 포함해야 합니다.)'
           );
           // 비밀번호 유효성 검사
@@ -96,7 +94,7 @@ const ResetPassword = () => {
       >
         비밀번호 변경하기
       </span>
-      <ResetPasswordAlert />
+      {showPrompt && <ResetPasswordAlert />}
       {isLoading && showLoadingAlert && <LoadingAlert />}
     </div>
   );

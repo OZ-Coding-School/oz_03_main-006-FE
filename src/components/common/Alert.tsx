@@ -1,20 +1,28 @@
 import { HiOutlineBellAlert } from 'react-icons/hi2';
 import {
   useAlertStore,
+  useConfirmAlertStore,
   useLoadingAlertStore,
   usePromptStore,
 } from '../../../config/store';
-import { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { BeatLoader } from 'react-spinners';
+import { useCloseAlert } from '../../hooks/useCloseAlert';
 
 const Alert = () => {
   const { showAlert, alertMessage, clearAlert } = useAlertStore();
+  const ref = useRef(null);
 
-  if (!showAlert) return null;
+  if (!showAlert) return;
+
+  useCloseAlert(ref, clearAlert);
 
   return (
     <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/5 shadow-md backdrop-blur-sm'>
-      <div className='fixed top-40 flex h-[160px] w-[480px] flex-col rounded-md bg-white shadow-md'>
+      <div
+        className='fixed top-40 flex h-[160px] w-[480px] flex-col rounded-md bg-white shadow-md'
+        ref={ref}
+      >
         <div className='flex items-center gap-1 rounded-t-md bg-[#28466A]'>
           <HiOutlineBellAlert className='light-white ml-3 text-[22px]' />
           <p className='light-white my-1.5 grow self-center'>알림</p>
@@ -40,13 +48,20 @@ const Alert = () => {
 export default Alert;
 
 export const MyPageConfirmAlert = () => {
-  const { showAlert, alertMessage, confirmResult } = useAlertStore();
+  const { showConfirmAlert, alertMessage, confirmResult, clearConfirmAlert } =
+    useConfirmAlertStore();
+  const ref = useRef(null);
 
-  if (!showAlert) return null;
+  if (!showConfirmAlert) return;
+
+  useCloseAlert(ref, clearConfirmAlert);
 
   return (
     <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/5 shadow-md backdrop-blur-sm'>
-      <div className='fixed top-40 flex h-[160px] w-[480px] flex-col rounded-md bg-white shadow-md'>
+      <div
+        className='fixed top-40 flex h-[160px] w-[480px] flex-col rounded-md bg-white shadow-md'
+        ref={ref}
+      >
         <div className='flex items-center gap-1 rounded-t-md bg-[#28466A]'>
           <HiOutlineBellAlert className='light-white ml-3 text-[22px]' />
           <p className='light-white my-1.5 grow self-center'>알림</p>
@@ -79,17 +94,34 @@ export const ResetPasswordAlert = () => {
   const { showPrompt, promptMessage, clearPrompt, confirmResult } =
     usePromptStore();
   const [value, setValue] = useState('');
+  const ref = useRef(null);
 
-  if (!showPrompt) return null;
+  if (!showPrompt) return;
 
   const submitHandler = () => {
-    confirmResult && confirmResult(value);
-    setValue('');
+    if (confirmResult) {
+      confirmResult(value);
+      setValue('');
+    }
+    return;
   };
+
+  const inputKeyHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      submitHandler();
+    } else if (e.key === 'Escape') {
+      clearPrompt();
+    }
+  };
+
+  useCloseAlert(ref, clearPrompt);
 
   return (
     <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/5 shadow-md backdrop-blur-sm'>
-      <div className='fixed top-40 flex h-[180px] w-[480px] flex-col rounded-md bg-white shadow-md'>
+      <div
+        className='fixed top-40 flex h-[185px] w-[480px] flex-col rounded-md bg-white shadow-md'
+        ref={ref}
+      >
         <div className='flex items-center gap-1 rounded-t-md bg-[#28466A]'>
           <HiOutlineBellAlert className='light-white ml-3 text-[22px]' />
           <p className='light-white my-1.5 grow self-center'>알림</p>
@@ -103,6 +135,7 @@ export const ResetPasswordAlert = () => {
                 type='text'
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
+                onKeyDown={inputKeyHandler}
               />
             </div>
           </div>
@@ -115,7 +148,7 @@ export const ResetPasswordAlert = () => {
             </button>
             <button
               className='light-white ml-1 rounded-md bg-[#28466A] px-6 py-1.5'
-              onClick={() => clearPrompt()}
+              onClick={clearPrompt}
             >
               취소
             </button>
@@ -127,9 +160,9 @@ export const ResetPasswordAlert = () => {
 };
 
 export const LoadingAlert = () => {
-  const { showAlert, alertMessage } = useLoadingAlertStore();
+  const { showLoadingAlert, alertMessage } = useLoadingAlertStore();
 
-  if (!showAlert) return null;
+  if (!showLoadingAlert) return;
 
   return (
     <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/5 shadow-md backdrop-blur-sm'>
@@ -138,7 +171,7 @@ export const LoadingAlert = () => {
           <HiOutlineBellAlert className='light-white ml-3 text-[22px]' />
           <p className='light-white my-1.5 grow self-center'>알림</p>
         </div>
-        <div className='flex grow flex-col p-4'>
+        <div className='flex grow flex-col p-3'>
           <div className='flex w-full grow flex-col items-center justify-center gap-3'>
             <p className='text-lg leading-normal'>{alertMessage}</p>
             <BeatLoader className='mx-auto' color='#005CB5' size={18} />

@@ -5,7 +5,12 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import 'react-quill/dist/quill.snow.css';
 import './PostingPage.css';
 import TagItem from '../components/TagItem';
-import { useTagStore, useUserStore, useAlertStore } from '../../config/store';
+import {
+  useTagStore,
+  useUserStore,
+  useAlertStore,
+  useConfirmAlertStore,
+} from '../../config/store';
 import { PostingFormData, PostResponse } from '../../config/types';
 import { FaPlus } from 'react-icons/fa6';
 import { locationList } from '../data/locationList';
@@ -39,8 +44,8 @@ const PostingPage = () => {
     clearTags: state.clearTags,
   }));
   const user = useUserStore((state) => state.user);
-  const setAlert = useAlertStore((state) => state.setAlert);
-  const showConfirmAlert = useAlertStore((state) => state.showConfirmAlert);
+  const { showAlert, setAlert } = useAlertStore();
+  const { showConfirmAlert, setConfirmAlert } = useConfirmAlertStore();
   const [travelPeriodError, setTravelPeriodError] = useState<string>('');
   const [imageIds, setImageIds] = useState<string[]>([]);
   const [fileName, setFileName] = useState<string | null>(null);
@@ -330,7 +335,7 @@ const PostingPage = () => {
 
   const handleClick = () => {
     setDeleteState(true);
-    showConfirmAlert('정말 작성을 취소하고 돌아가시겠습니까?').then((res) => {
+    setConfirmAlert('정말 작성을 취소하고 돌아가시겠습니까?').then((res) => {
       if (res === true) {
         navigate(-1);
       }
@@ -346,8 +351,8 @@ const PostingPage = () => {
   return (
     <>
       <div className='fixed left-0 top-0 z-10 w-screen bg-white'>
-        <Alert></Alert>
-        {deleteState ? <MyPageConfirmAlert></MyPageConfirmAlert> : <></>}
+        {showAlert && <Alert />}
+        {deleteState ? showConfirmAlert && <MyPageConfirmAlert /> : <></>}
         <Link to='/' className='flex items-center py-[20px] pl-[30px]'>
           <img src='/logo.svg' alt='한바퀴 로고' className='w-9' />
           <h1 className={'font-okgung text-2xl text-black'}>한바퀴</h1>
