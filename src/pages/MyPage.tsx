@@ -1,4 +1,3 @@
-// 최종 수정 - my page
 import { Link, useNavigate } from 'react-router-dom';
 import { MdLogout } from 'react-icons/md';
 import { FaUserEdit } from 'react-icons/fa';
@@ -31,28 +30,31 @@ const MyPage = () => {
   const [isPagination, setIsPagination] = useState(false);
   const [isOtherPage, setIsOtherPage] = useState(false);
   const [imgFile, setImgFile] = useState<File>();
-  // 일단 쥬스탠드에도 저장하고, 요청할 이미지 상태도 만들고,,,
-  // const [imgPreString, setImgPreString] = useState<string>();
-
-  useEffect(() => {
-    const fetchUserGet = async () => {
-      try {
-        const response = await axiosInstance.get(`/users/accounts/user`, {
-          withCredentials: true,
-        });
-        console.log(response);
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
-    };
-    fetchUserGet();
-  }, []);
-
   const [page, setPage] = useState<number>(1);
 
   const postPerPage: number = 8;
   const indexOfLastPost: number = page * postPerPage;
   const indexOfFirstPost: number = indexOfLastPost - postPerPage;
+
+  const fetchUserData = async () => {
+    try {
+      const response = await axiosInstance.get(`/users/accounts/user`, {
+        withCredentials: true,
+      });
+      const userData = response.data;
+      setUser(userData);
+      setNickname(userData.nickname);
+      setImg(userData.profile_image);
+      updateProfileImage(userData.profile_image);
+      console.log('User data fetched:', userData);
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
 
   const handlePageChange = (page: number) => {
     setPage(page);
@@ -68,17 +70,17 @@ const MyPage = () => {
           { withCredentials: true }
         );
         clearUser();
-        console.log('logout');
+        navigate('/login');
       }
     } catch (error) {
       console.error('Logout failed', error);
     }
-  }, [showConfirmAlert, clearUser]);
+  }, [setConfirmAlert, clearUser, navigate]);
 
   useEffect(() => {
     if (!user) {
       navigate('/login');
-    } else if (user) {
+    } else {
       handleMyPost();
     }
   }, [user, navigate]);
@@ -99,79 +101,55 @@ const MyPage = () => {
   const handleNewNick = useCallback(
     async (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
-      setEdit((edit) => !edit);
-      setProfileEdit((edit) => !edit);
       if (user) {
-        setUser({ ...user, nickname: nickname });
-        updateProfileImage(img);
         try {
           const formData = new FormData();
           formData.append('nickname', nickname);
-          console.log(nickname);
           if (imgFile) {
             formData.append('profile_image', imgFile);
           }
-          console.log(imgFile);
-          const response = await axiosInstance.put(
-            `users/accounts/edit`,
-            formData,
-            {
-              headers: {
-                'Content-Type': 'multipart/form-data',
-              },
-              withCredentials: true,
-            }
-          );
-
-          console.log(response.data);
-
-          const updatedProfileImage = response.data.profile_image;
-          // setImgPreString(updatedProfileImage);
-          // setImg(updatedProfileImage);
-          updateProfileImage(updatedProfileImage);
-
-          setUser({
-            ...user,
-            nickname: nickname,
-            profile_image: updatedProfileImage,
+          await axiosInstance.put(`users/accounts/edit`, formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+            withCredentials: true,
           });
 
-          console.log('수정 성공~~~~~~~~~~?~~~~~~');
+          // 수정 후 사용자 정보 다시 가져오기
+          await fetchUserData();
+
+          setEdit(false);
+          setProfileEdit(false);
+          console.log('프로필 수정 성공');
         } catch (error) {
           console.error('Profile update failed', error);
         }
       }
     },
-    [user, nickname, img, updateProfileImage, setUser, setImg]
+    [user, nickname, imgFile]
   );
+
   const handleCancle = () => {
-    if (user && user.nickname) {
+    if (user) {
       setNickname(user.nickname);
+      setImg(user.profile_image || '');
     }
-    if (user && user?.profile_image) {
-      setImg(user?.profile_image);
-    }
-    setEdit((edit) => !edit);
-    setProfileEdit((edit) => !edit);
+    setEdit(false);
+    setProfileEdit(false);
   };
 
   const handleFileSelect = (file: File) => {
     const imageUrl = URL.createObjectURL(file);
-    console.log('Selected file:', file);
-    console.log('Image URL:', imageUrl);
-    console.log(typeof imageUrl);
-    return imageUrl;
+    setImgFile(file);
+    setImg(imageUrl);
   };
 
-  const sortedPosts = useCallback(
-    (posts: Post[]) => {
-      return [...posts].sort(
-        (a, b) =>
-          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-      );
-    },
-    [userPost]
-  );
+  const sortedPosts = useCallback((posts: Post[]) => {
+    return [...posts].sort(
+      (a, b) =>
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    );
+  }, []);
 
   const handleMyPost = useCallback(() => {
     if (user) {
@@ -182,18 +160,10 @@ const MyPage = () => {
           const response = await axiosInstance.get(`posts/user/${user.id}`, {
             withCredentials: true,
           });
-          console.log(response);
-          console.log(response.data);
           const sort: Post[] = sortedPosts(response.data);
           setUserPost(sort);
-          if (sort.length === 0) {
-            setIsPagination(false);
-            setIsOtherPage(true);
-            console.log('check: false');
-          } else {
-            setIsPagination(true);
-            console.log('check: true');
-          }
+          setIsPagination(sort.length > 0);
+          setIsOtherPage(sort.length === 0);
         } catch (error) {
           console.log(error);
         }
@@ -201,33 +171,28 @@ const MyPage = () => {
       fetchUserPost();
       setPostClick('myposts');
     }
-  }, [user, isPagination]);
+  }, [user, sortedPosts]);
 
   const handleHeartPost = useCallback(async () => {
-    setPage(1);
-    try {
-      const response = await axiosInstance.get(
-        `posts/user/${user?.id}/liked_posts/`,
-        {
-          withCredentials: true,
-        }
-      );
-      const sort: Post[] = sortedPosts(response.data);
-      setUserPost(sort);
-      if (sort.length === 0) {
-        setIsPagination(false);
-        setIsOtherPage(false);
-        console.log('check: false');
-      } else {
-        setIsPagination(true);
-        setIsOtherPage(true);
-        console.log('check: true');
+    if (user) {
+      setPage(1);
+      try {
+        const response = await axiosInstance.get(
+          `posts/user/${user.id}/liked_posts/`,
+          {
+            withCredentials: true,
+          }
+        );
+        const sort: Post[] = sortedPosts(response.data);
+        setUserPost(sort);
+        setIsPagination(sort.length > 0);
+        setIsOtherPage(sort.length > 0);
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
+      setPostClick('likedPosts');
     }
-    setPostClick('likedPosts');
-  }, [user, isPagination]);
+  }, [user, sortedPosts]);
 
   const handleDelete = useCallback(async () => {
     const confirmed = await setConfirmAlert('정말 탈퇴를 하시겠습니까?');
@@ -237,12 +202,13 @@ const MyPage = () => {
           withCredentials: true,
         });
         clearUser();
-        console.log('탈퇴');
+        navigate('/login');
       } catch (error) {
         console.log('회원탈퇴 Error: ', error);
       }
     }
-  }, []);
+  }, [setConfirmAlert, clearUser, navigate]);
+
   const currentPosts = useMemo(() => {
     return userPost.slice(indexOfFirstPost, indexOfLastPost);
   }, [indexOfFirstPost, indexOfLastPost, userPost]);
@@ -251,12 +217,6 @@ const MyPage = () => {
     () => currentPosts.map((post) => <PostCard key={post.id} post={post} />),
     [currentPosts]
   );
-
-  // const handleInitial = () => {};
-
-  useEffect(() => {
-    console.log('Current img state:', img);
-  }, [img]);
 
   return (
     <div className='flex min-h-screen w-screen flex-col'>
