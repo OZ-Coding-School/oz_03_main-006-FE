@@ -24,7 +24,6 @@ const ProfileModal: React.FC<ModalProps> = ({
   //userId,
   originalFileName,
 }) => {
-  console.log('ProfileModal received originalFileName:', originalFileName);
   const [crop, setCrop] = useState<Crop>();
   const [completedCrop, setCompletedCrop] = useState<PixelCrop>();
   const imgRef = useRef<HTMLImageElement>(null);
@@ -92,8 +91,6 @@ const ProfileModal: React.FC<ModalProps> = ({
 
       // 원본 파일 이름에서 확장자를 추출
       const extension = originalFileName.split('.').pop();
-      console.log(originalFileName);
-      console.log(extension);
 
       // 원본 파일 이름에 'cropped-'를 접두사로 붙이고 확장자를 유지
       const newFileName = `cropped-${originalFileName}`;

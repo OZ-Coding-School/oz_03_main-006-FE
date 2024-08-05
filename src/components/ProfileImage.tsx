@@ -31,7 +31,6 @@ const ProfileImage: React.FC<FileUploadProps> = ({
     const file = e.target.files?.[0];
     if (file) {
       setOriginalFileName(file.name);
-      console.log('Original file name set:', file.name); // 로그 추가
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreview(reader.result as string);
