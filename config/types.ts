@@ -72,10 +72,8 @@ export interface LoginUser {
 export interface AlertState {
   showAlert: boolean;
   alertMessage: string;
-  confirmResult: ((result: boolean) => void) | null;
   setAlert: (message: string) => void;
   clearAlert: () => void;
-  showConfirmAlert: (message: string) => Promise<boolean>;
 }
 
 export interface TagState {
@@ -133,11 +131,20 @@ export interface PromptState {
   promptMessage: string;
   confirmResult: ((result: string) => void) | null;
   clearPrompt: () => void;
-  showConfirmPrompt: (message: string) => Promise<string>;
+  setConfirmPrompt: (message: string) => Promise<string>;
 }
 
 export interface LoadingAlertState {
-  showAlert: boolean;
+  showLoadingAlert: boolean;
   alertMessage: string;
   setLoadingAlert: (message: string) => void;
+  clearLoadingAlert: () => void;
+}
+
+export interface ConfirmAlertState {
+  showConfirmAlert: boolean;
+  alertMessage: string;
+  confirmResult: ((result: boolean) => void) | null;
+  setConfirmAlert: (message: string) => Promise<boolean>;
+  clearConfirmAlert: () => void;
 }

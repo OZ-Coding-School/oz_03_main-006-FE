@@ -7,7 +7,7 @@ import axios from '../api/axios';
 import Alert from './common/Alert';
 
 const SignUp = () => {
-  const setAlert = useAlertStore((state) => state.setAlert);
+  const { showAlert, setAlert } = useAlertStore();
   const {
     register,
     handleSubmit,
@@ -157,7 +157,7 @@ const SignUp = () => {
           </form>
         </div>
       </div>
-      <Alert />
+      {showAlert && <Alert />}
     </div>
   );
 };
