@@ -1,3 +1,4 @@
+// 최종 수정 - profileModal
 import React, { useState, useRef, useCallback } from 'react';
 import ReactCrop, {
   Crop,
@@ -12,9 +13,18 @@ interface ModalProps {
   preview: string;
   onClose: () => void;
   onCrop: (file: File) => void;
+  //userId: number;
+  originalFileName: string;
 }
 
-const ProfileModal: React.FC<ModalProps> = ({ preview, onClose, onCrop }) => {
+const ProfileModal: React.FC<ModalProps> = ({
+  preview,
+  onClose,
+  onCrop,
+  //userId,
+  originalFileName,
+}) => {
+  console.log('ProfileModal received originalFileName:', originalFileName);
   const [crop, setCrop] = useState<Crop>();
   const [completedCrop, setCompletedCrop] = useState<PixelCrop>();
   const imgRef = useRef<HTMLImageElement>(null);
@@ -76,11 +86,25 @@ const ProfileModal: React.FC<ModalProps> = ({ preview, onClose, onCrop }) => {
         imgRef.current,
         completedCrop
       );
-      const croppedImageFile = new File(
-        [croppedImageBlob],
-        'cropped-image.jpg',
-        { type: 'image/jpeg' }
-      );
+      // 현재 시간을 밀리초로 가져와 파일 이름에 추가합니다.
+      // const timestamp = new Date().getTime();
+      // const fileName = `profile-${userId}-${timestamp}.jpg`;
+
+      // 원본 파일 이름에서 확장자를 추출
+      const extension = originalFileName.split('.').pop();
+      console.log(originalFileName);
+      console.log(extension);
+
+      // 원본 파일 이름에 'cropped-'를 접두사로 붙이고 확장자를 유지
+      const newFileName = `cropped-${originalFileName}`;
+
+      // const croppedImageFile = new File([croppedImageBlob], fileName, {
+      //   type: 'image/jpeg',
+      // });
+
+      const croppedImageFile = new File([croppedImageBlob], newFileName, {
+        type: `image/${extension}`,
+      });
 
       onCrop(croppedImageFile);
       onClose();

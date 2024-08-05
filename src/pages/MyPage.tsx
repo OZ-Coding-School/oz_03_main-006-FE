@@ -1,8 +1,9 @@
+// 최종 수정 - my page
 import { Link, useNavigate } from 'react-router-dom';
 import { MdLogout } from 'react-icons/md';
 import { FaUserEdit } from 'react-icons/fa';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useAlertStore, useUserStore } from '../../config/store';
+import { useConfirmAlertStore, useUserStore } from '../../config/store';
 import ProfileImage from '../components/ProfileImage';
 import { FaRegUser } from 'react-icons/fa';
 import axiosInstance from '../api/axios';
@@ -24,22 +25,21 @@ const MyPage = () => {
   const [profileEdit, setProfileEdit] = useState(false);
   const [nickname, setNickname] = useState(user?.nickname || '');
   const [img, setImg] = useState(user?.profile_image || '');
-  const { showConfirmAlert } = useAlertStore((state) => state);
+  const { showConfirmAlert, setConfirmAlert } = useConfirmAlertStore();
   const [userPost, setUserPost] = useState<Post[]>([]);
   const [postClick, setPostClick] = useState('myPosts');
   const [isPagination, setIsPagination] = useState(false);
   const [isOtherPage, setIsOtherPage] = useState(false);
   const [imgFile, setImgFile] = useState<File>();
+  // 일단 쥬스탠드에도 저장하고, 요청할 이미지 상태도 만들고,,,
+  // const [imgPreString, setImgPreString] = useState<string>();
 
   useEffect(() => {
     const fetchUserGet = async () => {
       try {
-        const response = await axiosInstance.get(
-          `/users/accounts/${user?.id}`,
-          {
-            withCredentials: true,
-          }
-        );
+        const response = await axiosInstance.get(`/users/accounts/user`, {
+          withCredentials: true,
+        });
         console.log(response);
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -60,7 +60,7 @@ const MyPage = () => {
 
   const handleLogout = useCallback(async () => {
     try {
-      const confirmed = await showConfirmAlert('로그아웃 하시겠습니까?');
+      const confirmed = await setConfirmAlert('로그아웃 하시겠습니까?');
       if (confirmed) {
         await axiosInstance.post(
           `/users/accounts/logout`,
@@ -103,14 +103,15 @@ const MyPage = () => {
       setProfileEdit((edit) => !edit);
       if (user) {
         setUser({ ...user, nickname: nickname });
+        updateProfileImage(img);
         try {
           const formData = new FormData();
           formData.append('nickname', nickname);
-
+          console.log(nickname);
           if (imgFile) {
             formData.append('profile_image', imgFile);
           }
-
+          console.log(imgFile);
           const response = await axiosInstance.put(
             `users/accounts/edit`,
             formData,
@@ -125,7 +126,10 @@ const MyPage = () => {
           console.log(response.data);
 
           const updatedProfileImage = response.data.profile_image;
+          // setImgPreString(updatedProfileImage);
           setImg(updatedProfileImage);
+          updateProfileImage(updatedProfileImage);
+
           setUser({
             ...user,
             nickname: nickname,
@@ -226,7 +230,7 @@ const MyPage = () => {
   }, [user, isPagination]);
 
   const handleDelete = useCallback(async () => {
-    const confirmed = await showConfirmAlert('정말 탈퇴를 하시겠습니까?');
+    const confirmed = await setConfirmAlert('정말 탈퇴를 하시겠습니까?');
     if (confirmed) {
       try {
         await axiosInstance.delete(`/users/accounts/delete`, {
@@ -250,9 +254,9 @@ const MyPage = () => {
 
   // const handleInitial = () => {};
 
-  useEffect(() => {
-    console.log('Current img state:', img);
-  }, [img]);
+  // useEffect(() => {
+  //   console.log('Current img state:', img);
+  // }, [img]);
 
   return (
     <div className='flex min-h-screen w-screen flex-col'>
@@ -264,7 +268,7 @@ const MyPage = () => {
       </div>
 
       <main className='flex-grow'>
-        <MyPageConfirmAlert></MyPageConfirmAlert>
+        {showConfirmAlert && <MyPageConfirmAlert />}
         <div className='mx-auto w-[1200px]'>
           <div className='mt-12 h-full px-8'>
             <div className='flex justify-between'>
@@ -275,8 +279,8 @@ const MyPage = () => {
                     onFileSelect={handleFileSelect}
                     img={img}
                     setImgFile={setImgFile}
-                    // profile_img={user?.profile_image}
-                    // updateProfileImage={updateProfileImage}
+                    // setImgPreString={setImgPreString}
+                    // userId={user?.id ?? 0} // user.id가 undefined일 경우 0을 사용
                   />
                 ) : (
                   <div>

@@ -5,7 +5,12 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import 'react-quill/dist/quill.snow.css';
 import './PostingPage.css';
 import TagItem from '../components/TagItem';
-import { useTagStore, useUserStore, useAlertStore } from '../../config/store';
+import {
+  useTagStore,
+  useUserStore,
+  useAlertStore,
+  useConfirmAlertStore,
+} from '../../config/store';
 import { PostingFormData, PostResponse } from '../../config/types';
 import { FaPlus } from 'react-icons/fa6';
 import { locationList } from '../data/locationList';
@@ -39,8 +44,8 @@ const PostingPage = () => {
     clearTags: state.clearTags,
   }));
   const user = useUserStore((state) => state.user);
-  const setAlert = useAlertStore((state) => state.setAlert);
-  const showConfirmAlert = useAlertStore((state) => state.showConfirmAlert);
+  const { showAlert, setAlert } = useAlertStore();
+  const { showConfirmAlert, setConfirmAlert } = useConfirmAlertStore();
   const [travelPeriodError, setTravelPeriodError] = useState<string>('');
   const [imageIds, setImageIds] = useState<string[]>([]);
   const [fileName, setFileName] = useState<string | null>(null);
@@ -52,6 +57,7 @@ const PostingPage = () => {
   const navigate = useNavigate();
   const { post_id } = useParams();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [errorStatus, setErrorStatus] = useState<number | null>(null);
 
   const isEditMode = post_id ? true : false;
   const today = new Date().toISOString().split('T')[0];
@@ -69,8 +75,7 @@ const PostingPage = () => {
       const fetchPostData = async () => {
         try {
           const response = await axios.get(
-            `https://api.hancycle.site/posts/${post_id}/`,
-            { withCredentials: true }
+            `https://api.hancycle.site/posts/${post_id}/`
           );
           const postData = response.data.post;
           setViewCount(postData.view_count);
@@ -271,7 +276,7 @@ const PostingPage = () => {
           if (response.status === 400) {
             setAlert('글 수정에 실패했습니다.');
           } else if (response.status === 404) {
-            <Error status={404} />;
+            setErrorStatus(404);
           } else {
             navigate(`/post-detail/${post_id}`);
           }
@@ -302,7 +307,7 @@ const PostingPage = () => {
         setIsLoading(false);
       } catch (error) {
         console.error(error);
-        <Error status={500} />;
+        setErrorStatus(500);
       }
     }
   };
@@ -330,7 +335,7 @@ const PostingPage = () => {
 
   const handleClick = () => {
     setDeleteState(true);
-    showConfirmAlert('정말 작성을 취소하고 돌아가시겠습니까?').then((res) => {
+    setConfirmAlert('정말 작성을 취소하고 돌아가시겠습니까?').then((res) => {
       if (res === true) {
         navigate(-1);
       }
@@ -345,9 +350,10 @@ const PostingPage = () => {
 
   return (
     <>
+      {errorStatus && <Error status={errorStatus} />}
       <div className='fixed left-0 top-0 z-10 w-screen bg-white'>
-        <Alert></Alert>
-        {deleteState ? <MyPageConfirmAlert></MyPageConfirmAlert> : <></>}
+        {showAlert && <Alert />}
+        {deleteState ? showConfirmAlert && <MyPageConfirmAlert /> : <></>}
         <Link to='/' className='flex items-center py-[20px] pl-[30px]'>
           <img src='/logo.svg' alt='한바퀴 로고' className='w-9' />
           <h1 className={'font-okgung text-2xl text-black'}>한바퀴</h1>

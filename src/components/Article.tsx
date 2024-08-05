@@ -3,8 +3,12 @@ import TagItem from './TagItem';
 import { PiEyesFill } from 'react-icons/pi';
 import { IoMdHeart, IoMdHeartEmpty } from 'react-icons/io';
 import { useEffect, useState } from 'react';
-import { useUserStore, useAlertStore } from '../../config/store';
-import Alert from './common/Alert';
+import {
+  useUserStore,
+  useAlertStore,
+  useConfirmAlertStore,
+} from '../../config/store';
+import { MyPageConfirmAlert } from '../components/common/Alert';
 import dompurify from 'dompurify';
 import { Tag, DetailPostArticle } from '../../config/types';
 import { useNavigate } from 'react-router-dom';
@@ -18,8 +22,10 @@ interface ArticleProps {
 const Article: React.FC<ArticleProps> = ({ article }) => {
   const user = useUserStore((state) => state.user);
   const setAlert = useAlertStore((state) => state.setAlert);
+  const { showConfirmAlert, setConfirmAlert } = useConfirmAlertStore();
   const [isLiked, setIsLiked] = useState<boolean | null>(null);
   const [showButton, setShowButton] = useState<boolean>(false);
+  const [deleteState, setDeleteState] = useState<boolean>(false);
   const [postLikesCount, setPostLikesCount] = useState<number>(
     article.likes_count
   );
@@ -97,12 +103,15 @@ const Article: React.FC<ArticleProps> = ({ article }) => {
   };
 
   const handleDelete = async () => {
+    setDeleteState(true);
     try {
-      await axios.delete(`/posts/${article.id}`);
-      setAlert('게시글이 삭제되었습니다.');
-      setTimeout(() => {
-        navigate('/');
-      }, 2000);
+      const isDelete = await setConfirmAlert('정말 게시글을 삭제하시겠습니까?');
+      if (isDelete) {
+        await axios.delete(`/posts/${article.id}`);
+        setTimeout(() => {
+          navigate('/');
+        }, 2000);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -115,7 +124,7 @@ const Article: React.FC<ArticleProps> = ({ article }) => {
   return (
     <>
       <div className='mx-auto mt-8 flex max-w-[1052px] flex-wrap'>
-        <Alert></Alert>
+        {deleteState ? showConfirmAlert && <MyPageConfirmAlert /> : <></>}
         <div className='mb-10 w-full text-4xl font-bold'>{article.title}</div>
         <div className='mb-2 flex w-full'>
           <span className='w-36 text-xl font-semibold'>지역</span>
