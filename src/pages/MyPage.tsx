@@ -46,7 +46,6 @@ const MyPage = () => {
       setNickname(userData.nickname);
       setImg(userData.profile_image);
       updateProfileImage(userData.profile_image);
-      console.log('User data fetched:', userData);
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
@@ -120,7 +119,6 @@ const MyPage = () => {
 
           setEdit(false);
           setProfileEdit(false);
-          console.log('프로필 수정 성공');
         } catch (error) {
           console.error('Profile update failed', error);
         }
