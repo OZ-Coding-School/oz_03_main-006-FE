@@ -127,7 +127,7 @@ const MyPage = () => {
 
           const updatedProfileImage = response.data.profile_image;
           // setImgPreString(updatedProfileImage);
-          setImg(updatedProfileImage);
+          // setImg(updatedProfileImage);
           updateProfileImage(updatedProfileImage);
 
           setUser({
@@ -254,9 +254,9 @@ const MyPage = () => {
 
   // const handleInitial = () => {};
 
-  // useEffect(() => {
-  //   console.log('Current img state:', img);
-  // }, [img]);
+  useEffect(() => {
+    console.log('Current img state:', img);
+  }, [img]);
 
   return (
     <div className='flex min-h-screen w-screen flex-col'>
