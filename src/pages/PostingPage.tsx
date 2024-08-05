@@ -57,6 +57,7 @@ const PostingPage = () => {
   const navigate = useNavigate();
   const { post_id } = useParams();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [errorStatus, setErrorStatus] = useState<number | null>(null);
 
   const isEditMode = post_id ? true : false;
   const today = new Date().toISOString().split('T')[0];
@@ -74,8 +75,7 @@ const PostingPage = () => {
       const fetchPostData = async () => {
         try {
           const response = await axios.get(
-            `https://api.hancycle.site/posts/${post_id}/`,
-            { withCredentials: true }
+            `https://api.hancycle.site/posts/${post_id}/`
           );
           const postData = response.data.post;
           setViewCount(postData.view_count);
@@ -276,7 +276,7 @@ const PostingPage = () => {
           if (response.status === 400) {
             setAlert('글 수정에 실패했습니다.');
           } else if (response.status === 404) {
-            <Error status={404} />;
+            setErrorStatus(404);
           } else {
             navigate(`/post-detail/${post_id}`);
           }
@@ -307,7 +307,7 @@ const PostingPage = () => {
         setIsLoading(false);
       } catch (error) {
         console.error(error);
-        <Error status={500} />;
+        setErrorStatus(500);
       }
     }
   };
@@ -350,6 +350,7 @@ const PostingPage = () => {
 
   return (
     <>
+      {errorStatus && <Error status={errorStatus} />}
       <div className='fixed left-0 top-0 z-10 w-screen bg-white'>
         {showAlert && <Alert />}
         {deleteState ? showConfirmAlert && <MyPageConfirmAlert /> : <></>}
